@@ -89,72 +89,98 @@ function initializeDropdowns() {
 function initializeDoctorSystem() {
     console.log('🔧 Doctor System Initializing');
 
+    function toPreviewUrl(videoUrl) {
+        if (!videoUrl) {
+            return '';
+        }
+
+        return videoUrl.includes('/view') ? videoUrl.replace('/view', '/preview') : videoUrl;
+    }
+
+    function getVideoUrl(doctorInfo) {
+        if (!doctorInfo) {
+            return '';
+        }
+
+        if (doctorInfo.type === 'gdrive') {
+            return toPreviewUrl(doctorInfo.video);
+        }
+
+        if (doctorInfo.type === 'youtube') {
+            return 'https://www.youtube.com/embed/' + doctorInfo.videoId;
+        }
+
+        return doctorInfo.video || '';
+    }
+
     // Multi-doctor data by city
     const data = {
         mumbai: [
             {
                 doctor: 'Dr. Sonam Solanki',
                 spec: 'Pulmonologist',
-                type: 'youtube',
-                video: 'https://www.youtube.com/embed/FF3wlitEUNg?autoplay=1&mute=1&loop=1&playlist=FF3wlitEUNg'
+                type: 'gdrive',
+                video: 'https://drive.google.com/file/d/136k8m5DCus7-WLW-_p7tW2H7bIOGct2I/preview'
             },
             {
                 doctor: 'Dr. Sameer Garde',
                 spec: 'Chest Physician',
-                type: 'youtube',
-                video: 'https://www.youtube.com/embed/gT3PUzvlQ_0?autoplay=1&mute=1&loop=1&playlist=gT3PUzvlQ_0'
+                type: 'gdrive',
+                video: 'https://drive.google.com/file/d/198uucZxoxBuoo5_iNCcReJmi6hub1yAw/preview'
             },
             {
                 doctor: 'Dr. Swami Pawar',
                 spec: 'Chest Physician',
-                type: 'youtube',
-                video: 'https://www.youtube.com/embed/gLCQwXNmJPU?autoplay=1&mute=1&loop=1&playlist=gLCQwXNmJPU'
+                type: 'gdrive',
+                video: 'https://drive.google.com/file/d/17dEXA8utX1hWI_WF3ytw94NWPOwZZqWo/preview'
             },
             {
                 doctor: 'Dr. Harshal Shah',
                 spec: 'Chest Physician',
-                type: 'youtube',
-                video: 'https://www.youtube.com/embed/aCgRBnfue6o?autoplay=1&mute=1&loop=1&playlist=aCgRBnfue6o'
+                type: 'gdrive',
+                video: 'https://drive.google.com/file/d/1GNjlgCpFlLtvmcj35WTAhfI2DZjoOU_s/preview'
             },
             {
                 doctor: 'Dr. Pankaj Bang',
                 spec: 'Chest Physician',
-                type: 'youtube',
-                video: 'https://www.youtube.com/embed/Fk-NmlGfqE4?autoplay=1&mute=1&loop=1&playlist=Fk-NmlGfqE4'
+                type: 'gdrive',
+                video: 'https://drive.google.com/file/d/1-vrNNm2iyvpHAOhktKApy7LFI4a5hKvk/preview'
             },
             {
                 doctor: 'Dr. Satyey G. Tayade',
                 spec: 'Chest Physician',
                 type: 'youtube',
-                video: 'https://www.youtube.com/embed/fZbT5g0hFTQ?autoplay=1&mute=1&loop=1&playlist=fZbT5g0hFTQ'
+                videoId: 'fZbT5g0hFTQ',
+                video: 'https://www.youtube.com/watch?v=fZbT5g0hFTQ'
             },
             {
                 doctor: 'Dr. Parag Mehta',
                 spec: 'Chest specialist',
                 type: 'youtube',
-                video: 'https://www.youtube.com/embed/64zcRFUmGDM?autoplay=1&mute=1&loop=1&playlist=64zcRFUmGDM'
+                videoId: '64zcRFUmGDM',
+                video: 'https://www.youtube.com/watch?v=64zcRFUmGDM'
             }
         ],
         chennai: [
             {
                 doctor: 'Dr. Suresh Kanna S',
                 spec: 'Chest Physician',
-                type: 'youtube',
-                video: 'https://www.youtube.com/embed/lhhNOGOuf0A?autoplay=1&mute=1&loop=1&playlist=lhhNOGOuf0A'
+                type: 'gdrive',
+                video: 'https://drive.google.com/file/d/1SQ-FZVNxu8OxvvxQ599UyW6ekK79DxmZ/preview'
             }
         ],
         punjab: [
             {
                 doctor: 'Dr. Ajaypal Singh',
                 spec: 'Chest Physician',
-                type: 'youtube',
-                video: 'https://www.youtube.com/embed/vwEUY4pp9ok?autoplay=1&mute=1&loop=1&playlist=vwEUY4pp9ok'
+                type: 'gdrive',
+                video: 'https://drive.google.com/file/d/12JIsAz0wY59hSZEa_zdwBwrNfr957qVI/preview'
             },
             {
                 doctor: 'Dr. Mohit Kaushal',
                 spec: 'Consultant Pulmonology & Critical Care',
-                type: 'youtube',
-                video: 'https://www.youtube.com/embed/5Xg_E1EMlxI?autoplay=1&mute=1&loop=1&playlist=5Xg_E1EMlxI'
+                type: 'gdrive',
+                video: 'https://drive.google.com/file/d/1v-w3BlPxFEUZ9pXjhIxcQvop53Bow1lg/preview'
             }
         ]
     };
@@ -206,22 +232,11 @@ function initializeDoctorSystem() {
     }
 
     function updateVideoDisplay(doctorInfo) {
-        if (doctorInfo.type === 'youtube') {
-            console.log('🎥 YouTube video');
-            displayVideo.pause();
-            displayVideo.style.display = 'none';
-            displayIframe.src = doctorInfo.video;
-            displayIframe.style.display = 'block';
-            return;
-        }
-
-        console.log('🎬 Local video');
-        displayIframe.src = '';
-        displayIframe.style.display = 'none';
-        videoSrc.src = doctorInfo.video;
-        displayVideo.load();
-        displayVideo.style.display = 'block';
-        displayVideo.play().catch(() => {});
+        displayVideo.pause();
+        displayVideo.style.display = 'none';
+        displayIframe.src = getVideoUrl(doctorInfo);
+        displayIframe.style.display = 'block';
+        displayIframe.style.pointerEvents = '';
     }
 
     function showEmptyCityState(cityKey) {
@@ -324,7 +339,6 @@ function initializeAll() {
     }
     hasInitialized = true;
 
-    console.log('⏳ Initializing all systems');
     initializeNavbar();
     initializeScrollAnimations();
     initializeDropdowns();

@@ -8,6 +8,8 @@
 </head>
 <body>
 
+    <main id="page-root">
+
     <!-- NAVBAR -->
     <nav class="navbar">
         <div class="nav-container">
@@ -16,7 +18,7 @@
             </a>
             
             <!-- Mobile Menu Toggle Button -->
-            <button class="menu-toggle" id="menu-toggle">
+            <button class="menu-toggle" id="menu-toggle" aria-label="Open menu">
                 <span></span>
                 <span></span>
                 <span></span>
@@ -34,12 +36,9 @@
     <section id="hero" class="hero">
         <div class="hero-content fade-in-on-scroll">
             <div class="hero-text">
-                <h1 class="hero-headline">COMPLETE COVERAGE FROM ATYPICAL & TYPICAL PATHOGENS<br>In CABP Management (1)</h1>
+                <h1 class="hero-headline">COMPLETE COVERAGE FROM ATYPICAL & TYPICAL PATHOGENS<br>In CABP Management<sup style="font-size:0.3em;opacity:0.5;vertical-align:super;">1</sup></h1>
                 <div class="hero-brand">
                     <img src="MIQNAF logo.png" alt="MIQNAF" class="hero-logo-img">
-                </div>
-                <div class="tagline-wrapper">
-                    <span class="brand-tagline text-red">Your license for success in CABP</span>
                 </div>
             </div>
             
@@ -52,7 +51,7 @@
 
     <!-- TRUST HEADER -->
     <section class="trust-container fade-in-on-scroll">
-        <h2 class="trust-title">Trust the one antibiotic that always works (2)</h2>
+        <h2 class="trust-title">Trust the one antibiotic that always works<sup style="font-size:0.45em;opacity:0.6;vertical-align:super;">2</sup></h2>
     </section>
 
     <!-- CONTENT SLIDES -->
@@ -71,7 +70,7 @@
                     <hr class="patient-line">
                     <h3 class="patient-subheading"></h3>
                     <p class="patient-body">Elderly patients are at higher risk of rapid disease progression and complications.
-Miqnaf supports early clinical improvement and timely recovery. (3)</p>
+Miqnaf supports early clinical improvement and timely recovery.³</p>
                 </div>
             </div>
         </div>
@@ -89,7 +88,7 @@ Miqnaf supports early clinical improvement and timely recovery. (3)</p>
                     <hr class="patient-line">
                     <h3 class="patient-subheading"></h3>
                     <p class="patient-body">CABP can exacerbate respiratory (asthma/COPD) and cardio metabolic comorbidities, leading to hospitalization.
-Miqnaf provides comprehensive coverage, early clinical response and reassured safety (1) and (3)</p>
+Miqnaf provides comprehensive coverage, early clinical response and reassured safety¹,³</p>
                 </div>
             </div>
         </div>
@@ -107,29 +106,13 @@ Miqnaf provides comprehensive coverage, early clinical response and reassured sa
                     <hr class="patient-line">
                     <h3 class="patient-subheading"></h3>
                     <p class="patient-body">In moderate to severe hospitalized CABP, early clinical stabilization, shorter hospital stay, atypical coverage and safety remain key treatment goals.
-Miqnaf provides potent activity against atypical pathogens, enabling early clinical improvement with better safety over traditional macrolides. (1) and (3)</p>
+Miqnaf provides potent activity against atypical pathogens, enabling early clinical improvement with better safety over traditional macrolides.¹,³</p>
                 </div>
             </div>
         </div>
 
-        <!-- Slide 4: Yellow/Ochre -->
-        <div class="slide bg-gold slide-fade">
-            <div class="slide-container">
-                <div class="slide-image fade-in-on-scroll">
-                    <div class="img-frame">
-                        <img src="image copy 4.png" alt="Discharge" class="rounded-stroke-img bw-filter">
-                    </div>
-                </div>
-                <div class="slide-text fade-in-on-scroll">
-                    <h2 class="patient-heading">Discharge Patients</h2>
-                    <hr class="patient-line">
-                    <h3 class="patient-subheading">Patients leaving the hospital need<br>confidence, not fear of relapse.</h3>
-                    <p class="patient-body">Miqnaf gives them peace of mind,<br>ensuring full recovery without the worry<br>of returning symptoms. Works for all,<br>works always.</p>
-                </div>
-            </div>
-        </div>
 
-        <!-- Slide 5: Prior Treatment Failure -->
+<!-- Slide 5: Prior Treatment Failure -->
         <div class="slide bg-maroon slide-fade">
             <div class="slide-container">
                 <div class="slide-image fade-in-on-scroll">
@@ -142,7 +125,7 @@ Miqnaf provides potent activity against atypical pathogens, enabling early clini
                     <hr class="patient-line">
                     <h3 class="patient-subheading"></h3>
                     <p class="patient-body">Inadequate response to initial antibiotics can prolong infection and increase disease burden.
-Miqnaf delivers potent, targeted action, ensuring rapid bacterial clearance and clinical resolution. (1) and (3)
+Miqnaf delivers potent, targeted action, ensuring rapid bacterial clearance and clinical resolution.¹,³
 
 Because second chances should not fail.</p>
                 </div>
@@ -199,8 +182,8 @@ Because second chances should not fail.</p>
                 
                 <div class="doctor-image-content">
                     <div class="image-container video-container" id="video-container">
-                        <iframe id="display-iframe" width="100%" height="100%" src="https://www.youtube.com/embed/lhhNOGOuf0A" title="Doctor Video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                        <video id="display-video" class="bw-filter" preload="metadata" autoplay loop muted playsinline controls>
+                        <iframe id="display-iframe" width="100%" height="100%" src="https://drive.google.com/file/d/136k8m5DCus7-WLW-_p7tW2H7bIOGct2I/preview" title="Doctor Video" frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        <video id="display-video" class="bw-filter" preload="metadata" loop muted controls>
                             <source id="video-src" src="" type="video/mp4">
                         </video>
                     </div>
@@ -229,12 +212,9 @@ Because second chances should not fail.</p>
             <div class="stats-references">
                 <div class="ref-item ref-item-1">
                     <h3 class="stats-ref-heading">References</h3>
-                    <p class="ref-text">1. Rodvold KA <em>et al.</em> Antimicrob Agents Chemother. 2017 Aug 24;61(9):e01096-17.</p>
-                    <p class="ref-text">2. Rodvold KA <em>et al.</em> Clin Pharmacokinet. 2011 Oct;50(10):637-64</p>
-                </div>
-                <div class="ref-item ref-item-2">
-                    <h3 class="stats-ref-heading">Reference</h3>
-                    <p class="ref-text">3. Phase 3 CT data on file</p>
+                    <p class="ref-text">¹ MIQNAF® Prescribing Information, Wockhardt Limited, 01/2025</p>
+                    <p class="ref-text">² ICMR AMR Surveillance Network 2023, 2024</p>
+                    <p class="ref-text">³ The Lancet Regional Health–Southeast Asia. 2025 Oct 1;41.</p>
                 </div>
             </div>
         </div>
@@ -248,6 +228,8 @@ Because second chances should not fail.</p>
         </div>
     </footer>
 
-    <script src="script.js?v=1"></script>
+    </main>
+
+    <script src="script.js" defer></script>
 </body>
 </html>

@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MIQNAF – Doctor Login</title>
+
+    <style>
+        @font-face {
+            font-family: 'Acumin Variable';
+            src: url('Fonts/AcuminVariableConcept.otf') format('opentype');
+            font-weight: 100 900;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --maroon:    #991f25;
+            --maroon-dk: #7a181d;
+            --navy:      #29397f;
+            --navy-dk:   #1a2a6c;
+            --orange:    #ef6a2b;
+            --white:     #ffffff;
+            --muted:     rgba(255,255,255,0.55);
+            --glass-bg:  rgba(255,255,255,0.08);
+            --glass-bdr: rgba(255,255,255,0.18);
+        }
+
+        html {
+            min-height: 100%;
+            font-family: 'Acumin Variable', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            background: var(--navy-dk);
+            padding: 32px 16px;
+            overflow-x: hidden;
+        }
+
+        /* ── Background ── */
+        .bg-site {
+            position: fixed;
+            inset: 0;
+            background: url('image copy 6.png') center/cover no-repeat;
+            filter: blur(18px) brightness(0.25) saturate(0.6);
+            transform: scale(1.06);
+            z-index: 0;
+            pointer-events: none;
+        }
+        .bg-overlay {
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(ellipse at 15% 60%, rgba(153,31,37,0.30) 0%, transparent 55%),
+                radial-gradient(ellipse at 85% 25%, rgba(41,57,127,0.35) 0%, transparent 55%),
+                linear-gradient(150deg, rgba(26,42,108,0.92) 0%, rgba(10,8,20,0.96) 100%);
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* ── Card ── */
+        .card-wrap {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 430px;
+            margin-top: auto;
+            margin-bottom: auto;
+            align-self: center;
+            animation: fadeUp 0.5s cubic-bezier(0.2,0.8,0.2,1) both;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(24px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(28px);
+            -webkit-backdrop-filter: blur(28px);
+            border: 1px solid var(--glass-bdr);
+            border-radius: 20px;
+            padding: 0 32px 32px;
+            box-shadow: 0 24px 60px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.1);
+            overflow: hidden;
+        }
+
+        /* ── Accent bar ── */
+        .card-accent {
+            height: 4px;
+            background: linear-gradient(90deg, var(--maroon) 0%, var(--navy) 50%, var(--orange) 100%);
+            margin: 0 -32px 28px;
+        }
+
+        /* ── Logo ── */
+        .logo {
+            text-align: center;
+            margin-bottom: 22px;
+        }
+        .logo img {
+            height: 48px;
+            filter: brightness(0) invert(1) drop-shadow(0 2px 6px rgba(0,0,0,0.4));
+        }
+        .logo-tagline {
+            display: block;
+            font-size: 0.65rem;
+            color: var(--muted);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-top: 6px;
+        }
+
+        /* ── Field ── */
+        .field { margin-bottom: 14px; }
+        .field label {
+            display: block;
+            font-size: 0.67rem;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+        .field input {
+            width: 100%;
+            background: rgba(255,255,255,0.07);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 10px;
+            padding: 12px 14px;
+            color: var(--white);
+            font-size: 1rem;
+            font-family: 'Acumin Variable', sans-serif;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+        .field input::placeholder { color: rgba(255,255,255,0.3); }
+        .field input:focus {
+            border-color: var(--maroon);
+            box-shadow: 0 0 0 3px rgba(153,31,37,0.2);
+        }
+
+        /* ── Phone row ── */
+        .phone-row { display: flex; gap: 8px; }
+        .phone-row .country-code {
+            width: 64px !important;
+            flex-shrink: 0;
+            flex-grow: 0;
+            background: rgba(255,255,255,0.07);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 10px;
+            padding: 12px 8px;
+            color: var(--white);
+            font-size: 1rem;
+            font-family: 'Acumin Variable', sans-serif;
+            text-align: center;
+            outline: none;
+            -webkit-appearance: none;
+        }
+        .phone-row .phone-input {
+            flex: 1 1 0;
+            width: 0 !important;
+            min-width: 0;
+        }
+
+        /* ── OTP section (shown after OTP sent) ── */
+        .otp-section {
+            display: none;
+            margin-top: 4px;
+        }
+        .otp-section.visible { display: block; }
+
+        .otp-sent-info {
+            font-size: 0.78rem;
+            color: var(--muted);
+            text-align: center;
+            margin-bottom: 12px;
+            letter-spacing: 0.2px;
+        }
+
+        .otp-row {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin-bottom: 16px;
+        }
+        .otp-box {
+            flex: 1;
+            min-width: 0;
+            max-width: 52px;
+            height: 54px;
+            background: rgba(255,255,255,0.07);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 10px;
+            color: var(--white);
+            font-size: 1.4rem;
+            font-weight: 700;
+            text-align: center;
+            outline: none;
+            caret-color: var(--maroon);
+            transition: border-color 0.2s, box-shadow 0.2s;
+            font-family: 'Acumin Variable', sans-serif;
+            -webkit-appearance: none;
+        }
+        .otp-box:focus {
+            border-color: var(--maroon);
+            box-shadow: 0 0 0 3px rgba(153,31,37,0.2);
+        }
+
+        .resend-row {
+            text-align: center;
+            margin-bottom: 14px;
+        }
+        .resend-btn {
+            background: none;
+            border: none;
+            color: rgba(153,31,37,0.85);
+            font-size: 0.8rem;
+            cursor: pointer;
+            font-family: 'Acumin Variable', sans-serif;
+            text-decoration: underline;
+            padding: 0;
+        }
+        .resend-btn:disabled { color: var(--muted); text-decoration: none; cursor: default; }
+
+        /* ── Buttons ── */
+        .btn {
+            width: 100%;
+            padding: 13px;
+            border-radius: 10px;
+            border: none;
+            background: var(--maroon);
+            color: var(--white);
+            font-size: 0.95rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            cursor: pointer;
+            font-family: 'Acumin Variable', sans-serif;
+            transition: background 0.2s, box-shadow 0.2s, transform 0.15s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            -webkit-appearance: none;
+        }
+        .btn:hover  { background: var(--maroon-dk); box-shadow: 0 6px 20px rgba(153,31,37,0.4); }
+        .btn:active { transform: scale(0.98); }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+        .btn + .btn { margin-top: 10px; }
+
+        .btn-ghost {
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.18);
+            color: var(--muted);
+            font-size: 0.82rem;
+            font-weight: 500;
+            text-transform: none;
+            letter-spacing: 0.2px;
+        }
+        .btn-ghost:hover { background: rgba(255,255,255,0.06); box-shadow: none; }
+
+        /* ── Spinner ── */
+        .spinner {
+            width: 16px; height: 16px;
+            border: 2px solid rgba(255,255,255,0.25);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            flex-shrink: 0;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ── Messages ── */
+        .msg {
+            font-size: 0.82rem;
+            border-radius: 8px;
+            padding: 10px 13px;
+            margin-bottom: 14px;
+            display: none;
+            font-family: 'Acumin Variable', sans-serif;
+            line-height: 1.4;
+        }
+        .msg.error   { background: rgba(255,107,107,0.1); border: 1px solid rgba(255,107,107,0.3); color: #ff9f9f; display: block; }
+        .msg.success { background: rgba(153,31,37,0.12);  border: 1px solid rgba(153,31,37,0.35);  color: #ffaaaa; display: block; }
+        .msg.info    { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12); color: var(--muted); display: block; }
+
+        /* ── NMC loading panel ── */
+        .nmc-panel {
+            text-align: center;
+            padding: 16px 0 8px;
+            display: none;
+        }
+        .nmc-panel.visible { display: block; }
+        .nmc-spinner {
+            width: 44px; height: 44px;
+            border: 3px solid rgba(153,31,37,0.18);
+            border-top-color: var(--maroon);
+            border-radius: 50%;
+            animation: spin 0.9s linear infinite;
+            margin: 0 auto 14px;
+        }
+        .nmc-title { color: var(--white); font-weight: 700; font-size: 0.95rem; margin-bottom: 6px; }
+        .nmc-sub   { color: var(--muted); font-size: 0.78rem; line-height: 1.5; }
+
+        /* ── Success panel ── */
+        .success-panel {
+            text-align: center;
+            padding: 8px 0;
+            display: none;
+        }
+        .success-panel.visible { display: block; }
+        .success-icon {
+            width: 60px; height: 60px;
+            border-radius: 50%;
+            background: rgba(153,31,37,0.15);
+            border: 2px solid var(--maroon);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            font-size: 1.6rem;
+        }
+        .success-title { color: var(--white); font-size: 1.1rem; font-weight: 800; margin-bottom: 6px; }
+        .success-sub   { color: var(--muted); font-size: 0.8rem; }
+
+        /* ── Divider ── */
+        .section-divider {
+            border: none;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            margin: 18px 0;
+        }
+
+        #recaptcha-container { display: none; }
+    </style>
+</head>
+<body>
+
+<div class="bg-site"></div>
+<div class="bg-overlay"></div>
+<div id="recaptcha-container"></div>
+
+<div class="card-wrap">
+    <div class="card">
+
+        <div class="card-accent"></div>
+
+        <!-- Logo -->
+        <div class="logo">
+            <img src="MIQNAF logo.png" alt="MIQNAF">
+            <span class="logo-tagline">For verified medical professionals only</span>
+        </div>
+
+        <!-- Global message -->
+        <div id="msg-main" class="msg"></div>
+
+        <!-- ── Main form ── -->
+        <div id="main-form">
+            <div class="field">
+                <label>Full Name (as registered with NMC)</label>
+                <input type="text" id="input-name" placeholder="Dr. First Last" autocomplete="name" inputmode="text">
+            </div>
+
+            <div class="field">
+                <label>Mobile Number</label>
+                <div class="phone-row">
+                    <input type="text" class="country-code" value="+91" readonly tabindex="-1">
+                    <input type="tel" id="input-phone" class="phone-input" placeholder="98765 43210" maxlength="10" inputmode="numeric" autocomplete="tel-national">
+                </div>
+            </div>
+
+            <!-- OTP section — appears below phone after Send OTP -->
+            <div class="otp-section" id="otp-section">
+                <hr class="section-divider">
+                <div class="otp-sent-info" id="otp-sent-info">OTP sent</div>
+
+                <div class="otp-row">
+                    <input class="otp-box" type="tel" maxlength="1" inputmode="numeric" id="otp-0">
+                    <input class="otp-box" type="tel" maxlength="1" inputmode="numeric" id="otp-1">
+                    <input class="otp-box" type="tel" maxlength="1" inputmode="numeric" id="otp-2">
+                    <input class="otp-box" type="tel" maxlength="1" inputmode="numeric" id="otp-3">
+                    <input class="otp-box" type="tel" maxlength="1" inputmode="numeric" id="otp-4">
+                    <input class="otp-box" type="tel" maxlength="1" inputmode="numeric" id="otp-5">
+                </div>
+
+                <div class="resend-row">
+                    <button class="resend-btn" id="btn-resend" disabled onclick="resendOTP()">
+                        Resend OTP <span id="resend-timer">(30s)</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Primary action button — changes label based on state -->
+            <button class="btn" id="btn-primary" onclick="primaryAction()">
+                <span id="primary-label">Send OTP</span>
+            </button>
+        </div>
+
+        <!-- ── NMC checking ── -->
+        <div class="nmc-panel" id="nmc-panel">
+            <div class="nmc-spinner"></div>
+            <div class="nmc-title">Checking NMC Registry…</div>
+            <div class="nmc-sub" id="nmc-sub">Verifying your name against the<br>National Medical Commission records</div>
+            <button class="btn btn-ghost" id="btn-nmc-back" onclick="resetForm()" style="display:none;margin-top:16px;">← Start Over</button>
+        </div>
+
+        <!-- ── Success ── -->
+        <div class="success-panel" id="success-panel">
+            <div class="success-icon">✓</div>
+            <div class="success-title">Verified Successfully</div>
+            <div class="success-sub" id="success-name"></div>
+            <div class="success-sub" style="margin-top:6px;">Redirecting to MIQNAF…</div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="firebase-config.js"></script>
+
+<script>
+firebase.initializeApp(window.FIREBASE_CONFIG);
+const auth = firebase.auth();
+const db   = firebase.firestore();
+
+const NMC_PROXY = "https://corsproxy.io/?url=";
+const NMC_URL   = "https://www.nmc.org.in/MCIRest/open/getPaginatedData?service=getPaginatedDoctor";
+
+let confirmationResult = null;
+let doctorName  = "";
+let doctorPhone = "";
+let otpSent     = false;
+let resendInterval = null;
+
+// ── OTP boxes: auto-advance, backspace, paste ────────────────
+document.querySelectorAll(".otp-box").forEach((box, i) => {
+    box.addEventListener("input", () => {
+        box.value = box.value.replace(/\D/g, "").slice(-1);
+        if (box.value && i < 5) document.getElementById(`otp-${i+1}`).focus();
+    });
+    box.addEventListener("keydown", e => {
+        if (e.key === "Backspace" && !box.value && i > 0)
+            document.getElementById(`otp-${i-1}`).focus();
+    });
+    box.addEventListener("paste", e => {
+        e.preventDefault();
+        const digits = (e.clipboardData.getData("text") || "").replace(/\D/g, "").slice(0, 6);
+        digits.split("").forEach((d, j) => {
+            const t = document.getElementById(`otp-${j}`);
+            if (t) t.value = d;
+        });
+        const nextBox = document.getElementById(`otp-${Math.min(digits.length, 5)}`);
+        if (nextBox) nextBox.focus();
+    });
+});
+
+function getOTPValue() {
+    return [0,1,2,3,4,5].map(i => document.getElementById(`otp-${i}`).value).join("");
+}
+function clearOTPBoxes() {
+    [0,1,2,3,4,5].forEach(i => { document.getElementById(`otp-${i}`).value = ""; });
+}
+
+// ── Resend timer ──────────────────────────────────────────────
+function startResendTimer(s = 30) {
+    const btn = document.getElementById("btn-resend");
+    const timer = document.getElementById("resend-timer");
+    btn.disabled = true;
+    let t = s;
+    clearInterval(resendInterval);
+    resendInterval = setInterval(() => {
+        t--;
+        timer.textContent = `(${t}s)`;
+        if (t <= 0) { clearInterval(resendInterval); timer.textContent = ""; btn.disabled = false; }
+    }, 1000);
+}
+
+// ── Show / hide helpers ──────────────────────────────────────
+function showMsg(type, text) {
+    const el = document.getElementById("msg-main");
+    el.className = `msg ${type}`;
+    el.textContent = text;
+}
+function clearMsg() {
+    const el = document.getElementById("msg-main");
+    el.className = "msg";
+    el.textContent = "";
+}
+
+function setLoading(loading, labelText) {
+    const btn = document.getElementById("btn-primary");
+    const lbl = document.getElementById("primary-label");
+    btn.disabled = loading;
+    lbl.innerHTML = loading ? `<div class="spinner"></div>${labelText}` : labelText;
+}
+
+// ── Primary button action ─────────────────────────────────────
+function primaryAction() {
+    if (!otpSent) {
+        sendOTP();
+    } else {
+        verifyOTP();
+    }
+}
+
+// ── Send OTP ──────────────────────────────────────────────────
+async function sendOTP() {
+    clearMsg();
+    const nameVal  = document.getElementById("input-name").value.trim();
+    const phoneVal = document.getElementById("input-phone").value.trim().replace(/\s/g, "");
+
+    if (!nameVal)                    return showMsg("error", "Please enter your full name.");
+    if (!/^\d{10}$/.test(phoneVal))  return showMsg("error", "Enter a valid 10-digit mobile number.");
+
+    doctorName  = nameVal;
+    doctorPhone = "+91" + phoneVal;
+
+    setLoading(true, "Sending OTP…");
+    try {
+        if (!window.recaptchaVerifier) {
+            window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier("recaptcha-container",
+                { size: "invisible", callback: () => {} });
+        }
+        confirmationResult = await auth.signInWithPhoneNumber(doctorPhone, window.recaptchaVerifier);
+
+        // Show OTP section below phone
+        otpSent = true;
+        document.getElementById("otp-sent-info").textContent =
+            `OTP sent to +91 ${phoneVal.replace(/(\d{5})(\d{5})/, "$1 $2")}`;
+        document.getElementById("otp-section").classList.add("visible");
+        document.getElementById("input-name").disabled  = true;
+        document.getElementById("input-phone").disabled = true;
+        setLoading(false, "Verify OTP");
+        clearOTPBoxes();
+        startResendTimer(30);
+        setTimeout(() => document.getElementById("otp-0").focus(), 100);
+
+    } catch (err) {
+        console.error(err);
+        showMsg("error", friendlyError(err));
+        if (window.recaptchaVerifier) { try { window.recaptchaVerifier.clear(); } catch(_){} window.recaptchaVerifier = null; }
+        setLoading(false, "Send OTP");
+    }
+}
+
+// ── Verify OTP ───────────────────────────────────────────────
+async function verifyOTP() {
+    clearMsg();
+    const code = getOTPValue();
+    if (code.length < 6) return showMsg("error", "Enter all 6 OTP digits.");
+
+    setLoading(true, "Verifying…");
+    try {
+        await confirmationResult.confirm(code);
+        // Hide form, show NMC check
+        document.getElementById("main-form").style.display  = "none";
+        document.getElementById("nmc-panel").classList.add("visible");
+        await checkNMC();
+    } catch (err) {
+        console.error(err);
+        showMsg("error", friendlyError(err));
+        clearOTPBoxes();
+        setLoading(false, "Verify OTP");
+    }
+}
+
+// ── Resend OTP ───────────────────────────────────────────────
+async function resendOTP() {
+    clearMsg();
+    if (window.recaptchaVerifier) { try { window.recaptchaVerifier.clear(); } catch(_){} window.recaptchaVerifier = null; }
+    window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier("recaptcha-container",
+        { size: "invisible", callback: () => {} });
+    try {
+        confirmationResult = await auth.signInWithPhoneNumber(doctorPhone, window.recaptchaVerifier);
+        showMsg("success", "OTP resent successfully.");
+        clearOTPBoxes();
+        startResendTimer(30);
+        setTimeout(() => document.getElementById("otp-0").focus(), 100);
+    } catch (err) {
+        showMsg("error", friendlyError(err));
+    }
+}
+
+// ── NMC check ────────────────────────────────────────────────
+async function checkNMC() {
+    try {
+        const body = {
+            page: 0, size: 20,
+            sortingColumnName: null, sortType: null,
+            name: doctorName, smcId: "", registrationNo: "",
+            typeOfDoctor: "", gender: "", specialization: ""
+        };
+        const res = await fetch(NMC_PROXY + encodeURIComponent(NMC_URL), {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(body)
+        });
+        if (!res.ok) throw new Error("NMC API returned " + res.status);
+        const data = await res.json();
+        const doctors = data?.content || data?.result || data?.data || [];
+        const found = doctors.some(d => {
+            const nmcName = ((d.doctor_name || d.name || d.full_name || "") + "").toLowerCase();
+            const search  = doctorName.replace(/^dr\.?\s*/i, "").toLowerCase().trim();
+            return nmcName.includes(search) || search.includes(nmcName.split(" ")[0]);
+        });
+        found ? await grantAccess() : showNMCError("Name not found in NMC registry. Please check your registered name.");
+    } catch (err) {
+        console.error("NMC error:", err);
+        const msg = (err.message.includes("Failed to fetch") || err.name === "TypeError")
+            ? "Could not reach NMC registry. Please contact your administrator. (CORS restriction)"
+            : "NMC verification failed. Please try again later.";
+        showNMCError(msg);
+    }
+}
+
+function showNMCError(msg) {
+    document.querySelector(".nmc-spinner").style.display = "none";
+    document.querySelector(".nmc-title").textContent     = "Verification Failed";
+    document.getElementById("nmc-sub").textContent       = msg;
+    document.getElementById("btn-nmc-back").style.display = "block";
+}
+
+// ── Grant access ─────────────────────────────────────────────
+async function grantAccess() {
+    const user = auth.currentUser;
+    try {
+        await db.collection("verified_doctors").doc(user.uid).set({
+            name: doctorName, phone: doctorPhone,
+            nmcVerified: true, accessGranted: true,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        });
+    } catch (e) { console.warn("Firestore write failed:", e); }
+
+    localStorage.setItem("doctorVerified", "true");
+    localStorage.setItem("doctorName",     doctorName);
+    localStorage.setItem("doctorPhone",    doctorPhone);
+
+    document.getElementById("nmc-panel").classList.remove("visible");
+    const sp = document.getElementById("success-panel");
+    sp.classList.add("visible");
+    document.getElementById("success-name").textContent = `Welcome, ${doctorName}`;
+    setTimeout(() => { window.location.href = "index.html"; }, 2200);
+}
+
+// ── Reset form ───────────────────────────────────────────────
+function resetForm() {
+    otpSent = false;
+    clearMsg();
+    document.getElementById("main-form").style.display = "";
+    document.getElementById("nmc-panel").classList.remove("visible");
+    document.getElementById("otp-section").classList.remove("visible");
+    document.getElementById("input-name").disabled  = false;
+    document.getElementById("input-phone").disabled = false;
+    document.getElementById("input-name").value     = "";
+    document.getElementById("input-phone").value    = "";
+    clearOTPBoxes();
+    setLoading(false, "Send OTP");
+    document.querySelector(".nmc-spinner").style.display   = "";
+    document.querySelector(".nmc-title").textContent        = "Checking NMC Registry…";
+    document.getElementById("btn-nmc-back").style.display  = "none";
+}
+
+// ── Already verified ─────────────────────────────────────────
+if (localStorage.getItem("doctorVerified") === "true") {
+    window.location.href = "index.html";
+}
+
+// ── Error messages ───────────────────────────────────────────
+function friendlyError(err) {
+    const map = {
+        "auth/invalid-phone-number":      "Invalid phone number format.",
+        "auth/too-many-requests":         "Too many attempts. Please try again later.",
+        "auth/invalid-verification-code": "Incorrect OTP. Please try again.",
+        "auth/code-expired":              "OTP has expired. Please request a new one.",
+        "auth/quota-exceeded":            "SMS quota exceeded. Contact support.",
+        "auth/captcha-check-failed":      "reCAPTCHA check failed. Please refresh."
+    };
+    return map[err?.code] || err?.message || "Something went wrong. Please try again.";
+}
+</script>
+
+</body>
+</html>
