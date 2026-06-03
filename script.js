@@ -89,76 +89,71 @@ function initializeDropdowns() {
 function initializeDoctorSystem() {
     console.log('🔧 Doctor System Initializing');
 
-    function toPreviewUrl(videoUrl) {
-        if (!videoUrl) {
-            return '';
-        }
-
-        return videoUrl.includes('/view') ? videoUrl.replace('/view', '/preview') : videoUrl;
-    }
-
     function getVideoUrl(doctorInfo) {
-        if (!doctorInfo) {
-            return '';
-        }
-
+        if (!doctorInfo) return '';
         if (doctorInfo.type === 'gdrive') {
-            return toPreviewUrl(doctorInfo.video);
+            const base = doctorInfo.video || '';
+            const preview = base.includes('/preview') ? base : base.replace('/view', '/preview');
+            return preview + (preview.includes('?') ? '&' : '?') + 'autoplay=1';
         }
-
         if (doctorInfo.type === 'youtube') {
-            return 'https://www.youtube.com/embed/' + doctorInfo.videoId;
+            return 'https://www.youtube.com/embed/' + doctorInfo.videoId
+                 + '?autoplay=1&rel=0&enablejsapi=1';
         }
-
         return doctorInfo.video || '';
     }
 
-    // Multi-doctor data by city
+    // Doctor data — each entry has a local thumbnail path + video URL
     const data = {
         mumbai: [
             {
                 doctor: 'Dr. Sonam Solanki',
                 spec: 'Pulmonologist',
                 type: 'gdrive',
-                video: 'https://drive.google.com/file/d/136k8m5DCus7-WLW-_p7tW2H7bIOGct2I/preview'
+                video: 'https://drive.google.com/file/d/136k8m5DCus7-WLW-_p7tW2H7bIOGct2I/preview',
+                thumb: 'thumbnails/dr-sonam-solanki.jpg'
             },
             {
                 doctor: 'Dr. Sameer Garde',
                 spec: 'Chest Physician',
                 type: 'gdrive',
-                video: 'https://drive.google.com/file/d/198uucZxoxBuoo5_iNCcReJmi6hub1yAw/preview'
+                video: 'https://drive.google.com/file/d/198uucZxoxBuoo5_iNCcReJmi6hub1yAw/preview',
+                thumb: 'thumbnails/dr-sameer-garde.jpg'
             },
             {
                 doctor: 'Dr. Swami Pawar',
                 spec: 'Chest Physician',
                 type: 'gdrive',
-                video: 'https://drive.google.com/file/d/17dEXA8utX1hWI_WF3ytw94NWPOwZZqWo/preview'
+                video: 'https://drive.google.com/file/d/17dEXA8utX1hWI_WF3ytw94NWPOwZZqWo/preview',
+                thumb: 'thumbnails/dr-swami-pawar.jpg'
             },
             {
                 doctor: 'Dr. Harshal Shah',
                 spec: 'Chest Physician',
                 type: 'gdrive',
-                video: 'https://drive.google.com/file/d/1GNjlgCpFlLtvmcj35WTAhfI2DZjoOU_s/preview'
+                video: 'https://drive.google.com/file/d/1GNjlgCpFlLtvmcj35WTAhfI2DZjoOU_s/preview',
+                thumb: 'thumbnails/dr-harshal-shah.jpg'
             },
             {
                 doctor: 'Dr. Pankaj Bang',
                 spec: 'Chest Physician',
                 type: 'gdrive',
-                video: 'https://drive.google.com/file/d/1-vrNNm2iyvpHAOhktKApy7LFI4a5hKvk/preview'
+                video: 'https://drive.google.com/file/d/1-vrNNm2iyvpHAOhktKApy7LFI4a5hKvk/preview',
+                thumb: 'thumbnails/dr-pankaj-bang.jpg'
             },
             {
                 doctor: 'Dr. Satyey G. Tayade',
                 spec: 'Chest Physician',
                 type: 'youtube',
                 videoId: 'fZbT5g0hFTQ',
-                video: 'https://www.youtube.com/watch?v=fZbT5g0hFTQ'
+                thumb: 'thumbnails/dr-satyey-tayade.jpg'
             },
             {
                 doctor: 'Dr. Parag Mehta',
                 spec: 'Chest specialist',
                 type: 'youtube',
                 videoId: '64zcRFUmGDM',
-                video: 'https://www.youtube.com/watch?v=64zcRFUmGDM'
+                thumb: 'thumbnails/dr-parag-mehta.jpg'
             }
         ],
         chennai: [
@@ -166,7 +161,8 @@ function initializeDoctorSystem() {
                 doctor: 'Dr. Suresh Kanna S',
                 spec: 'Chest Physician',
                 type: 'gdrive',
-                video: 'https://drive.google.com/file/d/1SQ-FZVNxu8OxvvxQ599UyW6ekK79DxmZ/preview'
+                video: 'https://drive.google.com/file/d/1SQ-FZVNxu8OxvvxQ599UyW6ekK79DxmZ/preview',
+                thumb: 'thumbnails/dr-suresh-kanna.jpg'
             }
         ],
         punjab: [
@@ -174,34 +170,36 @@ function initializeDoctorSystem() {
                 doctor: 'Dr. Ajaypal Singh',
                 spec: 'Chest Physician',
                 type: 'gdrive',
-                video: 'https://drive.google.com/file/d/12JIsAz0wY59hSZEa_zdwBwrNfr957qVI/preview'
+                video: 'https://drive.google.com/file/d/12JIsAz0wY59hSZEa_zdwBwrNfr957qVI/preview',
+                thumb: 'thumbnails/dr-ajaypal-singh.jpg'
             },
             {
                 doctor: 'Dr. Mohit Kaushal',
                 spec: 'Consultant Pulmonology & Critical Care',
                 type: 'gdrive',
-                video: 'https://drive.google.com/file/d/1v-w3BlPxFEUZ9pXjhIxcQvop53Bow1lg/preview'
+                video: 'https://drive.google.com/file/d/1v-w3BlPxFEUZ9pXjhIxcQvop53Bow1lg/preview',
+                thumb: 'thumbnails/dr-mohit-kaushal.jpg'
             }
         ]
     };
 
     // Elements
     const cityDropdown = document.getElementById('city-dropdown');
-    const docDropdown = document.getElementById('doc-dropdown');
-    const cityText = document.getElementById('city-selected-text');
-    const docText = document.getElementById('doctor-selected-text');
-    const displayName = document.getElementById('display-name');
-    const displaySpec = document.getElementById('display-spec');
-    const displayIframe = document.getElementById('display-iframe');
-    const displayVideo = document.getElementById('display-video');
-    const videoSrc = document.getElementById('video-src');
-    const docList = document.querySelector('.doc-list');
+    const docDropdown  = document.getElementById('doc-dropdown');
+    const cityText     = document.getElementById('city-selected-text');
+    const docText      = document.getElementById('doctor-selected-text');
+    const displayName  = document.getElementById('display-name');
+    const displaySpec  = document.getElementById('display-spec');
+    const displayThumb = document.getElementById('display-thumbnail');
+    const docList      = document.querySelector('.doc-list');
+    const videoContainer = document.getElementById('video-container');
+
+    const playBtn      = document.getElementById('display-play-btn');
 
     let currentCity = 'mumbai';
     let currentDoctorIndex = 0;
 
-    console.log('✓ Elements loaded:', { cityDropdown: !!cityDropdown, docDropdown: !!docDropdown, displayName: !!displayName });
-
+    // ---- Display helpers ----
     function getCityTitle(cityKey) {
         return cityKey.charAt(0).toUpperCase() + cityKey.slice(1);
     }
@@ -215,7 +213,6 @@ function initializeDoctorSystem() {
     function renderDoctorOptions(cityKey, selectedIndex) {
         const doctors = data[cityKey] || [];
         if (!docList) return;
-
         docList.innerHTML = '';
         doctors.forEach((doctor, idx) => {
             const opt = document.createElement('div');
@@ -224,37 +221,72 @@ function initializeDoctorSystem() {
             opt.setAttribute('data-index', String(idx));
             opt.setAttribute('data-name', doctor.doctor);
             opt.textContent = doctor.doctor;
-            if (idx === selectedIndex) {
-                opt.style.display = 'none';
-            }
+            if (idx === selectedIndex) opt.style.display = 'none';
             docList.appendChild(opt);
         });
     }
 
-    function updateVideoDisplay(doctorInfo) {
-        displayVideo.pause();
-        displayVideo.style.display = 'none';
-        displayIframe.src = getVideoUrl(doctorInfo);
-        displayIframe.style.display = 'block';
-        displayIframe.style.pointerEvents = '';
+    function clearIframes() {
+        videoContainer?.querySelectorAll('iframe').forEach(el => el.remove());
+    }
+
+    function restoreThumbnail(doctorInfo) {
+        clearIframes();
+        if (displayThumb) {
+            displayThumb.src    = doctorInfo.thumb || '';
+            displayThumb.alt    = doctorInfo.doctor;
+            displayThumb.style.display = '';
+        }
+        if (playBtn) playBtn.style.display = '';
+    }
+
+    function updateThumbnailDisplay(doctorInfo) {
+        restoreThumbnail(doctorInfo);
+
+        if (!videoContainer) return;
+
+        // ── Preload the iframe now, hidden, so it's ready before the click ──
+        const iframe = document.createElement('iframe');
+        iframe.src = getVideoUrl(doctorInfo);
+        iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+        iframe.allowFullscreen = true;
+        iframe.style.cssText =
+            'position:absolute;top:0;left:0;width:100%;height:100%;' +
+            'border:0;border-radius:25px;z-index:1;' +
+            'visibility:hidden;pointer-events:none;';
+        videoContainer.appendChild(iframe);
+
+        videoContainer.style.cursor = 'pointer';
+        videoContainer.onclick = () => {
+            // Hide thumbnail and play button
+            if (displayThumb) displayThumb.style.display = 'none';
+            if (playBtn)      playBtn.style.display      = 'none';
+            // Reveal preloaded iframe instantly
+            iframe.style.visibility   = 'visible';
+            iframe.style.pointerEvents = '';
+            iframe.style.zIndex       = '2';
+            // YouTube: ensure play via JS API in case autoplay was blocked
+            if (doctorInfo.type === 'youtube') {
+                iframe.contentWindow?.postMessage(
+                    JSON.stringify({event:'command', func:'playVideo', args:[]}), '*'
+                );
+            }
+            videoContainer.style.cursor = 'default';
+            videoContainer.onclick = null;
+        };
     }
 
     function showEmptyCityState(cityKey) {
         currentCity = cityKey;
         currentDoctorIndex = -1;
-
         cityText.textContent = getCityTitle(cityKey);
         docText.textContent = 'No doctor added yet';
         displayName.textContent = '';
         displaySpec.textContent = '';
-        displayIframe.src = '';
-        displayIframe.style.display = 'none';
-        displayVideo.pause();
-        displayVideo.style.display = 'none';
-        if (videoSrc) {
-            videoSrc.src = '';
-        }
-
+        clearIframes();
+        if (displayThumb) { displayThumb.src = ''; displayThumb.style.display = ''; }
+        if (playBtn) playBtn.style.display = '';
+        if (videoContainer) { videoContainer.style.cursor = ''; videoContainer.onclick = null; }
         updateCityOptions(cityKey);
         renderDoctorOptions(cityKey, -1);
     }
@@ -276,7 +308,7 @@ function initializeDoctorSystem() {
         cityText.textContent = getCityTitle(cityKey);
 
         console.log('📝 Updated:', info.doctor);
-        updateVideoDisplay(info);
+        updateThumbnailDisplay(info);
         updateCityOptions(cityKey);
         renderDoctorOptions(cityKey, doctorIndex);
     }

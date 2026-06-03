@@ -490,6 +490,14 @@ button, a {
     line-height: 1.4;
 }
 
+.patient-body sup {
+    font-size: 0.55em;
+    opacity: 0.7;
+    font-weight: normal;
+    vertical-align: super;
+    line-height: 0;
+}
+
 /* DOCTOR SECTION */
 .doctor-section {
     width: 100%;
@@ -735,6 +743,7 @@ button, a {
     background: transparent;
     overflow: visible;
     isolation: isolate;
+    padding-top: 0;
 }
 
 #video-container::before {
@@ -745,15 +754,58 @@ button, a {
     z-index: 3;
 }
 
-#video-container iframe,
-#video-container video {
-    z-index: 2;
+.doctor-thumbnail {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center center;
     border-radius: 25px;
+    z-index: 2;
+    display: block;
 }
 
-#video-container video {
-    display: none;
-    object-fit: cover;
+.playing-iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    border-radius: 25px;
+    z-index: 2;
+}
+
+.doctor-play-btn {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 68px;
+    height: 68px;
+    background: rgba(0, 0, 0, 0.55);
+    border: 3px solid rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 4;
+    pointer-events: none;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.doctor-play-btn svg {
+    width: 26px;
+    height: 26px;
+    fill: #fff;
+    margin-left: 5px;
+}
+
+#video-container:hover .doctor-play-btn {
+    background: rgba(0, 0, 0, 0.78);
+    transform: translate(-50%, -50%) scale(1.08);
 }
 
 body.doctor-modal-open {
