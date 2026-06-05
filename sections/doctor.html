@@ -1,0 +1,59 @@
+<!-- DOCTOR SECTION -->
+<section id="doctor" class="doctor-section fade-in-on-scroll">
+    <div class="doctor-container">
+        <div class="doctor-layout-row" style="display: flex; justify-content: space-between; align-items: flex-start; gap: 5%;">
+            <div class="left-section">
+                <div class="doctor-section-title-wrap">
+                    <h2 class="doctor-section-title bouncing-title" data-text="The Proven Solution Trusted by Doctors Nationwide">
+                        The Proven Solution Trusted by Doctors Nationwide
+                    </h2>
+                </div>
+
+                <div class="dropdown-row stagger-children">
+                    <div class="filter-table" id="doc-dropdown">
+                        <div class="filter-head">
+                            Doctor's Name
+                            <svg width="10" height="6" viewBox="0 0 14 8" style="margin-top: 4px;"><polyline points="1,1 7,7 13,1" fill="none" stroke="white" stroke-width="1.5"/></svg>
+                        </div>
+                        <div class="filter-selected doc-selected" id="doctor-selected-text">Dr. Sonam Solanki</div>
+                        <div class="filter-list doc-list"></div>
+                    </div>
+
+                    <div class="filter-table" id="city-dropdown">
+                        <div class="filter-head">
+                            City
+                            <svg width="10" height="6" viewBox="0 0 14 8" style="margin-top: 4px;"><polyline points="1,1 7,7 13,1" fill="none" stroke="white" stroke-width="1.5"/></svg>
+                        </div>
+                        <div class="filter-selected city-selected" id="city-selected-text">Mumbai</div>
+                        <div class="filter-list city-list">
+                            <div class="filter-option city-option" data-city="mumbai" style="display: none;">Mumbai</div>
+                            <div class="filter-option city-option" data-city="chennai">Chennai</div>
+                            <div class="filter-option city-option" data-city="punjab">Punjab</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="doctor-info">
+                    <span class="doctor-play-icon" aria-hidden="true">
+                        <svg viewBox="0 0 806.5 1718.64" xmlns="http://www.w3.org/2000/svg">
+                            <polygon fill="#991f25" points="157.06 856.78 0 1718.64 806.5 855.28 22.32 0 157.06 856.78"/>
+                        </svg>
+                    </span>
+                    <div>
+                        <h2 id="display-name">Dr. Sonam Solanki</h2>
+                        <p id="display-spec">Pulmonologist</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="doctor-image-content">
+                <div class="image-container" id="video-container" style="cursor:pointer;">
+                    <img id="display-thumbnail" class="doctor-thumbnail" src="thumbnails/dr-sonam-solanki.jpg" alt="Dr. Sonam Solanki">
+                    <div id="display-play-btn" class="doctor-play-btn">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><polygon points="5,3 19,12 5,21"/></svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

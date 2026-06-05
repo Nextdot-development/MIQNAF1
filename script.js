@@ -50,7 +50,7 @@ function initializeNavbar() {
 
 // ========== SCROLL ANIMATIONS ==========
 function initializeScrollAnimations() {
-    const observerOptions = { root: null, rootMargin: '0px', threshold: 0.2 };
+    const observerOptions = { root: null, rootMargin: '0px 0px -8% 0px', threshold: 0.15 };
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -60,27 +60,62 @@ function initializeScrollAnimations() {
         });
     }, observerOptions);
 
-    document.querySelectorAll('.fade-in-on-scroll').forEach(el => observer.observe(el));
+    document.querySelectorAll('.fade-in-on-scroll, .slide-fade, .reveal-on-scroll').forEach(el => observer.observe(el));
+
+    document.querySelectorAll('.stagger-children').forEach((group) => {
+        group.querySelectorAll(':scope > *').forEach((child, index) => {
+            child.style.transitionDelay = `${index * 0.12}s`;
+        });
+    });
+
+    document.querySelectorAll('.slide-fade').forEach((slide, index) => {
+        const image = slide.querySelector('.slide-image');
+        const text = slide.querySelector('.slide-text');
+        if (!image || !text) return;
+
+        if (index % 2 === 1) {
+            image.classList.add('reveal-from-right');
+            text.classList.add('reveal-from-left');
+        } else {
+            image.classList.add('reveal-from-left');
+            text.classList.add('reveal-from-right');
+        }
+    });
+}
+
+// ========== PAGE LOAD ANIMATIONS ==========
+function initializePageAnimations() {
+    requestAnimationFrame(() => {
+        document.body.classList.add('page-loaded');
+    });
 }
 
 // ========== DROPDOWN TOGGLE ==========
 function initializeDropdowns() {
     const toggleList = (table) => {
         const isOpen = table.classList.contains('is-open');
-        document.querySelectorAll('.filter-table').forEach(t => t.classList.remove('is-open'));
+        document.querySelectorAll('#doctor .filter-table').forEach(t => t.classList.remove('is-open'));
         if (!isOpen) table.classList.add('is-open');
     };
 
-    document.querySelectorAll('.filter-table').forEach(table => {
+    document.querySelectorAll('#doctor .filter-table').forEach(table => {
         const head = table.querySelector('.filter-head');
         const sel = table.querySelector('.filter-selected');
         if (head) head.addEventListener('click', (e) => { e.stopPropagation(); toggleList(table); });
         if (sel) sel.addEventListener('click', (e) => { e.stopPropagation(); toggleList(table); });
     });
 
+    document.querySelectorAll('#doctor .filter-list').forEach(list => {
+        list.addEventListener('click', (e) => {
+            const option = e.target.closest('.filter-option');
+            if (!option) return;
+            e.stopPropagation();
+        });
+    });
+
     document.addEventListener('click', (e) => {
-        if (!e.target.closest('.filter-table')) {
-            document.querySelectorAll('.filter-table').forEach(t => t.classList.remove('is-open'));
+        if (!e.target.closest('#doctor .filter-table')) {
+            document.querySelectorAll('#doctor .filter-table').forEach(t => t.classList.remove('is-open'));
         }
     });
 }
@@ -245,32 +280,28 @@ function initializeDoctorSystem() {
 
         if (!videoContainer) return;
 
-        // ── Preload the iframe now, hidden, so it's ready before the click ──
-        const iframe = document.createElement('iframe');
-        iframe.src = getVideoUrl(doctorInfo);
-        iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
-        iframe.allowFullscreen = true;
-        iframe.style.cssText =
-            'position:absolute;top:0;left:0;width:100%;height:100%;' +
-            'border:0;border-radius:25px;z-index:1;' +
-            'visibility:hidden;pointer-events:none;';
-        videoContainer.appendChild(iframe);
-
         videoContainer.style.cursor = 'pointer';
         videoContainer.onclick = () => {
-            // Hide thumbnail and play button
             if (displayThumb) displayThumb.style.display = 'none';
-            if (playBtn)      playBtn.style.display      = 'none';
-            // Reveal preloaded iframe instantly
-            iframe.style.visibility   = 'visible';
-            iframe.style.pointerEvents = '';
-            iframe.style.zIndex       = '2';
-            // YouTube: ensure play via JS API in case autoplay was blocked
+            if (playBtn) playBtn.style.display = 'none';
+
+            const iframe = document.createElement('iframe');
+            iframe.src = getVideoUrl(doctorInfo);
+            iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+            iframe.allowFullscreen = true;
+            iframe.style.cssText =
+                'position:absolute;top:0;left:0;width:100%;height:100%;' +
+                'border:0;border-radius:25px;z-index:2;';
+            videoContainer.appendChild(iframe);
+
             if (doctorInfo.type === 'youtube') {
-                iframe.contentWindow?.postMessage(
-                    JSON.stringify({event:'command', func:'playVideo', args:[]}), '*'
-                );
+                iframe.addEventListener('load', () => {
+                    iframe.contentWindow?.postMessage(
+                        JSON.stringify({ event: 'command', func: 'playVideo', args: [] }), '*'
+                    );
+                });
             }
+
             videoContainer.style.cursor = 'default';
             videoContainer.onclick = null;
         };
@@ -302,12 +333,22 @@ function initializeDoctorSystem() {
         currentCity = cityKey;
         currentDoctorIndex = doctorIndex;
 
+        const doctorInfoEl = document.querySelector('.doctor-info');
+        doctorInfoEl?.classList.remove('is-updating');
+        void doctorInfoEl?.offsetWidth;
+        doctorInfoEl?.classList.add('is-updating');
+
         displayName.textContent = info.doctor;
         displaySpec.textContent = info.spec;
         docText.textContent = info.doctor;
         cityText.textContent = getCityTitle(cityKey);
 
         console.log('📝 Updated:', info.doctor);
+        if (displayThumb) {
+            displayThumb.classList.remove('thumb-swapping');
+            void displayThumb.offsetWidth;
+            displayThumb.classList.add('thumb-swapping');
+        }
         updateThumbnailDisplay(info);
         updateCityOptions(cityKey);
         renderDoctorOptions(cityKey, doctorIndex);
@@ -362,6 +403,111 @@ function initializeDoctorSystem() {
     console.log('✨ Doctor System Ready');
 }
 
+// ========== BOUNCING TITLE ==========
+function initializeBouncingTitles() {
+    document.querySelectorAll('.bouncing-title').forEach((el) => {
+        const raw = el.dataset.text || el.textContent || '';
+        el.textContent = '';
+
+        let charIndex = 0;
+
+        raw.split(/[\n|]/).forEach((line, lineIndex) => {
+            if (lineIndex > 0) {
+                el.appendChild(document.createElement('br'));
+                charIndex = 0;
+            }
+
+            line.trim().split(/\s+/).filter(Boolean).forEach((word, wordIndex) => {
+                if (wordIndex > 0) {
+                    const space = document.createElement('span');
+                    space.className = 'bounce-char';
+                    space.textContent = '\u00A0';
+                    space.style.animationDelay = `${charIndex * 0.03}s`;
+                    charIndex += 1;
+                    el.appendChild(space);
+                }
+
+                const wordWrap = document.createElement('span');
+                wordWrap.className = 'bounce-word';
+
+                [...word].forEach((char) => {
+                    const span = document.createElement('span');
+                    span.className = 'bounce-char';
+                    span.textContent = char;
+                    span.style.animationDelay = `${charIndex * 0.03}s`;
+                    charIndex += 1;
+                    wordWrap.appendChild(span);
+                });
+
+                el.appendChild(wordWrap);
+            });
+        });
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (!entry.isIntersecting) return;
+                el.classList.add('is-visible');
+                observer.disconnect();
+            });
+        }, { threshold: 0.4 });
+
+        observer.observe(el);
+    });
+}
+
+// ========== STATS CIRCLE ANIMATION ==========
+function initializeStatsCircles() {
+    const R = 44;
+    const CIRCUMFERENCE = 2 * Math.PI * R;
+    const cards = document.querySelectorAll('.stats-circle-card');
+
+    cards.forEach((card) => {
+        const prefix = card.dataset.prefix || '';
+        const target = Number(card.dataset.target || '0');
+        const max = Number(card.dataset.max || '100');
+        const suffix = card.dataset.suffix || '';
+        const counterEl = card.querySelector('.stats-counter');
+        const progressEl = card.querySelector('.stats-ring-progress');
+        if (!counterEl || !progressEl) return;
+
+        const arcLength = (target / max) * CIRCUMFERENCE;
+        const finalOffset = CIRCUMFERENCE - arcLength;
+
+        function animateCounter() {
+            const duration = 1500;
+            const start = performance.now();
+
+            function tick(now) {
+                const elapsed = now - start;
+                const progress = Math.min(elapsed / duration, 1);
+                const eased = 1 - Math.pow(1 - progress, 3);
+                const count = Math.round(eased * target);
+                counterEl.textContent = `${prefix}${count}${suffix}`;
+                if (progress < 1) requestAnimationFrame(tick);
+            }
+
+            requestAnimationFrame(tick);
+        }
+
+        function startAnimation() {
+            progressEl.classList.add('is-animated');
+            progressEl.style.strokeDashoffset = String(finalOffset);
+            animateCounter();
+        }
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (!entry.isIntersecting) return;
+                observer.disconnect();
+                const delay = Number(card.dataset.delay || '0');
+                setTimeout(startAnimation, 1000 + delay);
+            });
+        }, { threshold: 0.5 });
+
+        observer.observe(card);
+    });
+}
+
 // ========== MAIN INIT ==========
 let hasInitialized = false;
 
@@ -372,9 +518,12 @@ function initializeAll() {
     hasInitialized = true;
 
     initializeNavbar();
+    initializePageAnimations();
     initializeScrollAnimations();
     initializeDropdowns();
     initializeDoctorSystem();
+    initializeBouncingTitles();
+    initializeStatsCircles();
     console.log('✅ ALL SYSTEMS GO');
 }
 
