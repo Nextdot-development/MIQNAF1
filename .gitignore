@@ -1,3 +1,5 @@
 *.ai
 *.pdf
 .env
+node_modules/
+.env
