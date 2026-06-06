@@ -48,6 +48,7 @@
 html {
     scroll-behavior: smooth;
     min-height: 100%;
+    -webkit-text-size-adjust: 100%;
     background-color: var(--bg-light);
     background-image: var(--bg-texture);
     background-repeat: repeat;
@@ -158,6 +159,9 @@ button, a {
 }
 
 .logo-img {
+    height: 84px;
+    width: auto;
+    object-fit: contain;
     transition: all 0.3s ease;
     transform: scale(1.1);
     transform-origin: center;
@@ -249,6 +253,10 @@ button, a {
 
 /* Responsive Styles for Navbar */
 @media (max-width: 992px) {
+    .logo-img {
+        height: 56px;
+    }
+
     .menu-toggle {
         display: flex;
     }
@@ -289,6 +297,10 @@ button, a {
 
 /* Extra small phones - adjust nav menu */
 @media (max-width: 480px) {
+    .logo-img {
+        height: 44px;
+    }
+
     .nav-links {
         width: 100%;
         gap: 1.5rem;
@@ -639,7 +651,7 @@ body.page-loaded .hero-logo-img {
 .doctor-layout-row {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
     width: 100%;
     gap: 4rem;
 }
@@ -1442,68 +1454,191 @@ body.doctor-modal-open {
     }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 992px) {
+    .about-timeline-section {
+        overflow: visible;
+        padding: 2rem 1rem 1.5rem;
+    }
+
     .about-timeline-visual {
+        flex-direction: column;
+        align-items: center;
         margin-top: 0;
+        width: 100%;
+        overflow: visible;
+    }
+
+    .about-timeline-gif {
+        width: 100%;
+        max-width: 480px;
+        margin: 0 auto;
     }
 
     .about-timeline-overlay {
         position: static;
-        margin-top: 1rem;
+        width: 100%;
+        margin-top: 1.25rem;
+        pointer-events: auto;
     }
 
     .about-timeline-overlay-inner {
         flex-direction: column;
         align-items: stretch;
-        gap: 1.5rem;
+        gap: 1.25rem;
+        width: 100%;
+        max-width: 100%;
+        padding: 0;
     }
 
     .about-timeline-entries {
-        flex-wrap: wrap;
-        gap: 1rem 1.5rem;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
         margin-bottom: 0;
-        justify-content: center;
+        justify-content: stretch;
+        width: 100%;
+    }
+
+    .about-timeline-entry {
+        background: rgba(255, 255, 255, 0.92);
+        padding: 0.65rem 0.75rem;
+        border-radius: 10px;
+        border-left: 3px solid var(--brand-red);
+        box-shadow: 0 2px 8px rgba(41, 57, 127, 0.08);
+    }
+
+    .about-entry-year {
+        font-size: 15px;
+    }
+
+    .about-entry-drug {
+        font-size: 14px;
+        word-break: break-word;
+    }
+
+    .about-entry-company {
+        font-size: 9px;
+        max-width: none;
     }
 
     .about-timeline-right {
         margin-left: 0;
-        align-items: flex-start;
+        align-items: center;
+        text-align: center;
+        width: 100%;
+        background: rgba(255, 255, 255, 0.92);
+        padding: 1rem 0.75rem;
+        border-radius: 12px;
+        box-shadow: 0 2px 10px rgba(41, 57, 127, 0.1);
     }
 
     .about-2025-block {
-        margin: 0 0 1rem 0;
+        margin: 0 0 0.75rem 0;
+        text-align: center;
     }
 
     .about-year-2025 {
-        font-size: 36px;
+        font-size: 32px;
     }
 
     .about-drug-2025 {
-        font-size: 28px;
+        font-size: 22px;
+        word-break: break-word;
+    }
+
+    .about-india-block {
+        text-align: center;
+    }
+
+    .about-india-title {
+        font-size: 24px;
     }
 
     .about-india-line {
-        font-size: 18px;
+        font-size: 16px;
     }
 
     .about-bridge-text {
-        font-size: 18px;
+        font-size: 16px;
+        text-align: center;
     }
 
     .about-bridge-logo {
-        height: 5rem;
+        height: 4.5rem;
     }
 
     .about-tagline-wrap {
-        margin: 0;
+        margin: 0.5rem 0 0;
         width: 100%;
         display: flex;
         justify-content: center;
     }
 
+    .about-tagline-ribbon {
+        width: auto;
+        max-width: 100%;
+        min-height: auto;
+        padding: 0.35rem 0.75rem;
+    }
+
+    .about-tagline-ribbon span {
+        font-size: 10px;
+    }
+
     .about-bridge-row {
         flex-direction: column;
         align-items: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .about-bouncing-title {
+        text-align: center;
+        font-size: clamp(16px, 4.5vw, 22px);
+    }
+
+    .bouncing-title .bounce-word {
+        white-space: normal;
+    }
+
+    .about-footnote {
+        text-align: center;
+        padding: 0 0.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .about-timeline-gif {
+        max-width: 360px;
+    }
+}
+
+@media (max-width: 480px) {
+    .about-timeline-gif {
+        max-width: 100%;
+    }
+
+    .about-timeline-entries {
+        grid-template-columns: 1fr;
+    }
+
+    .about-entry-drug {
+        font-size: 15px;
+    }
+
+    .about-year-2025 {
+        font-size: 28px;
+    }
+
+    .about-drug-2025 {
+        font-size: 20px;
+    }
+
+    .about-india-title {
+        font-size: 22px;
+    }
+
+    .about-india-line {
+        font-size: 15px;
     }
 }
 
@@ -1824,6 +1959,10 @@ body.doctor-modal-open {
 
     .stats-qr-label {
         display: none;
+    }
+
+    .ref-item-2 {
+        transform: none;
     }
 }
 
@@ -2236,6 +2375,22 @@ body.page-loaded .reveal-up {
         letter-spacing: 1px;
     }
 
+    .hero-brand {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .hero-logo-img {
+        max-width: min(100%, 260px);
+        margin: 0 auto;
+    }
+
+    .logo-img {
+        height: 44px;
+        transform: scale(1);
+    }
+
     /* Trust Section */
     .trust-title {
         font-size: clamp(1.5rem, 3vw, 2rem);
@@ -2382,6 +2537,17 @@ body.page-loaded .reveal-up {
         margin-top: 0;
     }
 
+    .doctor-section-title-wrap {
+        padding: 12px 0;
+        margin-bottom: 1.25rem;
+        width: 100%;
+    }
+
+    .left-section {
+        align-items: center;
+        text-align: center;
+    }
+
     /* Footer Mobile */
     .pharma-footer {
         padding: 1.25rem 1.25rem 1rem;
@@ -2452,31 +2618,8 @@ body.page-loaded .reveal-up {
 
     .copyright-text {
         font-size: 0.65rem;
-    }
-}
-
-/* Tablets and Medium devices (641px - 992px) */
-@media (max-width: 992px) and (min-width: 641px) {
-    /* Hero Section */
-        margin-top: 1rem;
-    }
-
-    .qr-code-container {
-        width: 140px;
-        height: 140px;
-    }
-
-    .qr-placeholder svg {
-        width: 110px;
-        height: 110px;
-    }
-
-    .qr-label {
-        font-size: 0.85rem;
-    }
-
-    .copyright-text {
-        font-size: 0.7rem;
+        padding: 0 0.5rem;
+        line-height: 1.5;
     }
 }
 
@@ -2564,12 +2707,45 @@ body.page-loaded .reveal-up {
         max-width: 350px;
         height: 400px;
     }
+
+    .hero-brand {
+        display: flex;
+        justify-content: center;
+    }
+
+    .hero-logo-img {
+        max-width: min(100%, 400px);
+        margin: 0 auto;
+    }
+
+    .trust-title-wrap {
+        max-width: 95%;
+    }
+
+    .doctor-section-title {
+        font-size: 22px;
+    }
+
+    #display-name,
+    .doctor-info h2 {
+        font-size: 2rem;
+    }
+
+    #display-spec,
+    .doctor-info p {
+        font-size: 1.5rem;
+    }
 }
 
 /* Small devices (max-width: 768px) - General fixes */
 @media (max-width: 768px) {
     body {
         overflow-x: hidden;
+    }
+
+    .navbar {
+        padding: 0.65rem 0;
+        padding-top: max(0.65rem, env(safe-area-inset-top, 0px));
     }
 
     .nav-container {
@@ -2582,8 +2758,9 @@ body.page-loaded .reveal-up {
         width: 80%;
     }
 
-    .nav-logo img {
-        height: 40px;
+    .logo-img {
+        height: 50px;
+        transform: scale(1);
     }
 
     /* Hero & Sections Padding */
@@ -2652,6 +2829,17 @@ body.page-loaded .reveal-up {
 
     .hero-group-img {
         transform: none !important;
+    }
+
+    .hero-brand {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 2rem;
+    }
+
+    .hero-logo-img {
+        max-width: min(100%, 320px);
+        margin: 0 auto;
     }
 
     .trust-container {
