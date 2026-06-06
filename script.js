@@ -508,6 +508,81 @@ function initializeStatsCircles() {
     });
 }
 
+// ========== CUSTOM CURSOR ==========
+function initializeCustomCursor() {
+    const canUseCursor = window.matchMedia('(hover: hover) and (pointer: fine)').matches
+        && !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (!canUseCursor) return;
+
+    document.body.classList.add('custom-cursor-enabled');
+
+    const dot = document.createElement('div');
+    dot.className = 'cursor-dot';
+    dot.setAttribute('aria-hidden', 'true');
+
+    const ring = document.createElement('div');
+    ring.className = 'cursor-ring';
+    ring.setAttribute('aria-hidden', 'true');
+
+    document.body.append(dot, ring);
+
+    let mouseX = -100;
+    let mouseY = -100;
+    let ringX = -100;
+    let ringY = -100;
+    let rafId = null;
+
+    const textSelector = 'h1, h2, h3, h4, p, span, li, .hero-headline-wrap, .stats-counter, .stats-value, .patient-body, .ref-text, .about-bridge-text, .about-entry-year, .about-entry-drug, .copyright-text';
+    const interactiveSelector = 'a, button, [role="button"], .filter-table, .filter-head, .filter-selected, #video-container, input, select, textarea';
+
+    function setRingState(target) {
+        ring.classList.remove('is-hover', 'is-text');
+        if (!target || target.closest('.cursor-dot, .cursor-ring')) return;
+
+        if (target.closest(interactiveSelector)) {
+            ring.classList.add('is-hover');
+        } else if (target.closest(textSelector)) {
+            ring.classList.add('is-text');
+        }
+    }
+
+    function moveDot() {
+        dot.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0) translate(-50%, -50%)`;
+    }
+
+    function animateRing() {
+        ringX += (mouseX - ringX) * 0.18;
+        ringY += (mouseY - ringY) * 0.18;
+        ring.style.transform = `translate3d(${ringX}px, ${ringY}px, 0) translate(-50%, -50%)`;
+        rafId = requestAnimationFrame(animateRing);
+    }
+
+    document.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        moveDot();
+        setRingState(e.target);
+        document.body.classList.add('custom-cursor-active');
+    }, { passive: true });
+
+    document.addEventListener('mouseover', (e) => {
+        setRingState(e.target);
+    });
+
+    document.addEventListener('mouseleave', () => {
+        document.body.classList.remove('custom-cursor-active');
+    });
+
+    rafId = requestAnimationFrame(animateRing);
+
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+            document.body.classList.remove('custom-cursor-active');
+        }
+    });
+}
+
 // ========== MAIN INIT ==========
 let hasInitialized = false;
 
@@ -518,6 +593,7 @@ function initializeAll() {
     hasInitialized = true;
 
     initializeNavbar();
+    initializeCustomCursor();
     initializePageAnimations();
     initializeScrollAnimations();
     initializeDropdowns();
