@@ -483,7 +483,14 @@ function initializeStatsCircles() {
                 const eased = 1 - Math.pow(1 - progress, 3);
                 const count = Math.round(eased * target);
                 counterEl.textContent = `${prefix}${count}${suffix}`;
-                if (progress < 1) requestAnimationFrame(tick);
+                if (progress < 1) {
+                    requestAnimationFrame(tick);
+                } else {
+                    // Little pop once the number lands on its final value.
+                    counterEl.classList.remove('stats-pop');
+                    void counterEl.offsetWidth;
+                    counterEl.classList.add('stats-pop');
+                }
             }
 
             requestAnimationFrame(tick);
@@ -506,6 +513,264 @@ function initializeStatsCircles() {
 
         observer.observe(card);
     });
+}
+
+// ========== EXTRA SCROLL REVEALS ==========
+// Adds the existing fade-up motion to sections that previously appeared
+// with no animation (timeline entries, stats footer row, copyright).
+// Pure motion enhancement — no content, color, or layout changes.
+function initializeExtraReveals() {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    const groups = [
+        { selector: '.about-bridge-row', stagger: 0 },
+        { selector: '.about-timeline-gif', stagger: 0 },
+        { selector: '.about-timeline-entry', stagger: 0.1 },
+        { selector: '.about-2025-block, .about-india-block', stagger: 0.12 },
+        { selector: '#video-container', stagger: 0, cls: 'mi-zoom' },
+        { selector: '.stats-qr-overlay', stagger: 0 },
+        { selector: '.stats-ref-heading, .ref-text', stagger: 0.08 },
+        { selector: '.footer-bottom', stagger: 0 }
+    ];
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            entry.target.classList.add('in-view');
+            observer.unobserve(entry.target);
+        });
+    }, { threshold: 0.2, rootMargin: '0px 0px -6% 0px' });
+
+    groups.forEach((group) => {
+        document.querySelectorAll(group.selector).forEach((el, index) => {
+            el.classList.add(group.cls || 'mi-rise');
+            if (group.stagger) el.style.transitionDelay = `${index * group.stagger}s`;
+            observer.observe(el);
+        });
+    });
+}
+
+// ========== SCROLL PROGRESS BAR ==========
+// Thin brand-gradient bar at the top that fills as the page is scrolled.
+function initializeScrollProgress() {
+    const bar = document.createElement('div');
+    bar.className = 'scroll-progress';
+    bar.setAttribute('aria-hidden', 'true');
+    document.body.appendChild(bar);
+
+    let ticking = false;
+
+    function update() {
+        const doc = document.documentElement;
+        const max = doc.scrollHeight - doc.clientHeight;
+        const ratio = max > 0 ? window.pageYOffset / max : 0;
+        bar.style.transform = `scaleX(${Math.min(Math.max(ratio, 0), 1)})`;
+        ticking = false;
+    }
+
+    window.addEventListener('scroll', () => {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(update);
+    }, { passive: true });
+    window.addEventListener('resize', update, { passive: true });
+    update();
+}
+
+// ========== 3D TILT ==========
+// Subtle pointer-following 3D tilt on the stats cards and the doctor
+// video thumbnail. Desktop pointers only; off under reduced-motion.
+function initializeTilt() {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+
+    const targets = [
+        ...document.querySelectorAll('.stats-circle-card'),
+        document.getElementById('video-container')
+    ].filter(Boolean);
+
+    const MAX = 7; // degrees
+
+    targets.forEach((el) => {
+        el.classList.add('mi-tilt');
+
+        el.addEventListener('mousemove', (e) => {
+            const r = el.getBoundingClientRect();
+            const px = (e.clientX - r.left) / r.width - 0.5;
+            const py = (e.clientY - r.top) / r.height - 0.5;
+            el.style.transform =
+                `perspective(800px) rotateX(${(-py * MAX).toFixed(2)}deg) ` +
+                `rotateY(${(px * MAX).toFixed(2)}deg) translateY(-4px)`;
+        });
+
+        el.addEventListener('mouseleave', () => {
+            el.style.transform = '';
+        });
+    });
+}
+
+// ========== RIPPLE ==========
+// Material-style click ripple on a host element.
+function addRipple(el) {
+    el.classList.add('mi-ripple-host');
+    el.addEventListener('click', (e) => {
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        const r = el.getBoundingClientRect();
+        const size = Math.max(r.width, r.height) * 2;
+        const span = document.createElement('span');
+        span.className = 'mi-ripple';
+        span.style.width = span.style.height = `${size}px`;
+        span.style.left = `${e.clientX - r.left - size / 2}px`;
+        span.style.top = `${e.clientY - r.top - size / 2}px`;
+        el.appendChild(span);
+        span.addEventListener('animationend', () => span.remove());
+    });
+}
+
+function initializeRipples() {
+    document.querySelectorAll('.filter-head, .filter-selected').forEach(addRipple);
+}
+
+// ========== BACK TO TOP ==========
+// Floating button that appears after scrolling and smooth-scrolls up.
+function initializeBackToTop() {
+    const btn = document.createElement('button');
+    btn.className = 'back-to-top';
+    btn.setAttribute('aria-label', 'Back to top');
+    btn.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="6 14 12 8 18 14"></polyline></svg>';
+    document.body.appendChild(btn);
+
+    let ticking = false;
+    function update() {
+        btn.classList.toggle('is-visible', window.pageYOffset > 500);
+        ticking = false;
+    }
+
+    window.addEventListener('scroll', () => {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(update);
+    }, { passive: true });
+
+    btn.addEventListener('click', () => {
+        const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+    });
+
+    // Magnetic: the button leans toward the cursor while hovered.
+    const canMagnet = window.matchMedia('(hover: hover) and (pointer: fine)').matches
+        && !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (canMagnet) {
+        btn.addEventListener('mousemove', (e) => {
+            const r = btn.getBoundingClientRect();
+            const mx = e.clientX - (r.left + r.width / 2);
+            const my = e.clientY - (r.top + r.height / 2);
+            btn.style.transform = `translate(${(mx * 0.35).toFixed(1)}px, ${(my * 0.35).toFixed(1)}px) scale(1.08)`;
+        });
+        btn.addEventListener('mouseleave', () => { btn.style.transform = ''; });
+    }
+
+    update();
+}
+
+// ========== HERO SCROLL CUE ==========
+// A bouncing chevron at the bottom of the hero that scrolls down on
+// click and fades away once the user starts scrolling.
+function initializeHeroScrollCue() {
+    const hero = document.querySelector('.hero');
+    if (!hero) return;
+
+    const cue = document.createElement('button');
+    cue.className = 'hero-scroll-cue';
+    cue.setAttribute('aria-label', 'Scroll down');
+    cue.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>';
+    hero.appendChild(cue);
+
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    cue.addEventListener('click', () => {
+        window.scrollTo({
+            top: Math.round(window.innerHeight * 0.9),
+            behavior: reduce ? 'auto' : 'smooth'
+        });
+    });
+
+    let ticking = false;
+    function onScroll() {
+        cue.classList.toggle('is-hidden', window.pageYOffset > 120);
+        ticking = false;
+    }
+    window.addEventListener('scroll', () => {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(onScroll);
+    }, { passive: true });
+    onScroll();
+}
+
+// ========== SLIDE IMAGE PARALLAX ==========
+// Each clinical-slide image drifts gently as its slide moves through the
+// viewport, adding depth. Desktop only; off under reduced-motion.
+function initializeScrollParallax() {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (!window.matchMedia('(min-width: 993px)').matches) return;
+
+    const frames = [...document.querySelectorAll('.content-slides .img-frame')];
+    if (!frames.length) return;
+
+    let ticking = false;
+    function update() {
+        const vh = window.innerHeight;
+        frames.forEach((el) => {
+            const r = el.getBoundingClientRect();
+            if (r.bottom < -120 || r.top > vh + 120) return;
+            const center = r.top + r.height / 2;
+            const delta = (center - vh / 2) / vh;
+            el.style.transform = `translate3d(0, ${(delta * -26).toFixed(1)}px, 0)`;
+        });
+        ticking = false;
+    }
+
+    window.addEventListener('scroll', () => {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(update);
+    }, { passive: true });
+    window.addEventListener('resize', update, { passive: true });
+    update();
+}
+
+// ========== HERO PARALLAX ==========
+// Subtle depth: the hero text drifts a touch slower than the scroll,
+// giving a layered feel against the floating people image. Desktop only,
+// and disabled under reduced-motion. No layout/color/content change.
+function initializeHeroParallax() {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (!window.matchMedia('(min-width: 993px)').matches) return;
+
+    const heroText = document.querySelector('.hero-text');
+    const hero = document.querySelector('.hero');
+    if (!heroText || !hero) return;
+
+    let ticking = false;
+
+    function update() {
+        const y = window.pageYOffset;
+        const heroBottom = hero.offsetTop + hero.offsetHeight;
+        // Only apply while the hero is on/near screen.
+        if (y <= heroBottom) {
+            heroText.style.transform = `translate3d(0, ${y * 0.12}px, 0)`;
+        }
+        ticking = false;
+    }
+
+    window.addEventListener('scroll', () => {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(update);
+    }, { passive: true });
+
+    update();
 }
 
 // ========== CUSTOM CURSOR ==========
@@ -600,6 +865,14 @@ function initializeAll() {
     initializeDoctorSystem();
     initializeBouncingTitles();
     initializeStatsCircles();
+    initializeExtraReveals();
+    initializeHeroParallax();
+    initializeScrollProgress();
+    initializeTilt();
+    initializeBackToTop();
+    initializeScrollParallax();
+    initializeHeroScrollCue();
+    initializeRipples();
     console.log('✅ ALL SYSTEMS GO');
 }
 

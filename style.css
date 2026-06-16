@@ -3377,3 +3377,753 @@ body.custom-cursor-active .cursor-ring {
     height: 36px;
     border-color: rgba(153, 31, 37, 0.55);
 }
+
+/* ============ POLISH PASS ============
+   Web-craft refinements only — no change to layout, palette, panel
+   colors, fonts, images, or content. The solid color panels are left
+   exactly as they were. */
+
+/* Web-craft details that add finish without altering the design. */
+
+/* Brand-tinted text selection */
+::selection {
+    background: var(--brand-red);
+    color: #fff;
+}
+::-moz-selection {
+    background: var(--brand-red);
+    color: #fff;
+}
+
+/* Visible, on-brand keyboard focus rings (accessibility + polish).
+   Only shows for keyboard users, never on mouse click. */
+a:focus-visible,
+button:focus-visible,
+[role="button"]:focus-visible,
+.filter-table:focus-visible,
+.filter-head:focus-visible,
+.filter-selected:focus-visible,
+.filter-option:focus-visible {
+    outline: 2px solid var(--brand-navy);
+    outline-offset: 3px;
+    border-radius: 4px;
+}
+
+/* On the dark colored panels, the focus ring switches to light so it
+   stays visible against maroon/navy/orange. */
+.slide a:focus-visible,
+.slide button:focus-visible,
+.slide [role="button"]:focus-visible {
+    outline-color: rgba(255, 255, 255, 0.9);
+}
+
+/* Slim, brand-tinted scrollbar instead of the default chunky grey one. */
+@media (pointer: fine) {
+    html {
+        scrollbar-width: thin;
+        scrollbar-color: rgba(41, 57, 127, 0.4) transparent;
+    }
+
+    ::-webkit-scrollbar {
+        width: 11px;
+        height: 11px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: rgba(41, 57, 127, 0.35);
+        border-radius: 10px;
+        border: 3px solid transparent;
+        background-clip: padding-box;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: rgba(41, 57, 127, 0.55);
+        background-clip: padding-box;
+    }
+}
+
+/* ============ ANIMATION ENHANCEMENTS ============
+   Extra motion only — no change to colors, layout, fonts, images, or
+   text. Uses the same fade + gentle-rise language already present on the
+   page, applied (via script.js) to sections that previously popped in
+   with no animation. */
+
+/* Scroll-reveal: fade up gently when scrolled into view. The .in-view
+   class is added by the IntersectionObserver in script.js. */
+.mi-rise {
+    opacity: 0;
+    transform: translateY(26px);
+    transition: opacity 0.75s cubic-bezier(0.22, 0.61, 0.36, 1),
+                transform 0.75s cubic-bezier(0.22, 0.61, 0.36, 1);
+    will-change: opacity, transform;
+}
+
+.mi-rise.in-view {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Gentle, looping pulse on the doctor video play button to draw the eye
+   to the playable thumbnail. Pauses on hover so it stays calm there. */
+.doctor-play-btn {
+    animation: play-pulse 2.6s ease-in-out infinite;
+}
+
+#video-container:hover .doctor-play-btn {
+    animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .mi-rise {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+    }
+
+    .doctor-play-btn {
+        animation: none !important;
+    }
+}
+
+/* ============ MORE ENHANCEMENTS ============
+   Additional motion + interaction polish. Still no change to colors,
+   design, layout, fonts, images, or text. */
+
+/* Fix anchor landings: when a nav link jumps to a section, stop the
+   heading from hiding behind the fixed navbar. */
+section[id] {
+    scroll-margin-top: 124px;
+}
+
+@media (max-width: 768px) {
+    section[id] {
+        scroll-margin-top: 70px;
+    }
+}
+
+/* Tactile press feedback on the interactive controls — a tiny "push in"
+   when clicked/tapped. Uses the transition already defined on these. */
+.filter-head:active,
+.filter-selected:active,
+.filter-option:active {
+    transform: scale(0.98);
+}
+
+.nav-links li a:active {
+    transform: translateY(0) scale(0.98);
+}
+
+.menu-toggle:active {
+    transform: scale(0.94);
+}
+
+/* Little celebratory pop when a stats counter finishes counting up.
+   The .stats-pop class is added/removed by script.js. */
+@keyframes stats-pop {
+    0% { transform: scale(1); }
+    45% { transform: scale(1.08); }
+    100% { transform: scale(1); }
+}
+
+.stats-counter.stats-pop {
+    animation: stats-pop 0.45s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .stats-counter.stats-pop {
+        animation: none !important;
+    }
+}
+
+/* Zoom-in reveal — same fade language, but scales up gently instead of
+   rising. Used for the doctor video thumbnail so it lands as a focal
+   point. .in-view is added by the observer in script.js. */
+.mi-zoom {
+    opacity: 0;
+    transform: scale(0.94);
+    transition: opacity 0.7s ease,
+                transform 0.7s cubic-bezier(0.22, 0.61, 0.36, 1);
+    will-change: opacity, transform;
+}
+
+.mi-zoom.in-view {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* Staged reveal for the stats icons: the ring + number animate first,
+   then the icon badges fade in just after, for a nicer sequence. */
+.stats-circle-card .stats-icon-badge,
+.stats-circle-card .stats-icon {
+    opacity: 0;
+    transition: opacity 0.55s ease;
+}
+
+.stats-circle-card.in-view .stats-icon-badge,
+.stats-circle-card.in-view .stats-icon {
+    opacity: 1;
+    transition-delay: 0.55s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .mi-zoom {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+    }
+
+    .stats-circle-card .stats-icon-badge,
+    .stats-circle-card .stats-icon {
+        opacity: 1 !important;
+        transition: none !important;
+    }
+}
+
+
+/* ============ BIGGER NAVBAR + MODERN NAV ANIMATIONS ============
+   Desktop only (so mobile layout is untouched). Same colors/fonts. */
+@media (min-width: 993px) {
+    /* Larger navbar */
+    .navbar {
+        padding: 1.7rem 0;
+    }
+
+    .logo-img {
+        height: 62px;
+        transition: height 0.3s ease;
+    }
+
+    .nav-links {
+        gap: 5.5rem;
+    }
+
+    .nav-links li a {
+        font-size: 1.35rem;
+    }
+
+    /* Modern shrink-on-scroll: navbar gets a touch more compact once you
+       start scrolling (the navbar already transitions, so it animates). */
+    .navbar.scrolled {
+        padding: 1.05rem 0;
+    }
+
+    .navbar.scrolled .logo-img {
+        height: 48px;
+    }
+
+    /* Nav links fade/slide in one-by-one just after the bar drops down. */
+    .navbar .nav-links li {
+        opacity: 0;
+        animation: nav-item-in 0.5s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+    }
+
+    .navbar .nav-links li:nth-child(1) { animation-delay: 0.70s; }
+    .navbar .nav-links li:nth-child(2) { animation-delay: 0.82s; }
+    .navbar .nav-links li:nth-child(3) { animation-delay: 0.94s; }
+}
+
+@keyframes nav-item-in {
+    from { opacity: 0; transform: translateY(-8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Scroll progress bar — thin brand-gradient line at the very top that
+   fills as you read down the page. Width driven by script.js. */
+.scroll-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    transform: scaleX(0);
+    transform-origin: left center;
+    background: linear-gradient(90deg, var(--brand-navy), var(--brand-red));
+    z-index: 200;
+    pointer-events: none;
+    will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .navbar .nav-links li {
+        opacity: 1 !important;
+        animation: none !important;
+    }
+
+    .scroll-progress {
+        display: none;
+    }
+}
+
+/* ============ 3D TILT + BACK-TO-TOP ============
+   More motion. No color/font/content change. */
+
+/* Cards/thumbnail follow the pointer with a subtle 3D tilt (driven by
+   script.js, which sets an inline transform on hover and clears it on
+   leave). A short transition keeps it smooth. */
+.stats-circle-card.mi-tilt,
+#video-container.mi-tilt {
+    transition: transform 0.18s ease-out;
+}
+
+/* Floating back-to-top button: fades/scales in once you scroll down,
+   smooth-scrolls to the top, and shifts to the brand red on hover. */
+.back-to-top {
+    position: fixed;
+    right: 26px;
+    bottom: 26px;
+    width: 48px;
+    height: 48px;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 150;
+    background: var(--brand-navy);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transform: translateY(18px) scale(0.9);
+    pointer-events: none;
+    box-shadow: 0 8px 22px rgba(41, 57, 127, 0.35);
+    transition: opacity 0.35s ease,
+                transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+                background 0.25s ease;
+}
+
+.back-to-top.is-visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+}
+
+.back-to-top:hover {
+    background: var(--brand-red);
+    transform: translateY(-4px) scale(1.05);
+}
+
+.back-to-top svg {
+    width: 22px;
+    height: 22px;
+    fill: none;
+    stroke: #fff;
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/* Material-style click ripple (dropdown controls). */
+.mi-ripple-host {
+    position: relative;
+    overflow: hidden;
+}
+
+.mi-ripple {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.45);
+    transform: scale(0);
+    opacity: 0.6;
+    pointer-events: none;
+    animation: mi-ripple-anim 0.6s ease-out;
+}
+
+@keyframes mi-ripple-anim {
+    to { transform: scale(1); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .mi-ripple { display: none !important; }
+}
+
+@media (max-width: 640px) {
+    .back-to-top {
+        right: 16px;
+        bottom: 16px;
+        width: 44px;
+        height: 44px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .stats-circle-card.mi-tilt,
+    #video-container.mi-tilt {
+        transition: none !important;
+        transform: none !important;
+    }
+
+    .back-to-top {
+        transition: opacity 0.2s ease;
+    }
+
+    .back-to-top.is-visible {
+        transform: none;
+    }
+}
+
+/* ============ PREMIUM TOUCHES ============
+   More finish. No color/font/content changes. */
+
+/* Trust heading wipes in left→right as the section enters (pairs with the
+   underline that already grows). */
+.trust-title {
+    clip-path: inset(0 100% 0 0);
+    transition: clip-path 1s cubic-bezier(0.22, 0.61, 0.36, 1) 0.15s;
+}
+
+.trust-container.in-view .trust-title {
+    clip-path: inset(0 0 0 0);
+}
+
+/* Slide images get a transform transition so the JS scroll-parallax is
+   buttery (no jump). */
+.content-slides .img-frame {
+    will-change: transform;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    /* Underline grows under any nav link on hover, not just the active one. */
+    .nav-links li a:hover::after {
+        width: 100%;
+    }
+
+    /* Chevron gives a tiny bounce on hover. */
+    .nav-chevron {
+        transition: transform 0.25s ease;
+    }
+
+    .nav-links li a:hover .nav-chevron {
+        transform: rotate(45deg) translate(1px, 2px);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .trust-title {
+        clip-path: none !important;
+        transition: none !important;
+    }
+
+    .content-slides .img-frame {
+        transform: none !important;
+    }
+}
+
+/* ============ MORE PREMIUM MOTION ============
+   No color/font/content changes. */
+
+/* Each slide heading wipes in left→right just after the text slides in. */
+.patient-heading {
+    clip-path: inset(0 100% 0 0);
+    transition: clip-path 0.9s cubic-bezier(0.22, 0.61, 0.36, 1) 0.25s;
+}
+
+.slide-fade.in-view .patient-heading {
+    clip-path: inset(0 0 0 0);
+}
+
+/* QR code gently floats to draw the eye, and a light sheen sweeps across
+   it on hover. */
+.stats-qr-box {
+    position: relative;
+    overflow: hidden;
+    animation: qr-float 4.5s ease-in-out infinite;
+}
+
+@keyframes qr-float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+}
+
+.stats-qr-box::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -60%;
+    width: 45%;
+    height: 100%;
+    background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.55), transparent);
+    transform: skewX(-18deg);
+    opacity: 0;
+    pointer-events: none;
+}
+
+.stats-qr-overlay:hover .stats-qr-box::after {
+    animation: qr-sheen 0.85s ease;
+}
+
+@keyframes qr-sheen {
+    0% { left: -60%; opacity: 0; }
+    20% { opacity: 1; }
+    100% { left: 150%; opacity: 0; }
+}
+
+/* Scroll progress bar gets a slow flowing-color shimmer. */
+.scroll-progress {
+    background: linear-gradient(90deg, var(--brand-navy), var(--brand-red), var(--brand-navy));
+    background-size: 200% 100%;
+    animation: progress-sheen 3s linear infinite;
+}
+
+@keyframes progress-sheen {
+    0% { background-position: 0% 0; }
+    100% { background-position: 200% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .patient-heading {
+        clip-path: none !important;
+        transition: none !important;
+    }
+
+    .stats-qr-box {
+        animation: none !important;
+    }
+
+    .stats-qr-box::after {
+        display: none !important;
+    }
+
+    .scroll-progress {
+        animation: none !important;
+    }
+}
+
+/* ============ SELF-ANALYZED ADDITIONS ============
+   Targeting the few spots still without motion. No color/font/content
+   changes. */
+
+/* 1. Slide body text rises in just after the heading wipes, so each
+      slide reads as a small sequence (heading -> line -> body). */
+.slide-fade .patient-body {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.7s cubic-bezier(0.22, 0.61, 0.36, 1) 0.55s,
+                transform 0.7s cubic-bezier(0.22, 0.61, 0.36, 1) 0.55s;
+}
+
+.slide-fade.in-view .patient-body {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* 2. The little red play-arrow next to the doctor's name gives a subtle,
+      continuous forward nudge to point toward the name. */
+.doctor-play-icon {
+    animation: play-icon-nudge 1.9s ease-in-out infinite;
+}
+
+@keyframes play-icon-nudge {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(4px); }
+}
+
+/* 3. The stats icon badges get a soft "breathing" halo pulse behind the
+      icon once they've faded in. */
+.stats-icon-badge {
+    animation: badge-breathe 3.2s ease-in-out infinite;
+}
+
+@keyframes badge-breathe {
+    0%, 100% { transform: translateX(-50%) scale(1); }
+    50% { transform: translateX(-50%) scale(1.07); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .slide-fade .patient-body {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+    }
+
+    .doctor-play-icon,
+    .stats-icon-badge {
+        animation: none !important;
+    }
+}
+
+/* ============ ROUND: MORE MOTION ============
+   No color/font/content changes. */
+
+/* The big launch year "2025" gives an emphasis pop when it reveals. */
+.about-2025-block.in-view .about-year-2025 {
+    animation: year-pop 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.25s;
+    transform-origin: left center;
+}
+
+@keyframes year-pop {
+    0% { transform: scale(1); }
+    45% { transform: scale(1.14); }
+    100% { transform: scale(1); }
+}
+
+@media (hover: hover) and (pointer: fine) {
+    /* Dropdowns lift with a soft premium shadow on hover. */
+    .filter-table:hover {
+        box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .about-2025-block.in-view .about-year-2025 {
+        animation: none !important;
+    }
+}
+
+/* ============ ROUND: HERO→FOOTER MOTION ============
+   No color/font/content changes. */
+
+/* HERO: soft navy glow that gently breathes on the product logo. */
+body.page-loaded .hero-logo-img {
+    animation: logo-glow 4.5s ease-in-out 1.8s infinite;
+}
+
+@keyframes logo-glow {
+    0%, 100% { filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.08)); }
+    50% { filter: drop-shadow(0 7px 20px rgba(41, 57, 127, 0.22)); }
+}
+
+/* HERO: animated scroll-down cue at the bottom of the hero. */
+.hero-scroll-cue {
+    position: absolute;
+    bottom: 26px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    z-index: 5;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+body.page-loaded .hero-scroll-cue {
+    opacity: 0.85;
+}
+
+.hero-scroll-cue:hover {
+    opacity: 1;
+}
+
+.hero-scroll-cue.is-hidden {
+    opacity: 0 !important;
+    pointer-events: none;
+}
+
+.hero-scroll-cue svg {
+    width: 28px;
+    height: 28px;
+    stroke: var(--brand-navy);
+    fill: none;
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    animation: cue-bounce 1.6s ease-in-out infinite;
+}
+
+@keyframes cue-bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(7px); }
+}
+
+@media (max-width: 992px) {
+    .hero-scroll-cue { display: none; }
+}
+
+/* ABOUT: the "India" headline pops for emphasis when revealed
+   (matches the 2025 pop). */
+.about-india-block.in-view .about-india-title {
+    animation: year-pop 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s;
+    transform-origin: left center;
+}
+
+/* FOOTER: a small brand accent line draws in across the top divider. */
+.footer-bottom {
+    position: relative;
+}
+
+.footer-bottom::before {
+    content: "";
+    position: absolute;
+    top: -1px;
+    left: 50%;
+    width: 120px;
+    height: 2px;
+    background: var(--brand-navy);
+    transform: translateX(-50%) scaleX(0);
+    transform-origin: center;
+    transition: transform 0.9s cubic-bezier(0.22, 0.61, 0.36, 1) 0.2s;
+}
+
+.footer-bottom.in-view::before {
+    transform: translateX(-50%) scaleX(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    body.page-loaded .hero-logo-img { animation: none !important; }
+    .hero-scroll-cue svg { animation: none !important; }
+    .about-india-block.in-view .about-india-title { animation: none !important; }
+    .footer-bottom::before { transform: translateX(-50%) scaleX(1); transition: none !important; }
+}
+
+/* ============ ROUND: REFINED MOTION ============
+   No color/font/content changes. */
+
+/* STATS: the descriptive label fades up just after its number lands,
+   so each metric reads as number-then-label. */
+.stats-circle-card .stats-value {
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.stats-circle-card.in-view .stats-value {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 1.25s;
+}
+
+/* STATS: a one-time soft shine sweeps the ring once it finishes filling. */
+.stats-ring-progress.is-animated {
+    animation: ring-shine 1.3s ease 1.4s 1;
+}
+
+@keyframes ring-shine {
+    0%, 100% { filter: none; }
+    50% { filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.7)); }
+}
+
+/* TRUST: letters settle from slightly spread to normal as the title
+   wipes in (works together with the existing clip-path reveal). */
+.trust-title {
+    letter-spacing: 0.05em;
+    transition: clip-path 1s cubic-bezier(0.22, 0.61, 0.36, 1) 0.15s,
+                letter-spacing 1.1s cubic-bezier(0.22, 0.61, 0.36, 1) 0.15s;
+}
+
+.trust-container.in-view .trust-title {
+    letter-spacing: normal;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .stats-circle-card .stats-value {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+    }
+
+    .stats-ring-progress.is-animated {
+        animation: none !important;
+    }
+
+    .trust-title {
+        letter-spacing: normal !important;
+        transition: none !important;
+    }
+}
