@@ -562,6 +562,7 @@ body.page-loaded .hero-headline-wrap {
     display: inline-block;
     margin-left: 20px;
     margin-bottom: 20px;
+    border-radius: 24px;
 }
 
 .rounded-stroke-img {
@@ -570,6 +571,7 @@ body.page-loaded .hero-headline-wrap {
     height: auto;
     position: relative;
     z-index: 2;
+    border-radius: 24px;
     transform: scale(1.08);
     transition: transform var(--mi-duration) var(--mi-ease),
                 filter var(--mi-duration) var(--mi-ease);
@@ -2310,6 +2312,20 @@ body.page-loaded .reveal-up {
     opacity: 0.85;
 }
 
+.footer-disclaimer {
+    max-width: 1100px;
+    margin: 0 auto 1.5rem;
+    text-align: center;
+}
+
+.disclaimer-text {
+    font-size: 0.72rem;
+    line-height: 1.7;
+    color: #888888;
+    font-family: 'Helvetica Neue', sans-serif;
+    letter-spacing: 0.2px;
+}
+
 .footer-bottom {
     border-top: 1px solid #f0f0f0;
     padding-top: 2rem;
@@ -2648,6 +2664,16 @@ body.page-loaded .reveal-up {
     .qr-label {
         font-size: 0.7rem;
         letter-spacing: 0.4px;
+    }
+
+    .footer-disclaimer {
+        margin-bottom: 1.25rem;
+        padding: 0 0.5rem;
+    }
+
+    .disclaimer-text {
+        font-size: 0.65rem;
+        line-height: 1.6;
     }
 
     .footer-bottom {
@@ -4124,6 +4150,230 @@ body.page-loaded .hero-scroll-cue {
 
     .trust-title {
         letter-spacing: normal !important;
+        transition: none !important;
+    }
+}
+
+/* ============ ROUND: EXTRA INTERACTIVITY ============
+   No color/font/content changes — motion only. */
+
+/* CLINICAL: a soft light "sheen" sweeps across each patient image on hover,
+   giving the photos a premium, glossy feel. Desktop pointers only. */
+@media (hover: hover) and (pointer: fine) {
+    .content-slides .img-frame::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: 3;
+        border-radius: inherit;
+        pointer-events: none;
+        opacity: 0;
+        background: linear-gradient(
+            115deg,
+            transparent 30%,
+            rgba(255, 255, 255, 0.28) 48%,
+            rgba(255, 255, 255, 0.28) 52%,
+            transparent 70%
+        );
+        background-size: 250% 100%;
+        background-position: 120% 0;
+    }
+
+    .content-slides .img-frame:hover::after {
+        opacity: 1;
+        animation: slide-sheen 0.9s ease-out forwards;
+    }
+
+    .content-slides .img-frame:hover .rounded-stroke-img {
+        transform: scale(1.11);
+    }
+}
+
+@keyframes slide-sheen {
+    0%   { background-position: 120% 0; }
+    100% { background-position: -40% 0; }
+}
+
+/* DOCTOR: when a dropdown opens, the options cascade in one after another
+   instead of all appearing at once. */
+.filter-table.is-open .filter-list .filter-option {
+    animation: option-cascade 0.34s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+
+.filter-table.is-open .filter-list .filter-option:nth-child(1) { animation-delay: 0.02s; }
+.filter-table.is-open .filter-list .filter-option:nth-child(2) { animation-delay: 0.06s; }
+.filter-table.is-open .filter-list .filter-option:nth-child(3) { animation-delay: 0.10s; }
+.filter-table.is-open .filter-list .filter-option:nth-child(4) { animation-delay: 0.14s; }
+.filter-table.is-open .filter-list .filter-option:nth-child(5) { animation-delay: 0.18s; }
+.filter-table.is-open .filter-list .filter-option:nth-child(6) { animation-delay: 0.22s; }
+.filter-table.is-open .filter-list .filter-option:nth-child(7) { animation-delay: 0.26s; }
+
+@keyframes option-cascade {
+    from { opacity: 0; transform: translateY(-8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ABOUT: the inline MIQNAF logo in the bridge line gently floats so the
+   "the gap is bridged with [logo]" line draws the eye. */
+.about-bridge-logo {
+    animation: bridge-logo-float 4s ease-in-out 1s infinite;
+}
+
+@keyframes bridge-logo-float {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-6px); }
+}
+
+/* STATS: the QR box lifts a touch on hover to invite a scan. */
+@media (hover: hover) and (pointer: fine) {
+    .stats-qr-box {
+        transition: transform 0.3s cubic-bezier(0.22, 0.61, 0.36, 1),
+                    box-shadow 0.3s ease;
+    }
+
+    .stats-qr-box:hover {
+        transform: translateY(-6px) scale(1.03);
+        box-shadow: 0 16px 32px rgba(41, 57, 127, 0.22);
+    }
+}
+
+/* HERO: pointer-driven depth — the people image leans toward the cursor.
+   Driven by --mi-px / --mi-py set in script.js (defaults to no shift). */
+.hero-people-layer {
+    --mi-px: 0;
+    --mi-py: 0;
+}
+
+body.page-loaded.mi-hero-parallax-ready .hero-people-layer {
+    transform: translate3d(
+        calc(var(--mi-px) * 18px),
+        calc(var(--mi-py) * 14px),
+        0
+    );
+    transition: transform 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .content-slides .img-frame:hover::after { animation: none !important; opacity: 0 !important; }
+    .content-slides .img-frame:hover .rounded-stroke-img { transform: scale(1.08) !important; }
+    .filter-table.is-open .filter-list .filter-option { animation: none !important; }
+    .about-bridge-logo { animation: none !important; }
+    .stats-qr-box:hover { transform: none !important; }
+    body.page-loaded.mi-hero-parallax-ready .hero-people-layer {
+        transform: none !important;
+        transition: none !important;
+    }
+}
+
+/* ============ ROUND: ADDED MOTION ============
+   Extra motion only — no change to colors, layout, fonts, images, or
+   text. Follows the fade/sheen/glow language already used on the page,
+   and is fully disabled under prefers-reduced-motion. */
+
+/* ABOUT: a slow light sweep travels across the white tagline ribbon so
+   "Delivering Guaranteed Results, Every Time" keeps catching the eye.
+   The ribbon's own clip-path also clips this overlay to its shape. */
+.about-tagline-ribbon {
+    position: relative;
+    overflow: hidden;
+}
+
+.about-tagline-ribbon::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(
+        115deg,
+        transparent 35%,
+        rgba(153, 31, 37, 0.18) 48%,
+        rgba(153, 31, 37, 0.18) 52%,
+        transparent 65%
+    );
+    background-size: 250% 100%;
+    background-position: 150% 0;
+    animation: mi-ribbon-sheen 4.8s ease-in-out 1.4s infinite;
+}
+
+@keyframes mi-ribbon-sheen {
+    0%   { background-position: 150% 0; }
+    55%  { background-position: -55% 0; }
+    100% { background-position: -55% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .about-tagline-ribbon::after {
+        animation: none !important;
+        opacity: 0 !important;
+    }
+}
+
+/* HERO: ambient aurora — two soft brand-colour glows drift slowly behind
+   the hero content, giving depth and a premium feel. They also lean a touch
+   with the cursor (reads the same --mi-px/--mi-py the pointer parallax sets
+   on .hero), so the layered depth reinforces the existing hero motion.
+   Pseudo-elements sit at z-index 0, behind hero-text (z2) and people (z1).
+   Keyframe drift uses the individual `translate` property so it composes
+   with the pointer offset in `transform` instead of overwriting it. */
+.hero {
+    overflow: hidden;
+    overflow: clip;
+    --mi-px: 0;
+    --mi-py: 0;
+}
+
+.hero::before,
+.hero::after {
+    content: "";
+    position: absolute;
+    z-index: 0;
+    border-radius: 50%;
+    filter: blur(70px);
+    pointer-events: none;
+    will-change: transform, translate, opacity;
+}
+
+.hero::before {
+    width: 42vw;
+    height: 42vw;
+    max-width: 620px;
+    max-height: 620px;
+    top: -8%;
+    left: -6%;
+    background: radial-gradient(circle, rgba(41, 57, 127, 0.30), transparent 70%);
+    transform: translate3d(calc(var(--mi-px) * -22px), calc(var(--mi-py) * -18px), 0);
+    transition: transform 0.6s cubic-bezier(0.22, 0.61, 0.36, 1);
+    animation: mi-aurora-1 19s ease-in-out infinite;
+}
+
+.hero::after {
+    width: 36vw;
+    height: 36vw;
+    max-width: 540px;
+    max-height: 540px;
+    bottom: -12%;
+    right: -4%;
+    background: radial-gradient(circle, rgba(239, 106, 43, 0.24), transparent 70%);
+    transform: translate3d(calc(var(--mi-px) * 26px), calc(var(--mi-py) * 20px), 0);
+    transition: transform 0.6s cubic-bezier(0.22, 0.61, 0.36, 1);
+    animation: mi-aurora-2 24s ease-in-out infinite;
+}
+
+@keyframes mi-aurora-1 {
+    0%, 100% { translate: 0 0; opacity: 0.45; }
+    50%      { translate: 4% 6%; opacity: 0.62; }
+}
+
+@keyframes mi-aurora-2 {
+    0%, 100% { translate: 0 0; opacity: 0.40; }
+    50%      { translate: -5% -4%; opacity: 0.58; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .hero::before,
+    .hero::after {
+        animation: none !important;
+        transform: none !important;
         transition: none !important;
     }
 }

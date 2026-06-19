@@ -527,6 +527,7 @@ function initializeExtraReveals() {
         { selector: '.about-timeline-gif', stagger: 0 },
         { selector: '.about-timeline-entry', stagger: 0.1 },
         { selector: '.about-2025-block, .about-india-block', stagger: 0.12 },
+        { selector: '.about-footnote', stagger: 0 },
         { selector: '#video-container', stagger: 0, cls: 'mi-zoom' },
         { selector: '.stats-qr-overlay', stagger: 0 },
         { selector: '.stats-ref-heading, .ref-text', stagger: 0.08 },
@@ -773,6 +774,51 @@ function initializeHeroParallax() {
     update();
 }
 
+// ========== HERO POINTER PARALLAX ==========
+// The hero people image leans gently toward the cursor, adding depth that
+// reacts to the user. Desktop pointers only; off under reduced-motion.
+// Writes normalized -0.5..0.5 values into CSS vars the stylesheet consumes,
+// so it never fights the existing scroll/float transforms on other layers.
+function initializeHeroPointerParallax() {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+
+    const hero = document.querySelector('.hero');
+    const layer = document.querySelector('.hero-people-layer');
+    if (!hero || !layer) return;
+
+    document.body.classList.add('mi-hero-parallax-ready');
+
+    let ticking = false;
+    let px = 0;
+    let py = 0;
+
+    function apply() {
+        layer.style.setProperty('--mi-px', px.toFixed(3));
+        layer.style.setProperty('--mi-py', py.toFixed(3));
+        // Same normalized values on the hero itself so the ambient aurora
+        // glows (its ::before / ::after) lean gently with the cursor too.
+        hero.style.setProperty('--mi-px', px.toFixed(3));
+        hero.style.setProperty('--mi-py', py.toFixed(3));
+        ticking = false;
+    }
+
+    hero.addEventListener('mousemove', (e) => {
+        const r = hero.getBoundingClientRect();
+        px = (e.clientX - r.left) / r.width - 0.5;
+        py = (e.clientY - r.top) / r.height - 0.5;
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(apply);
+    }, { passive: true });
+
+    hero.addEventListener('mouseleave', () => {
+        px = 0;
+        py = 0;
+        requestAnimationFrame(apply);
+    });
+}
+
 // ========== CUSTOM CURSOR ==========
 function initializeCustomCursor() {
     const canUseCursor = window.matchMedia('(hover: hover) and (pointer: fine)').matches
@@ -867,6 +913,7 @@ function initializeAll() {
     initializeStatsCircles();
     initializeExtraReveals();
     initializeHeroParallax();
+    initializeHeroPointerParallax();
     initializeScrollProgress();
     initializeTilt();
     initializeBackToTop();
