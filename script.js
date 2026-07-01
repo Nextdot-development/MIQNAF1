@@ -1,5 +1,3 @@
-console.log('🔴 SCRIPT.JS LOADED');
-
 // ========== NAVBAR & SCROLL ==========
 function initializeNavbar() {
     const navbar = document.querySelector('.navbar');
@@ -91,18 +89,106 @@ function initializePageAnimations() {
 }
 
 // ========== DROPDOWN TOGGLE ==========
+// Accessible listbox pattern: each .filter-table is a button (.filter-selected)
+// that toggles a role="listbox". Fully operable by mouse AND keyboard, with
+// aria-expanded / aria-selected kept in sync for screen readers.
 function initializeDropdowns() {
+    const tables = document.querySelectorAll('#doctor .filter-table');
+
+    // Visible options only — the currently-selected option is hidden via display:none.
+    const visibleOptions = (list) =>
+        [...list.querySelectorAll('.filter-option')].filter(o => o.style.display !== 'none');
+
+    const openTable = (table) => {
+        tables.forEach(t => { if (t !== table) t.classList.remove('is-open'); });
+        table.classList.add('is-open');
+    };
+    const closeTable = (table) => table.classList.remove('is-open');
     const toggleList = (table) => {
-        const isOpen = table.classList.contains('is-open');
-        document.querySelectorAll('#doctor .filter-table').forEach(t => t.classList.remove('is-open'));
-        if (!isOpen) table.classList.add('is-open');
+        if (table.classList.contains('is-open')) closeTable(table);
+        else openTable(table);
     };
 
-    document.querySelectorAll('#doctor .filter-table').forEach(table => {
+    tables.forEach(table => {
         const head = table.querySelector('.filter-head');
-        const sel = table.querySelector('.filter-selected');
+        const trigger = table.querySelector('.filter-selected');
+        const list = table.querySelector('.filter-list');
+
+        // Keep aria-expanded synced with the .is-open class, whoever toggles it.
+        if (trigger) {
+            const sync = () => trigger.setAttribute(
+                'aria-expanded', table.classList.contains('is-open') ? 'true' : 'false');
+            new MutationObserver(sync).observe(table, { attributes: true, attributeFilter: ['class'] });
+            sync();
+        }
+
         if (head) head.addEventListener('click', (e) => { e.stopPropagation(); toggleList(table); });
-        if (sel) sel.addEventListener('click', (e) => { e.stopPropagation(); toggleList(table); });
+        if (trigger) trigger.addEventListener('click', (e) => { e.stopPropagation(); toggleList(table); });
+
+        // ---- Keyboard: on the trigger button ----
+        trigger?.addEventListener('keydown', (e) => {
+            switch (e.key) {
+                case 'Enter':
+                case ' ':
+                case 'ArrowDown': {
+                    e.preventDefault();
+                    openTable(table);
+                    visibleOptions(list)[0]?.focus();
+                    break;
+                }
+                case 'ArrowUp': {
+                    e.preventDefault();
+                    openTable(table);
+                    const opts = visibleOptions(list);
+                    opts[opts.length - 1]?.focus();
+                    break;
+                }
+                case 'Escape':
+                    closeTable(table);
+                    break;
+            }
+        });
+
+        // ---- Keyboard: while focus is inside the listbox ----
+        list?.addEventListener('keydown', (e) => {
+            const opts = visibleOptions(list);
+            if (!opts.length) return;
+            const current = document.activeElement;
+            const i = opts.indexOf(current);
+
+            switch (e.key) {
+                case 'ArrowDown':
+                    e.preventDefault();
+                    opts[i < 0 ? 0 : Math.min(i + 1, opts.length - 1)].focus();
+                    break;
+                case 'ArrowUp':
+                    e.preventDefault();
+                    opts[i < 0 ? opts.length - 1 : Math.max(i - 1, 0)].focus();
+                    break;
+                case 'Home':
+                    e.preventDefault();
+                    opts[0].focus();
+                    break;
+                case 'End':
+                    e.preventDefault();
+                    opts[opts.length - 1].focus();
+                    break;
+                case 'Enter':
+                case ' ':
+                    e.preventDefault();
+                    current?.click();        // existing handlers select + close
+                    trigger?.focus();
+                    break;
+                case 'Escape':
+                    e.preventDefault();
+                    closeTable(table);
+                    trigger?.focus();
+                    break;
+                case 'Tab':
+                    closeTable(table);       // let focus leave naturally
+                    break;
+            }
+        });
     });
 
     document.querySelectorAll('#doctor .filter-list').forEach(list => {
@@ -115,14 +201,13 @@ function initializeDropdowns() {
 
     document.addEventListener('click', (e) => {
         if (!e.target.closest('#doctor .filter-table')) {
-            document.querySelectorAll('#doctor .filter-table').forEach(t => t.classList.remove('is-open'));
+            tables.forEach(t => t.classList.remove('is-open'));
         }
     });
 }
 
 // ========== DOCTOR SYSTEM ==========
 function initializeDoctorSystem() {
-    console.log('🔧 Doctor System Initializing');
 
     function getVideoUrl(doctorInfo) {
         if (!doctorInfo) return '';
@@ -241,7 +326,9 @@ function initializeDoctorSystem() {
 
     function updateCityOptions(selectedCity) {
         document.querySelectorAll('.city-option').forEach(opt => {
-            opt.style.display = (opt.getAttribute('data-city') === selectedCity) ? 'none' : 'block';
+            const isSelected = opt.getAttribute('data-city') === selectedCity;
+            opt.style.display = isSelected ? 'none' : 'block';
+            opt.setAttribute('aria-selected', isSelected ? 'true' : 'false');
         });
     }
 
@@ -252,6 +339,9 @@ function initializeDoctorSystem() {
         doctors.forEach((doctor, idx) => {
             const opt = document.createElement('div');
             opt.className = 'filter-option doc-option';
+            opt.setAttribute('role', 'option');
+            opt.setAttribute('tabindex', '-1');
+            opt.setAttribute('aria-selected', idx === selectedIndex ? 'true' : 'false');
             opt.setAttribute('data-city', cityKey);
             opt.setAttribute('data-index', String(idx));
             opt.setAttribute('data-name', doctor.doctor);
@@ -343,7 +433,6 @@ function initializeDoctorSystem() {
         docText.textContent = info.doctor;
         cityText.textContent = getCityTitle(cityKey);
 
-        console.log('📝 Updated:', info.doctor);
         if (displayThumb) {
             displayThumb.classList.remove('thumb-swapping');
             void displayThumb.offsetWidth;
@@ -361,7 +450,6 @@ function initializeDoctorSystem() {
         }
 
         if (data[cityKey].length === 0) {
-            console.log('ℹ️ City has no doctors yet:', cityKey);
             showEmptyCityState(cityKey);
             return;
         }
@@ -370,11 +458,9 @@ function initializeDoctorSystem() {
     }
 
     // Attach city option clicks
-    console.log('📌 Attaching city option clicks');
     document.querySelectorAll('.city-option').forEach((opt) => {
         opt.addEventListener('click', (e) => {
             const cityKey = opt.getAttribute('data-city');
-            console.log('🏙️ City clicked:', cityKey);
             e.stopPropagation();
             e.preventDefault();
             selectCity(cityKey);
@@ -383,14 +469,12 @@ function initializeDoctorSystem() {
     });
 
     // Attach doctor option clicks via event delegation (supports dynamic doctor list)
-    console.log('📌 Attaching doctor option clicks');
     docList?.addEventListener('click', (e) => {
         const option = e.target.closest('.doc-option');
         if (!option) return;
 
         const cityKey = option.getAttribute('data-city') || currentCity;
         const doctorIndex = Number(option.getAttribute('data-index') || '0');
-        console.log('👨‍⚕️ Doctor clicked:', cityKey, doctorIndex);
         e.stopPropagation();
         e.preventDefault();
         selectDoctor(cityKey, doctorIndex);
@@ -398,9 +482,7 @@ function initializeDoctorSystem() {
     });
 
     // Initial state
-    console.log('🚀 Initializing with Mumbai');
     selectDoctor(currentCity, currentDoctorIndex);
-    console.log('✨ Doctor System Ready');
 }
 
 // ========== BOUNCING TITLE ==========
@@ -866,7 +948,17 @@ function initializeCustomCursor() {
         ringX += (mouseX - ringX) * 0.18;
         ringY += (mouseY - ringY) * 0.18;
         ring.style.transform = `translate3d(${ringX}px, ${ringY}px, 0) translate(-50%, -50%)`;
+        // Stop the loop once the ring has caught up to the pointer — avoids a
+        // perpetual 60fps rAF running (and burning CPU) while the mouse is idle.
+        if (Math.abs(mouseX - ringX) < 0.1 && Math.abs(mouseY - ringY) < 0.1) {
+            rafId = null;
+            return;
+        }
         rafId = requestAnimationFrame(animateRing);
+    }
+
+    function startRing() {
+        if (rafId == null) rafId = requestAnimationFrame(animateRing);
     }
 
     document.addEventListener('mousemove', (e) => {
@@ -875,6 +967,7 @@ function initializeCustomCursor() {
         moveDot();
         setRingState(e.target);
         document.body.classList.add('custom-cursor-active');
+        startRing();
     }, { passive: true });
 
     document.addEventListener('mouseover', (e) => {
@@ -920,7 +1013,6 @@ function initializeAll() {
     initializeScrollParallax();
     initializeHeroScrollCue();
     initializeRipples();
-    console.log('✅ ALL SYSTEMS GO');
 }
 
 // Run when ready

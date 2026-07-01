@@ -1,21 +1,35 @@
 <!-- NAVBAR -->
 <nav class="navbar">
     <div class="nav-container">
+        <!-- left: logo -->
         <a href="#hero" class="nav-logo">
             <img src="assests/MIQNAF Logo.svg" alt="MIQNAF" class="logo-img">
         </a>
-        
-        <!-- Mobile Menu Toggle Button -->
-        <button class="menu-toggle" id="menu-toggle" aria-label="Open menu">
+
+        <!-- center: navigation -->
+        <ul class="nav-links" id="nav-links">
+            <li><a href="#hero" class="nav-link active">Home</a></li>
+            <li><a href="#clinical-experience" class="nav-link">Clinical</a></li>
+            <li><a href="#about-miqnaf" class="nav-link">About</a></li>
+            <li><a href="#evolution" class="nav-link">Evolution</a></li>
+            <li><a href="#moa" class="nav-link">Mechanism</a></li>
+            <li><a href="#molecule-3d" class="nav-link">Molecule</a></li>
+        </ul>
+
+        <!-- right: CTA -->
+        <a href="#resistance-map" class="nav-cta">
+            <svg class="nav-cta-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 21s-7-7.2-7-12a7 7 0 0 1 14 0c0 4.8-7 12-7 12z"/>
+                <circle cx="12" cy="9" r="2.6"/>
+            </svg>
+            <span>Map</span>
+        </a>
+
+        <!-- mobile menu toggle -->
+        <button type="button" class="menu-toggle" id="menu-toggle" aria-label="Open menu">
             <span></span>
             <span></span>
             <span></span>
         </button>
-
-        <ul class="nav-links" id="nav-links">
-            <li><a href="#hero" class="nav-link active">Home <span class="nav-chevron"></span></a></li>
-            <li><a href="#clinical-experience" class="nav-link">Clinical Experience <span class="nav-chevron"></span></a></li>
-            <li><a href="#about-miqnaf" class="nav-link">About MIQNAF <span class="nav-chevron"></span></a></li>
-        </ul>
     </div>
 </nav>

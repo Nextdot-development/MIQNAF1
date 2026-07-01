@@ -1,0 +1,673 @@
+<!-- AMR RESISTANCE MAP -->
+<section id="resistance-map" class="rmap-section fade-in-on-scroll">
+  <style>
+    .rmap-section{width:100%;padding:2.5rem 1rem 5rem;overflow:hidden;background:transparent}
+    .rmap-container{width:100%;max-width:1300px;margin:0 auto}
+    .rmap-head{margin-bottom:1.6rem}
+    .rmap-eyebrow{font-family:'Acumin Variable',sans-serif;font-size:.8rem;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--orange-section);margin-bottom:.6rem}
+    .rmap-title{font-family:'Acumin Variable',sans-serif;font-size:clamp(2rem,3.4vw,3.3rem);font-weight:800;line-height:1.12;color:var(--brand-navy);margin:0}
+    .rmap-title em{font-style:italic;color:var(--brand-red)}
+    .rmap-sub{font-family:'Acumin Variable',sans-serif;font-size:clamp(1rem,1.4vw,1.2rem);font-weight:600;color:var(--text-muted);margin-top:.7rem;max-width:66ch}
+    .rmap-disc{display:inline-block;margin-top:1rem;background:rgba(239,106,43,.08);border:1px solid rgba(239,106,43,.25);
+      padding:8px 16px;border-radius:999px;font-family:'Acumin Variable',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--orange-section)}
+    .rmap-atlas{margin-top:1.8rem;background:#fff;border:1px solid rgba(41,57,127,.1);border-radius:18px;padding:24px 26px 8px;
+      box-shadow:0 1px 4px rgba(0,0,0,.05),0 14px 36px rgba(0,0,0,.05)}
+    /* Theme-bridge variables for the embedded atlas */
+    #rmap-atlas-vars{
+      --color-background-primary:#ffffff;
+      --color-background-secondary:#F2F4F6;
+      --color-background-info:rgba(41,57,127,.08);
+      --color-text-primary:#1A2433;
+      --color-text-secondary:rgba(51,51,51,.62);
+      --color-text-tertiary:rgba(51,51,51,.4);
+      --color-text-info:var(--brand-navy);
+      --color-border-secondary:rgba(41,57,127,.16);
+      --color-border-tertiary:rgba(41,57,127,.1);
+      --font-sans:'Acumin Variable',sans-serif;
+      --border-radius-md:8px;
+      --border-radius-lg:14px;
+    }
+    /* Re-theme the atlas accent from its default blue to brand navy */
+    #resistance-map .tab-btn.active{border-bottom-color:var(--brand-navy)!important;color:var(--brand-navy)!important}
+    #resistance-map .ptab.active{background:var(--brand-navy)!important;border-color:var(--brand-navy)!important}
+    #resistance-map .source-box a,
+    #resistance-map .atlas-wrap a{color:var(--brand-navy)!important}
+    #resistance-map .atlas-wrap [style*="color:#185FA5"]{color:var(--brand-navy)!important}
+  </style>
+
+  <div class="rmap-container">
+    <div class="rmap-head">
+      <div class="rmap-eyebrow">Interactive Intelligence</div>
+      <h2 class="rmap-title">CABP AMR Resistance <em>Map</em></h2>
+      <p class="rmap-sub">Select a pathogen and antibiotic to map resistance rates globally and across India's states &mdash; the resistance landscape MIQNAF&reg; was built to answer.</p>
+      <div class="rmap-disc">Illustrative &middot; Published surveillance data 2018&ndash;2024</div>
+    </div>
+
+    <div class="rmap-atlas">
+      <div id="rmap-atlas-vars">
+
+<style>
+#resistance-map *{box-sizing:border-box}
+#resistance-map .atlas-wrap{font-family:var(--font-sans);padding:0 0 1rem}
+.tab-bar{display:flex;gap:4px;border-bottom:0.5px solid var(--color-border-tertiary);margin-bottom:0;flex-wrap:wrap}
+.tab-btn{padding:10px 18px;font-size:13px;font-weight:600;border:none;background:transparent;cursor:pointer;color:var(--color-text-secondary);border-bottom:2px solid transparent;margin-bottom:-1px;transition:color .15s}
+.tab-btn.active{color:var(--color-text-primary);border-bottom-color:#185FA5}
+.tab-pane{display:none;padding:16px 0 0}
+.tab-pane.active{display:block}
+.controls{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:14px;align-items:center}
+.ctrl-group{display:flex;flex-direction:column;gap:3px}
+.ctrl-label{font-size:11px;color:var(--color-text-secondary);font-weight:600;text-transform:uppercase;letter-spacing:.4px}
+#resistance-map select{font-size:13px;padding:6px 10px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:var(--color-background-primary);color:var(--color-text-primary);cursor:pointer;min-width:160px;font-family:var(--font-sans)}
+.map-container{position:relative;width:100%;background:var(--color-background-secondary);border-radius:var(--border-radius-lg);border:0.5px solid var(--color-border-tertiary);overflow:hidden}
+#world-map,#india-map{width:100%;display:block}
+.legend{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:10px;font-size:12px;color:var(--color-text-secondary)}
+.legend-bar{display:flex;height:12px;border-radius:2px;overflow:hidden;width:200px}
+.legend-seg{flex:1}
+.legend-labels{display:flex;justify-content:space-between;width:200px;font-size:11px}
+.tooltip{position:fixed;background:var(--color-background-primary);border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);padding:10px 14px;font-size:12px;pointer-events:none;display:none;z-index:999;max-width:240px;box-shadow:0 6px 24px rgba(0,0,0,.12)}
+.tt-country{font-size:13px;font-weight:600;color:var(--color-text-primary);margin-bottom:6px}
+.tt-row{display:flex;justify-content:space-between;gap:16px;padding:2px 0;color:var(--color-text-secondary)}
+.tt-val{font-weight:600;color:var(--color-text-primary)}
+.resistance-pill{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600}
+.r-low{background:#EAF3DE;color:#3B6D11}
+.r-mod{background:#FAEEDA;color:#854F0B}
+.r-high{background:#FAECE7;color:#993C1D}
+.r-vhigh{background:#FCEBEB;color:#A32D2D}
+.r-none{background:var(--color-background-secondary);color:var(--color-text-tertiary)}
+.data-table{width:100%;border-collapse:collapse;font-size:12px;margin-top:12px}
+.data-table th{text-align:left;padding:8px 10px;font-weight:600;font-size:11px;color:var(--color-text-secondary);border-bottom:0.5px solid var(--color-border-tertiary);background:var(--color-background-secondary)}
+.data-table td{padding:7px 10px;border-bottom:0.5px solid var(--color-border-tertiary);color:var(--color-text-primary);vertical-align:middle}
+.data-table tr:last-child td{border-bottom:none}
+.data-table tr:hover td{background:var(--color-background-secondary)}
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:16px}
+.stat-card{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:12px 14px}
+.stat-label{font-size:11px;color:var(--color-text-secondary);margin-bottom:4px}
+.stat-val{font-size:22px;font-weight:600;color:var(--color-text-primary)}
+.stat-sub{font-size:11px;color:var(--color-text-secondary);margin-top:2px}
+.section-title{font-size:13px;font-weight:600;color:var(--color-text-secondary);margin:16px 0 8px;text-transform:uppercase;letter-spacing:.4px}
+.pathogen-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.ptab{padding:5px 12px;font-size:12px;border:0.5px solid var(--color-border-secondary);border-radius:20px;cursor:pointer;background:transparent;color:var(--color-text-secondary);transition:all .15s;font-family:var(--font-sans)}
+.ptab.active{background:#185FA5;color:#fff;border-color:#185FA5}
+.source-box{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:12px 14px;margin-top:16px;font-size:12px;color:var(--color-text-secondary);line-height:1.6}
+.source-box a{color:#185FA5;text-decoration:none}
+.bar-wrap{display:flex;align-items:center;gap:8px}
+.bar-bg{flex:1;height:8px;background:var(--color-background-secondary);border-radius:4px;overflow:hidden}
+.bar-fill{height:100%;border-radius:4px;transition:width .3s}
+.note-tag{display:inline-flex;align-items:center;gap:4px;font-size:11px;padding:3px 8px;border-radius:10px;background:var(--color-background-info);color:var(--color-text-info)}
+.india-state-info{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:12px;margin-top:12px}
+.flex-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+</style>
+
+<h2 class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">CABP Antibiotic Resistance Atlas &mdash; Interactive world and India resistance maps for community-acquired bacterial pneumonia pathogens</h2>
+
+<div class="atlas-wrap">
+  <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:16px">
+    <div>
+      <div style="font-size:11px;font-weight:700;color:#185FA5;text-transform:uppercase;letter-spacing:.6px;margin-bottom:4px">Antimicrobial Resistance Intelligence</div>
+      <div style="font-size:20px;font-weight:700;color:var(--color-text-primary)">CABP Resistance Atlas</div>
+      <div style="font-size:13px;color:var(--color-text-secondary);margin-top:2px">Community-Acquired Bacterial Pneumonia &middot; Typical &amp; Atypical Pathogens</div>
+    </div>
+    <div class="note-tag">Data: 2018&ndash;2024 aggregated</div>
+  </div>
+
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="rmapSwitchTab('world')">World Map</button>
+    <button class="tab-btn" onclick="rmapSwitchTab('india')">India Map</button>
+    <button class="tab-btn" onclick="rmapSwitchTab('table')">Data Table</button>
+    <button class="tab-btn" onclick="rmapSwitchTab('drugs')">Drug Profiles</button>
+    <button class="tab-btn" onclick="rmapSwitchTab('sources')">Sources</button>
+  </div>
+
+  <div class="tab-pane active" id="rmap-tab-world">
+    <div class="controls">
+      <div class="ctrl-group">
+        <span class="ctrl-label">Pathogen</span>
+        <select id="wPathogen" onchange="renderWorld()">
+          <option value="spneu">S. pneumoniae (Typical)</option>
+          <option value="hi">H. influenzae (Typical)</option>
+          <option value="mcat">M. catarrhalis (Typical)</option>
+          <option value="sa">S. aureus (Typical)</option>
+          <option value="kp">K. pneumoniae (Typical)</option>
+          <option value="mp">M. pneumoniae (Atypical)</option>
+          <option value="cp">C. pneumoniae (Atypical)</option>
+          <option value="lp">L. pneumophila (Atypical)</option>
+        </select>
+      </div>
+      <div class="ctrl-group">
+        <span class="ctrl-label">Antibiotic</span>
+        <select id="wDrug" onchange="renderWorld()">
+          <option value="pen">Penicillin / Amoxicillin</option>
+          <option value="macro">Macrolides (Azithromycin)</option>
+          <option value="fq">Fluoroquinolones (Levo/Moxi)</option>
+          <option value="ceph">3rd-gen Cephalosporins</option>
+          <option value="tet">Tetracyclines / Doxycycline</option>
+          <option value="tms">TMP-SMX</option>
+          <option value="carb">Carbapenems</option>
+        </select>
+      </div>
+    </div>
+    <div class="map-container">
+      <svg id="world-map" viewBox="0 0 900 460"></svg>
+    </div>
+    <div class="legend">
+      <div class="ctrl-label" style="min-width:70px">Resistance %</div>
+      <div>
+        <div class="legend-bar">
+          <div class="legend-seg" style="background:#EAF3DE"></div>
+          <div class="legend-seg" style="background:#C0DD97"></div>
+          <div class="legend-seg" style="background:#FAEEDA"></div>
+          <div class="legend-seg" style="background:#EF9F27"></div>
+          <div class="legend-seg" style="background:#F09595"></div>
+          <div class="legend-seg" style="background:#E24B4A"></div>
+          <div class="legend-seg" style="background:#A32D2D"></div>
+        </div>
+        <div class="legend-labels"><span>0%</span><span>20%</span><span>40%</span><span>60%</span><span>80%+</span></div>
+      </div>
+      <div style="display:flex;gap:10px;margin-left:8px">
+        <span style="font-size:11px;display:flex;align-items:center;gap:3px"><span style="display:inline-block;width:10px;height:10px;background:#B4B2A9;border-radius:2px"></span>No data</span>
+      </div>
+    </div>
+    <div id="world-selected" style="margin-top:14px"></div>
+  </div>
+
+  <div class="tab-pane" id="rmap-tab-india">
+    <div class="controls">
+      <div class="ctrl-group">
+        <span class="ctrl-label">Pathogen</span>
+        <select id="iPathogen" onchange="renderIndia()">
+          <option value="spneu">S. pneumoniae</option>
+          <option value="hi">H. influenzae</option>
+          <option value="kp">K. pneumoniae</option>
+          <option value="sa">S. aureus (MRSA)</option>
+          <option value="mp">M. pneumoniae</option>
+          <option value="mcat">M. catarrhalis</option>
+        </select>
+      </div>
+      <div class="ctrl-group">
+        <span class="ctrl-label">Antibiotic</span>
+        <select id="iDrug" onchange="renderIndia()">
+          <option value="pen">Penicillin / Amoxicillin</option>
+          <option value="macro">Macrolides</option>
+          <option value="fq">Fluoroquinolones</option>
+          <option value="ceph">3rd-gen Cephalosporins</option>
+          <option value="tet">Tetracyclines</option>
+          <option value="tms">TMP-SMX</option>
+        </select>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 220px;gap:12px;align-items:start">
+      <div class="map-container">
+        <svg id="india-map" viewBox="0 0 500 560"></svg>
+      </div>
+      <div id="india-state-detail" class="india-state-info">
+        <div style="font-size:12px;color:var(--color-text-secondary)">Click a state to see resistance details</div>
+      </div>
+    </div>
+    <div class="legend" style="margin-top:8px">
+      <div class="ctrl-label" style="min-width:70px">Resistance %</div>
+      <div>
+        <div class="legend-bar">
+          <div class="legend-seg" style="background:#EAF3DE"></div>
+          <div class="legend-seg" style="background:#C0DD97"></div>
+          <div class="legend-seg" style="background:#FAEEDA"></div>
+          <div class="legend-seg" style="background:#EF9F27"></div>
+          <div class="legend-seg" style="background:#F09595"></div>
+          <div class="legend-seg" style="background:#E24B4A"></div>
+          <div class="legend-seg" style="background:#A32D2D"></div>
+        </div>
+        <div class="legend-labels"><span>0%</span><span>20%</span><span>40%</span><span>60%</span><span>80%+</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-pane" id="rmap-tab-table">
+    <div class="stat-grid" id="summary-stats"></div>
+    <div class="pathogen-tabs" id="ptabs"></div>
+    <div style="overflow-x:auto">
+      <table class="data-table" id="resistance-table">
+        <thead><tr id="table-head"></tr></thead>
+        <tbody id="table-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="tab-pane" id="rmap-tab-drugs">
+    <div id="drug-profiles"></div>
+  </div>
+
+  <div class="tab-pane" id="rmap-tab-sources">
+    <div id="sources-content"></div>
+  </div>
+</div>
+
+<div class="tooltip" id="tooltip"></div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js"></script>
+<script>
+const PATHOGENS = {
+  spneu:{label:'S. pneumoniae',type:'Typical',color:'#29397f'},
+  hi:{label:'H. influenzae',type:'Typical',color:'#3B6D11'},
+  mcat:{label:'M. catarrhalis',type:'Typical',color:'#854F0B'},
+  sa:{label:'S. aureus',type:'Typical',color:'#993C1D'},
+  kp:{label:'K. pneumoniae',type:'Typical',color:'#993356'},
+  mp:{label:'M. pneumoniae',type:'Atypical',color:'#534AB7'},
+  cp:{label:'C. pneumoniae',type:'Atypical',color:'#0F6E56'},
+  lp:{label:'L. pneumophila',type:'Atypical',color:'#BA7517'}
+};
+const DRUGS = {
+  pen:{label:'Penicillin/Amoxicillin',class:'β-lactam',spectrum:'Narrow',cabp:'First-line for mild CAP (S. pneumoniae)'},
+  macro:{label:'Macrolides (Azithromycin/Clarithromycin)',class:'Macrolide',spectrum:'Broad',cabp:'Atypical coverage; 5-day azithromycin standard of care'},
+  fq:{label:'Fluoroquinolones (Levo/Moxifloxacin)',class:'Fluoroquinolone',spectrum:'Broad',cabp:'Respiratory quinolones — typical + atypical dual coverage'},
+  ceph:{label:'3rd-gen Cephalosporins (Ceftriaxone)',class:'β-lactam',spectrum:'Extended',cabp:'Moderate-severe CAP; hospital IV treatment'},
+  tet:{label:'Tetracyclines / Doxycycline',class:'Tetracycline',spectrum:'Broad',cabp:'Atypical coverage; outpatient mild CAP alternative'},
+  tms:{label:'TMP-SMX (Co-trimoxazole)',class:'Folate inhibitor',spectrum:'Broad',cabp:'Alternative for mild CAP; high resistance in India'},
+  carb:{label:'Carbapenems (Meropenem/Imipenem)',class:'Carbapenem',spectrum:'Very Broad',cabp:'Severe/ICU CAP with MDR organisms; last resort'}
+};
+
+const WORLD_DATA = {
+  spneu:{
+    pen:{USA:20,GBR:4,FRA:27,DEU:7,ITA:18,ESP:26,IND:35,CHN:45,JPN:15,BRA:20,AUS:8,RUS:15,SAU:30,ZAF:22,NGA:40,MEX:25,KOR:17,TUR:20,PAK:38,BGD:42,IDN:35,PHL:28,VNM:50,THA:22,EGY:33,ARG:18,CAN:12,NLD:5,SWE:3,NOR:4,DNK:5,POL:14,UKR:25,IRN:30},
+    macro:{USA:34,GBR:12,FRA:20,DEU:11,ITA:22,ESP:19,IND:48,CHN:96,JPN:88,BRA:18,AUS:16,RUS:22,SAU:25,ZAF:20,NGA:35,MEX:22,KOR:72,TUR:18,PAK:30,BGD:38,IDN:30,PHL:25,VNM:55,THA:30,EGY:28,ARG:15,CAN:18,NLD:8,SWE:6,NOR:5,DNK:6,POL:12,UKR:22,IRN:25},
+    fq:{USA:1,GBR:1,FRA:2,DEU:1,ITA:3,ESP:2,IND:5,CHN:8,JPN:2,BRA:3,AUS:1,RUS:4,SAU:4,ZAF:3,NGA:6,MEX:4,KOR:5,TUR:4,PAK:8,BGD:10,IDN:7,PHL:5,VNM:12,THA:4,EGY:6,ARG:2,CAN:1,NLD:1,SWE:1,NOR:1,DNK:1,POL:2,UKR:5,IRN:5},
+    ceph:{USA:5,GBR:2,FRA:10,DEU:3,ITA:8,ESP:12,IND:15,CHN:20,JPN:8,BRA:8,AUS:4,RUS:6,SAU:12,ZAF:10,NGA:18,MEX:10,KOR:8,TUR:9,PAK:14,BGD:18,IDN:14,PHL:12,VNM:22,THA:9,EGY:15,ARG:8,CAN:3,NLD:2,SWE:2,NOR:2,DNK:2,POL:5,UKR:12,IRN:14},
+    tet:{USA:15,GBR:8,FRA:18,DEU:10,ITA:20,ESP:22,IND:40,CHN:55,JPN:30,BRA:20,AUS:12,RUS:20,SAU:28,ZAF:25,NGA:45,MEX:22,KOR:25,TUR:22,PAK:42,BGD:48,IDN:38,PHL:30,VNM:52,THA:28,EGY:35,ARG:18,CAN:14,NLD:7,SWE:5,NOR:5,DNK:6,POL:15,UKR:25,IRN:30},
+    tms:{USA:25,GBR:10,FRA:20,DEU:12,ITA:22,ESP:25,IND:55,CHN:45,JPN:20,BRA:30,AUS:15,RUS:30,SAU:35,ZAF:35,NGA:55,MEX:35,KOR:22,TUR:28,PAK:60,BGD:65,IDN:50,PHL:45,VNM:58,THA:40,EGY:48,ARG:25,CAN:14,NLD:8,SWE:6,NOR:5,DNK:6,POL:18,UKR:30,IRN:38},
+    carb:{USA:1,GBR:1,FRA:1,DEU:1,ITA:1,ESP:1,IND:2,CHN:2,JPN:1,BRA:2,AUS:1,RUS:2,SAU:2,ZAF:2,NGA:3,MEX:2,KOR:1,TUR:1,PAK:3,BGD:4,IDN:2,PHL:2,VNM:3,THA:2,EGY:2,ARG:1,CAN:1,NLD:1,SWE:1,NOR:1,DNK:1,POL:1,UKR:2,IRN:2}
+  },
+  hi:{
+    pen:{USA:38,GBR:18,FRA:25,DEU:20,ITA:22,ESP:28,IND:55,CHN:50,JPN:40,BRA:35,AUS:22,RUS:28,SAU:40,ZAF:30,NGA:55,MEX:35,KOR:45,TUR:32,PAK:58,BGD:62,IDN:52,PHL:48,VNM:60,THA:40,EGY:50,ARG:30,CAN:25,NLD:12,SWE:8,NOR:6,DNK:8,POL:22,UKR:32,IRN:42},
+    macro:{USA:12,GBR:8,FRA:10,DEU:8,ITA:12,ESP:15,IND:20,CHN:25,JPN:15,BRA:15,AUS:10,RUS:15,SAU:18,ZAF:15,NGA:25,MEX:18,KOR:20,TUR:14,PAK:22,BGD:28,IDN:22,PHL:18,VNM:30,THA:18,EGY:20,ARG:12,CAN:8,NLD:5,SWE:4,NOR:3,DNK:4,POL:10,UKR:15,IRN:18},
+    fq:{USA:2,GBR:1,FRA:2,DEU:1,ITA:2,ESP:2,IND:8,CHN:10,JPN:4,BRA:4,AUS:2,RUS:5,SAU:5,ZAF:4,NGA:8,MEX:5,KOR:6,TUR:4,PAK:10,BGD:12,IDN:8,PHL:6,VNM:15,THA:5,EGY:8,ARG:3,CAN:2,NLD:1,SWE:1,NOR:1,DNK:1,POL:3,UKR:6,IRN:7},
+    ceph:{USA:8,GBR:5,FRA:8,DEU:6,ITA:10,ESP:12,IND:18,CHN:22,JPN:12,BRA:12,AUS:8,RUS:10,SAU:15,ZAF:12,NGA:22,MEX:14,KOR:15,TUR:11,PAK:20,BGD:25,IDN:18,PHL:15,VNM:28,THA:12,EGY:18,ARG:10,CAN:5,NLD:3,SWE:2,NOR:2,DNK:2,POL:8,UKR:12,IRN:15},
+    tet:{USA:20,GBR:10,FRA:15,DEU:12,ITA:18,ESP:20,IND:35,CHN:40,JPN:25,BRA:22,AUS:14,RUS:22,SAU:28,ZAF:24,NGA:40,MEX:25,KOR:28,TUR:20,PAK:40,BGD:45,IDN:38,PHL:30,VNM:48,THA:28,EGY:32,ARG:18,CAN:14,NLD:7,SWE:5,NOR:4,DNK:6,POL:15,UKR:22,IRN:28},
+    tms:{USA:30,GBR:15,FRA:22,DEU:15,ITA:25,ESP:28,IND:60,CHN:50,JPN:30,BRA:35,AUS:18,RUS:32,SAU:38,ZAF:38,NGA:58,MEX:38,KOR:28,TUR:30,PAK:65,BGD:70,IDN:55,PHL:50,VNM:62,THA:45,EGY:50,ARG:28,CAN:18,NLD:10,SWE:7,NOR:6,DNK:7,POL:20,UKR:32,IRN:40},
+    carb:{USA:2,GBR:1,FRA:2,DEU:1,ITA:2,ESP:2,IND:5,CHN:6,JPN:2,BRA:4,AUS:1,RUS:3,SAU:4,ZAF:3,NGA:6,MEX:4,KOR:3,TUR:3,PAK:7,BGD:9,IDN:6,PHL:5,VNM:8,THA:4,EGY:5,ARG:2,CAN:1,NLD:1,SWE:1,NOR:1,DNK:1,POL:2,UKR:4,IRN:5}
+  },
+  kp:{
+    pen:{USA:0,GBR:0,FRA:0,DEU:0,ITA:0,ESP:0,IND:0,CHN:0,JPN:0,BRA:0,AUS:0,RUS:0,SAU:0,ZAF:0,NGA:0,MEX:0,KOR:0,TUR:0,PAK:0,BGD:0,IDN:0,PHL:0,VNM:0,THA:0,EGY:0,ARG:0,CAN:0,NLD:0,SWE:0,NOR:0,DNK:0,POL:0,UKR:0,IRN:0},
+    macro:{USA:0,GBR:0,FRA:0,DEU:0,ITA:0,ESP:0,IND:0,CHN:0,JPN:0,BRA:0,AUS:0,RUS:0,SAU:0,ZAF:0,NGA:0,MEX:0,KOR:0,TUR:0,PAK:0,BGD:0,IDN:0,PHL:0,VNM:0,THA:0,EGY:0,ARG:0,CAN:0,NLD:0,SWE:0,NOR:0,DNK:0,POL:0,UKR:0,IRN:0},
+    fq:{USA:10,GBR:8,FRA:12,DEU:9,ITA:22,ESP:18,IND:45,CHN:42,JPN:15,BRA:20,AUS:10,RUS:28,SAU:30,ZAF:25,NGA:40,MEX:28,KOR:25,TUR:28,PAK:50,BGD:55,IDN:45,PHL:38,VNM:52,THA:30,EGY:40,ARG:18,CAN:8,NLD:6,SWE:4,NOR:4,DNK:5,POL:15,UKR:30,IRN:38},
+    ceph:{USA:15,GBR:10,FRA:18,DEU:12,ITA:30,ESP:25,IND:55,CHN:50,JPN:20,BRA:30,AUS:12,RUS:35,SAU:38,ZAF:32,NGA:50,MEX:35,KOR:30,TUR:32,PAK:60,BGD:65,IDN:55,PHL:48,VNM:60,THA:38,EGY:48,ARG:25,CAN:10,NLD:7,SWE:5,NOR:4,DNK:6,POL:18,UKR:35,IRN:45},
+    tet:{USA:20,GBR:15,FRA:22,DEU:16,ITA:28,ESP:25,IND:50,CHN:48,JPN:22,BRA:28,AUS:16,RUS:30,SAU:35,ZAF:30,NGA:48,MEX:30,KOR:28,TUR:28,PAK:55,BGD:60,IDN:50,PHL:42,VNM:55,THA:35,EGY:45,ARG:22,CAN:14,NLD:10,SWE:7,NOR:6,DNK:8,POL:18,UKR:30,IRN:40},
+    tms:{USA:25,GBR:20,FRA:28,DEU:20,ITA:38,ESP:35,IND:65,CHN:58,JPN:25,BRA:38,AUS:18,RUS:42,SAU:45,ZAF:42,NGA:62,MEX:42,KOR:35,TUR:38,PAK:70,BGD:75,IDN:62,PHL:55,VNM:68,THA:48,EGY:55,ARG:30,CAN:18,NLD:12,SWE:8,NOR:6,DNK:8,POL:22,UKR:40,IRN:50},
+    carb:{USA:8,GBR:5,FRA:10,DEU:6,ITA:22,ESP:18,IND:35,CHN:30,JPN:8,BRA:15,AUS:5,RUS:20,SAU:22,ZAF:18,NGA:28,MEX:18,KOR:15,TUR:20,PAK:40,BGD:45,IDN:35,PHL:28,VNM:42,THA:20,EGY:30,ARG:12,CAN:5,NLD:3,SWE:2,NOR:2,DNK:3,POL:10,UKR:22,IRN:30}
+  },
+  mp:{
+    macro:{USA:8,GBR:4,FRA:6,DEU:4,ITA:8,ESP:7,IND:20,CHN:90,JPN:55,BRA:10,AUS:5,RUS:12,SAU:15,ZAF:10,NGA:15,MEX:10,KOR:60,TUR:10,PAK:18,BGD:22,IDN:15,PHL:12,VNM:25,THA:15,EGY:18,ARG:7,CAN:5,NLD:3,SWE:2,NOR:2,DNK:2,POL:6,UKR:14,IRN:16},
+    fq:{USA:1,GBR:1,FRA:1,DEU:1,ITA:1,ESP:1,IND:2,CHN:2,JPN:2,BRA:1,AUS:1,RUS:2,SAU:2,ZAF:1,NGA:2,MEX:1,KOR:2,TUR:1,PAK:3,BGD:3,IDN:2,PHL:2,VNM:3,THA:2,EGY:2,ARG:1,CAN:1,NLD:1,SWE:1,NOR:1,DNK:1,POL:1,UKR:2,IRN:2},
+    tet:{USA:2,GBR:1,FRA:2,DEU:1,ITA:2,ESP:2,IND:5,CHN:8,JPN:5,BRA:2,AUS:1,RUS:3,SAU:4,ZAF:2,NGA:5,MEX:3,KOR:5,TUR:2,PAK:6,BGD:7,IDN:5,PHL:4,VNM:8,THA:4,EGY:5,ARG:2,CAN:1,NLD:1,SWE:1,NOR:1,DNK:1,POL:2,UKR:4,IRN:4},
+    pen:{USA:100,GBR:100,FRA:100,DEU:100,ITA:100,ESP:100,IND:100,CHN:100,JPN:100,BRA:100,AUS:100,RUS:100,SAU:100,ZAF:100,NGA:100,MEX:100,KOR:100,TUR:100,PAK:100,BGD:100,IDN:100,PHL:100,VNM:100,THA:100,EGY:100,ARG:100,CAN:100,NLD:100,SWE:100,NOR:100,DNK:100,POL:100,UKR:100,IRN:100},
+    ceph:{USA:100,GBR:100,FRA:100,DEU:100,ITA:100,ESP:100,IND:100,CHN:100,JPN:100,BRA:100,AUS:100,RUS:100,SAU:100,ZAF:100,NGA:100,MEX:100,KOR:100,TUR:100,PAK:100,BGD:100,IDN:100,PHL:100,VNM:100,THA:100,EGY:100,ARG:100,CAN:100,NLD:100,SWE:100,NOR:100,DNK:100,POL:100,UKR:100,IRN:100},
+    tms:{USA:100,GBR:100,FRA:100,DEU:100,ITA:100,ESP:100,IND:100,CHN:100,JPN:100,BRA:100,AUS:100,RUS:100,SAU:100,ZAF:100,NGA:100,MEX:100,KOR:100,TUR:100,PAK:100,BGD:100,IDN:100,PHL:100,VNM:100,THA:100,EGY:100,ARG:100,CAN:100,NLD:100,SWE:100,NOR:100,DNK:100,POL:100,UKR:100,IRN:100},
+    carb:{USA:100,GBR:100,FRA:100,DEU:100,ITA:100,ESP:100,IND:100,CHN:100,JPN:100,BRA:100,AUS:100,RUS:100,SAU:100,ZAF:100,NGA:100,MEX:100,KOR:100,TUR:100,PAK:100,BGD:100,IDN:100,PHL:100,VNM:100,THA:100,EGY:100,ARG:100,CAN:100,NLD:100,SWE:100,NOR:100,DNK:100,POL:100,UKR:100,IRN:100}
+  },
+  mcat:{
+    pen:{USA:90,GBR:88,FRA:92,DEU:88,ITA:90,ESP:91,IND:95,CHN:95,JPN:90,BRA:88,AUS:88,RUS:90,SAU:92,ZAF:90,NGA:94,MEX:88,KOR:91,TUR:88,PAK:96,BGD:97,IDN:95,PHL:92,VNM:96,THA:90,EGY:93,ARG:85,CAN:88,NLD:85,SWE:82,NOR:80,DNK:83,POL:88,UKR:91,IRN:92},
+    macro:{USA:5,GBR:3,FRA:5,DEU:3,ITA:5,ESP:6,IND:10,CHN:15,JPN:8,BRA:6,AUS:4,RUS:7,SAU:8,ZAF:6,NGA:12,MEX:7,KOR:10,TUR:5,PAK:12,BGD:15,IDN:10,PHL:8,VNM:16,THA:7,EGY:10,ARG:4,CAN:3,NLD:2,SWE:2,NOR:2,DNK:2,POL:4,UKR:7,IRN:8},
+    fq:{USA:1,GBR:1,FRA:1,DEU:1,ITA:1,ESP:1,IND:3,CHN:4,JPN:2,BRA:2,AUS:1,RUS:2,SAU:2,ZAF:1,NGA:3,MEX:2,KOR:2,TUR:1,PAK:4,BGD:5,IDN:3,PHL:2,VNM:5,THA:2,EGY:3,ARG:1,CAN:1,NLD:1,SWE:1,NOR:1,DNK:1,POL:1,UKR:2,IRN:2},
+    ceph:{USA:2,GBR:1,FRA:2,DEU:1,ITA:2,ESP:2,IND:5,CHN:6,JPN:3,BRA:3,AUS:1,RUS:3,SAU:3,ZAF:2,NGA:5,MEX:3,KOR:3,TUR:2,PAK:6,BGD:8,IDN:5,PHL:4,VNM:7,THA:3,EGY:4,ARG:2,CAN:1,NLD:1,SWE:1,NOR:1,DNK:1,POL:2,UKR:3,IRN:4},
+    tet:{USA:10,GBR:6,FRA:10,DEU:7,ITA:12,ESP:12,IND:22,CHN:28,JPN:15,BRA:12,AUS:8,RUS:14,SAU:18,ZAF:15,NGA:25,MEX:14,KOR:18,TUR:12,PAK:25,BGD:30,IDN:22,PHL:18,VNM:32,THA:16,EGY:20,ARG:10,CAN:7,NLD:4,SWE:3,NOR:3,DNK:4,POL:8,UKR:14,IRN:16},
+    tms:{USA:15,GBR:10,FRA:14,DEU:10,ITA:16,ESP:18,IND:35,CHN:40,JPN:20,BRA:20,AUS:12,RUS:22,SAU:25,ZAF:22,NGA:38,MEX:20,KOR:22,TUR:17,PAK:40,BGD:45,IDN:36,PHL:28,VNM:45,THA:24,EGY:30,ARG:14,CAN:10,NLD:7,SWE:5,NOR:4,DNK:5,POL:12,UKR:20,IRN:25},
+    carb:{USA:1,GBR:1,FRA:1,DEU:1,ITA:1,ESP:1,IND:2,CHN:2,JPN:1,BRA:1,AUS:1,RUS:1,SAU:1,ZAF:1,NGA:2,MEX:1,KOR:1,TUR:1,PAK:2,BGD:3,IDN:2,PHL:1,VNM:2,THA:1,EGY:2,ARG:1,CAN:1,NLD:1,SWE:1,NOR:1,DNK:1,POL:1,UKR:1,IRN:1}
+  },
+  sa:{
+    pen:{USA:55,GBR:48,FRA:52,DEU:45,ITA:58,ESP:55,IND:72,CHN:68,JPN:45,BRA:55,AUS:50,RUS:58,SAU:62,ZAF:60,NGA:70,MEX:55,KOR:48,TUR:55,PAK:75,BGD:78,IDN:68,PHL:62,VNM:75,THA:55,EGY:65,ARG:48,CAN:45,NLD:30,SWE:22,NOR:18,DNK:22,POL:42,UKR:55,IRN:60},
+    macro:{USA:22,GBR:15,FRA:28,DEU:16,ITA:30,ESP:28,IND:45,CHN:50,JPN:35,BRA:28,AUS:20,RUS:30,SAU:35,ZAF:32,NGA:45,MEX:28,KOR:38,TUR:25,PAK:48,BGD:52,IDN:42,PHL:35,VNM:50,THA:30,EGY:40,ARG:20,CAN:18,NLD:10,SWE:8,NOR:6,DNK:8,POL:20,UKR:30,IRN:35},
+    fq:{USA:15,GBR:10,FRA:18,DEU:12,ITA:22,ESP:20,IND:40,CHN:45,JPN:25,BRA:20,AUS:14,RUS:25,SAU:28,ZAF:25,NGA:38,MEX:22,KOR:28,TUR:20,PAK:45,BGD:50,IDN:38,PHL:32,VNM:48,THA:25,EGY:36,ARG:15,CAN:12,NLD:7,SWE:5,NOR:4,DNK:5,POL:14,UKR:25,IRN:30},
+    ceph:{USA:18,GBR:12,FRA:20,DEU:14,ITA:28,ESP:25,IND:45,CHN:48,JPN:28,BRA:25,AUS:18,RUS:28,SAU:32,ZAF:28,NGA:42,MEX:25,KOR:30,TUR:24,PAK:50,BGD:55,IDN:42,PHL:35,VNM:52,THA:28,EGY:40,ARG:18,CAN:14,NLD:8,SWE:6,NOR:5,DNK:6,POL:16,UKR:28,IRN:35},
+    tet:{USA:25,GBR:18,FRA:28,DEU:20,ITA:32,ESP:30,IND:50,CHN:55,JPN:32,BRA:30,AUS:22,RUS:32,SAU:38,ZAF:34,NGA:50,MEX:30,KOR:35,TUR:28,PAK:55,BGD:60,IDN:48,PHL:40,VNM:58,THA:32,EGY:45,ARG:22,CAN:18,NLD:12,SWE:8,NOR:7,DNK:9,POL:20,UKR:32,IRN:38},
+    tms:{USA:30,GBR:22,FRA:32,DEU:22,ITA:38,ESP:36,IND:60,CHN:62,JPN:38,BRA:38,AUS:28,RUS:40,SAU:45,ZAF:42,NGA:58,MEX:38,KOR:40,TUR:35,PAK:65,BGD:70,IDN:55,PHL:48,VNM:65,THA:40,EGY:52,ARG:28,CAN:22,NLD:14,SWE:10,NOR:8,DNK:10,POL:24,UKR:38,IRN:45},
+    carb:{USA:2,GBR:1,FRA:2,DEU:2,ITA:3,ESP:3,IND:5,CHN:6,JPN:2,BRA:3,AUS:1,RUS:3,SAU:4,ZAF:3,NGA:6,MEX:3,KOR:3,TUR:2,PAK:7,BGD:8,IDN:5,PHL:4,VNM:7,THA:3,EGY:5,ARG:2,CAN:1,NLD:1,SWE:1,NOR:1,DNK:1,POL:2,UKR:3,IRN:4}
+  },
+  cp:{
+    macro:{USA:5,GBR:3,FRA:5,DEU:3,ITA:6,ESP:5,IND:15,CHN:30,JPN:20,BRA:7,AUS:4,RUS:8,SAU:10,ZAF:7,NGA:12,MEX:7,KOR:25,TUR:6,PAK:14,BGD:16,IDN:12,PHL:9,VNM:18,THA:8,EGY:11,ARG:5,CAN:3,NLD:2,SWE:2,NOR:2,DNK:2,POL:4,UKR:8,IRN:10},
+    fq:{USA:1,GBR:1,FRA:1,DEU:1,ITA:1,ESP:1,IND:2,CHN:3,JPN:2,BRA:1,AUS:1,RUS:2,SAU:2,ZAF:1,NGA:2,MEX:1,KOR:2,TUR:1,PAK:3,BGD:3,IDN:2,PHL:2,VNM:3,THA:2,EGY:2,ARG:1,CAN:1,NLD:1,SWE:1,NOR:1,DNK:1,POL:1,UKR:1,IRN:2},
+    tet:{USA:3,GBR:2,FRA:3,DEU:2,ITA:3,ESP:3,IND:8,CHN:12,JPN:7,BRA:4,AUS:2,RUS:5,SAU:6,ZAF:4,NGA:8,MEX:5,KOR:8,TUR:4,PAK:9,BGD:11,IDN:8,PHL:6,VNM:12,THA:5,EGY:7,ARG:3,CAN:2,NLD:1,SWE:1,NOR:1,DNK:1,POL:3,UKR:5,IRN:6},
+    pen:{USA:100,GBR:100,FRA:100,DEU:100,ITA:100,ESP:100,IND:100,CHN:100,JPN:100,BRA:100,AUS:100,RUS:100,SAU:100,ZAF:100,NGA:100,MEX:100,KOR:100,TUR:100,PAK:100,BGD:100,IDN:100,PHL:100,VNM:100,THA:100,EGY:100,ARG:100,CAN:100,NLD:100,SWE:100,NOR:100,DNK:100,POL:100,UKR:100,IRN:100},
+    ceph:{USA:100,GBR:100,FRA:100,DEU:100,ITA:100,ESP:100,IND:100,CHN:100,JPN:100,BRA:100,AUS:100,RUS:100,SAU:100,ZAF:100,NGA:100,MEX:100,KOR:100,TUR:100,PAK:100,BGD:100,IDN:100,PHL:100,VNM:100,THA:100,EGY:100,ARG:100,CAN:100,NLD:100,SWE:100,NOR:100,DNK:100,POL:100,UKR:100,IRN:100},
+    tms:{USA:100,GBR:100,FRA:100,DEU:100,ITA:100,ESP:100,IND:100,CHN:100,JPN:100,BRA:100,AUS:100,RUS:100,SAU:100,ZAF:100,NGA:100,MEX:100,KOR:100,TUR:100,PAK:100,BGD:100,IDN:100,PHL:100,VNM:100,THA:100,EGY:100,ARG:100,CAN:100,NLD:100,SWE:100,NOR:100,DNK:100,POL:100,UKR:100,IRN:100},
+    carb:{USA:100,GBR:100,FRA:100,DEU:100,ITA:100,ESP:100,IND:100,CHN:100,JPN:100,BRA:100,AUS:100,RUS:100,SAU:100,ZAF:100,NGA:100,MEX:100,KOR:100,TUR:100,PAK:100,BGD:100,IDN:100,PHL:100,VNM:100,THA:100,EGY:100,ARG:100,CAN:100,NLD:100,SWE:100,NOR:100,DNK:100,POL:100,UKR:100,IRN:100}
+  },
+  lp:{
+    macro:{USA:3,GBR:2,FRA:3,DEU:2,ITA:4,ESP:3,IND:8,CHN:10,JPN:6,BRA:4,AUS:2,RUS:5,SAU:6,ZAF:4,NGA:8,MEX:4,KOR:7,TUR:3,PAK:9,BGD:11,IDN:7,PHL:5,VNM:11,THA:5,EGY:7,ARG:3,CAN:2,NLD:1,SWE:1,NOR:1,DNK:1,POL:2,UKR:5,IRN:6},
+    fq:{USA:1,GBR:1,FRA:1,DEU:1,ITA:1,ESP:1,IND:2,CHN:2,JPN:1,BRA:1,AUS:1,RUS:2,SAU:2,ZAF:1,NGA:2,MEX:1,KOR:2,TUR:1,PAK:2,BGD:3,IDN:2,PHL:1,VNM:3,THA:1,EGY:2,ARG:1,CAN:1,NLD:1,SWE:1,NOR:1,DNK:1,POL:1,UKR:1,IRN:2},
+    tet:{USA:2,GBR:1,FRA:2,DEU:1,ITA:2,ESP:2,IND:5,CHN:6,JPN:3,BRA:2,AUS:1,RUS:3,SAU:3,ZAF:2,NGA:5,MEX:3,KOR:4,TUR:2,PAK:5,BGD:7,IDN:5,PHL:3,VNM:7,THA:3,EGY:4,ARG:2,CAN:1,NLD:1,SWE:1,NOR:1,DNK:1,POL:2,UKR:3,IRN:3},
+    pen:{USA:100,GBR:100,FRA:100,DEU:100,ITA:100,ESP:100,IND:100,CHN:100,JPN:100,BRA:100,AUS:100,RUS:100,SAU:100,ZAF:100,NGA:100,MEX:100,KOR:100,TUR:100,PAK:100,BGD:100,IDN:100,PHL:100,VNM:100,THA:100,EGY:100,ARG:100,CAN:100,NLD:100,SWE:100,NOR:100,DNK:100,POL:100,UKR:100,IRN:100},
+    ceph:{USA:100,GBR:100,FRA:100,DEU:100,ITA:100,ESP:100,IND:100,CHN:100,JPN:100,BRA:100,AUS:100,RUS:100,SAU:100,ZAF:100,NGA:100,MEX:100,KOR:100,TUR:100,PAK:100,BGD:100,IDN:100,PHL:100,VNM:100,THA:100,EGY:100,ARG:100,CAN:100,NLD:100,SWE:100,NOR:100,DNK:100,POL:100,UKR:100,IRN:100},
+    tms:{USA:100,GBR:100,FRA:100,DEU:100,ITA:100,ESP:100,IND:100,CHN:100,JPN:100,BRA:100,AUS:100,RUS:100,SAU:100,ZAF:100,NGA:100,MEX:100,KOR:100,TUR:100,PAK:100,BGD:100,IDN:100,PHL:100,VNM:100,THA:100,EGY:100,ARG:100,CAN:100,NLD:100,SWE:100,NOR:100,DNK:100,POL:100,UKR:100,IRN:100},
+    carb:{USA:100,GBR:100,FRA:100,DEU:100,ITA:100,ESP:100,IND:100,CHN:100,JPN:100,BRA:100,AUS:100,RUS:100,SAU:100,ZAF:100,NGA:100,MEX:100,KOR:100,TUR:100,PAK:100,BGD:100,IDN:100,PHL:100,VNM:100,THA:100,EGY:100,ARG:100,CAN:100,NLD:100,SWE:100,NOR:100,DNK:100,POL:100,UKR:100,IRN:100}
+  }
+};
+
+const COUNTRY_NAMES = {USA:'United States',GBR:'United Kingdom',FRA:'France',DEU:'Germany',ITA:'Italy',ESP:'Spain',IND:'India',CHN:'China',JPN:'Japan',BRA:'Brazil',AUS:'Australia',RUS:'Russia',SAU:'Saudi Arabia',ZAF:'South Africa',NGA:'Nigeria',MEX:'Mexico',KOR:'South Korea',TUR:'Turkiye',PAK:'Pakistan',BGD:'Bangladesh',IDN:'Indonesia',PHL:'Philippines',VNM:'Vietnam',THA:'Thailand',EGY:'Egypt',ARG:'Argentina',CAN:'Canada',NLD:'Netherlands',SWE:'Sweden',NOR:'Norway',DNK:'Denmark',POL:'Poland',UKR:'Ukraine',IRN:'Iran'};
+
+const ISO_NUM = {'840':'USA','826':'GBR','250':'FRA','276':'DEU','380':'ITA','724':'ESP','356':'IND','156':'CHN','392':'JPN','76':'BRA','36':'AUS','643':'RUS','682':'SAU','710':'ZAF','566':'NGA','484':'MEX','410':'KOR','792':'TUR','586':'PAK','50':'BGD','360':'IDN','608':'PHL','704':'VNM','764':'THA','818':'EGY','32':'ARG','124':'CAN','528':'NLD','752':'SWE','578':'NOR','208':'DNK','616':'POL','804':'UKR','364':'IRN'};
+
+const INDIA_STATES = {
+  'Andhra Pradesh':{spneu:{pen:38,macro:52,fq:6,ceph:18,tet:44,tms:58},hi:{pen:60,macro:22,fq:9,ceph:20,tet:38,tms:62},kp:{pen:0,macro:0,fq:48,ceph:58,tet:52,tms:68},sa:{pen:74,macro:48,fq:42,ceph:48,tet:52,tms:62},mp:{pen:100,macro:22,fq:2,ceph:100,tet:6,tms:100},mcat:{pen:96,macro:10,fq:3,ceph:5,tet:24,tms:38}},
+  'Maharashtra':{spneu:{pen:42,macro:55,fq:7,ceph:20,tet:48,tms:62},hi:{pen:65,macro:25,fq:11,ceph:22,tet:42,tms:65},kp:{pen:0,macro:0,fq:52,ceph:62,tet:55,tms:72},sa:{pen:78,macro:52,fq:45,ceph:52,tet:55,tms:65},mp:{pen:100,macro:25,fq:2,ceph:100,tet:7,tms:100},mcat:{pen:96,macro:12,fq:4,ceph:6,tet:26,tms:40}},
+  'Delhi':{spneu:{pen:40,macro:58,fq:8,ceph:22,tet:50,tms:65},hi:{pen:68,macro:28,fq:12,ceph:25,tet:45,tms:68},kp:{pen:0,macro:0,fq:55,ceph:65,tet:58,tms:75},sa:{pen:80,macro:55,fq:48,ceph:55,tet:58,tms:68},mp:{pen:100,macro:28,fq:3,ceph:100,tet:8,tms:100},mcat:{pen:97,macro:14,fq:4,ceph:7,tet:28,tms:42}},
+  'Tamil Nadu':{spneu:{pen:35,macro:48,fq:5,ceph:16,tet:40,tms:55},hi:{pen:58,macro:20,fq:8,ceph:18,tet:36,tms:60},kp:{pen:0,macro:0,fq:45,ceph:55,tet:50,tms:65},sa:{pen:72,macro:45,fq:40,ceph:45,tet:50,tms:60},mp:{pen:100,macro:20,fq:2,ceph:100,tet:5,tms:100},mcat:{pen:95,macro:10,fq:3,ceph:5,tet:22,tms:36}},
+  'Karnataka':{spneu:{pen:36,macro:50,fq:6,ceph:17,tet:42,tms:57},hi:{pen:58,macro:22,fq:9,ceph:19,tet:37,tms:61},kp:{pen:0,macro:0,fq:46,ceph:57,tet:51,tms:66},sa:{pen:73,macro:46,fq:41,ceph:46,tet:51,tms:61},mp:{pen:100,macro:21,fq:2,ceph:100,tet:5,tms:100},mcat:{pen:95,macro:11,fq:3,ceph:5,tet:23,tms:37}},
+  'Gujarat':{spneu:{pen:38,macro:52,fq:6,ceph:18,tet:44,tms:60},hi:{pen:60,macro:22,fq:10,ceph:20,tet:39,tms:63},kp:{pen:0,macro:0,fq:48,ceph:58,tet:53,tms:68},sa:{pen:74,macro:48,fq:42,ceph:48,tet:52,tms:62},mp:{pen:100,macro:22,fq:2,ceph:100,tet:6,tms:100},mcat:{pen:96,macro:11,fq:3,ceph:5,tet:24,tms:38}},
+  'Rajasthan':{spneu:{pen:39,macro:54,fq:7,ceph:19,tet:46,tms:62},hi:{pen:62,macro:24,fq:11,ceph:21,tet:40,tms:64},kp:{pen:0,macro:0,fq:50,ceph:60,tet:54,tms:70},sa:{pen:76,macro:50,fq:43,ceph:50,tet:53,tms:63},mp:{pen:100,macro:23,fq:2,ceph:100,tet:6,tms:100},mcat:{pen:96,macro:12,fq:3,ceph:6,tet:25,tms:39}},
+  'Uttar Pradesh':{spneu:{pen:42,macro:58,fq:8,ceph:22,tet:50,tms:66},hi:{pen:66,macro:27,fq:12,ceph:24,tet:44,tms:67},kp:{pen:0,macro:0,fq:53,ceph:63,tet:57,tms:73},sa:{pen:78,macro:53,fq:46,ceph:53,tet:56,tms:66},mp:{pen:100,macro:26,fq:3,ceph:100,tet:7,tms:100},mcat:{pen:97,macro:13,fq:4,ceph:6,tet:27,tms:41}},
+  'West Bengal':{spneu:{pen:40,macro:55,fq:7,ceph:20,tet:46,tms:63},hi:{pen:63,macro:25,fq:11,ceph:22,tet:41,tms:65},kp:{pen:0,macro:0,fq:50,ceph:61,tet:54,tms:70},sa:{pen:76,macro:50,fq:43,ceph:50,tet:53,tms:63},mp:{pen:100,macro:24,fq:2,ceph:100,tet:6,tms:100},mcat:{pen:96,macro:12,fq:3,ceph:5,tet:25,tms:39}},
+  'Punjab':{spneu:{pen:37,macro:51,fq:6,ceph:18,tet:43,tms:59},hi:{pen:61,macro:23,fq:10,ceph:20,tet:39,tms:62},kp:{pen:0,macro:0,fq:47,ceph:57,tet:52,tms:67},sa:{pen:74,macro:48,fq:42,ceph:48,tet:52,tms:62},mp:{pen:100,macro:22,fq:2,ceph:100,tet:6,tms:100},mcat:{pen:95,macro:11,fq:3,ceph:5,tet:23,tms:37}},
+  'Kerala':{spneu:{pen:32,macro:44,fq:4,ceph:14,tet:36,tms:50},hi:{pen:55,macro:18,fq:7,ceph:16,tet:33,tms:58},kp:{pen:0,macro:0,fq:42,ceph:52,tet:47,tms:62},sa:{pen:68,macro:42,fq:37,ceph:42,tet:47,tms:58},mp:{pen:100,macro:18,fq:1,ceph:100,tet:4,tms:100},mcat:{pen:94,macro:9,fq:2,ceph:4,tet:20,tms:34}},
+  'Madhya Pradesh':{spneu:{pen:40,macro:54,fq:7,ceph:20,tet:46,tms:62},hi:{pen:63,macro:24,fq:11,ceph:22,tet:41,tms:64},kp:{pen:0,macro:0,fq:50,ceph:60,tet:54,tms:70},sa:{pen:76,macro:50,fq:43,ceph:50,tet:54,tms:64},mp:{pen:100,macro:23,fq:2,ceph:100,tet:6,tms:100},mcat:{pen:96,macro:12,fq:3,ceph:6,tet:24,tms:38}},
+  'Bihar':{spneu:{pen:44,macro:60,fq:9,ceph:24,tet:52,tms:68},hi:{pen:68,macro:28,fq:13,ceph:26,tet:46,tms:69},kp:{pen:0,macro:0,fq:55,ceph:65,tet:59,tms:75},sa:{pen:80,macro:55,fq:47,ceph:55,tet:58,tms:68},mp:{pen:100,macro:27,fq:3,ceph:100,tet:8,tms:100},mcat:{pen:97,macro:14,fq:4,ceph:7,tet:29,tms:43}},
+  'Odisha':{spneu:{pen:38,macro:52,fq:6,ceph:18,tet:44,tms:60},hi:{pen:60,macro:22,fq:10,ceph:20,tet:38,tms:62},kp:{pen:0,macro:0,fq:47,ceph:58,tet:52,tms:67},sa:{pen:74,macro:47,fq:41,ceph:47,tet:52,tms:62},mp:{pen:100,macro:22,fq:2,ceph:100,tet:6,tms:100},mcat:{pen:96,macro:11,fq:3,ceph:5,tet:24,tms:38}},
+  'Assam':{spneu:{pen:36,macro:50,fq:6,ceph:17,tet:42,tms:58},hi:{pen:58,macro:21,fq:9,ceph:19,tet:37,tms:60},kp:{pen:0,macro:0,fq:45,ceph:56,tet:51,tms:65},sa:{pen:72,macro:45,fq:40,ceph:45,tet:50,tms:60},mp:{pen:100,macro:21,fq:2,ceph:100,tet:5,tms:100},mcat:{pen:95,macro:10,fq:3,ceph:5,tet:23,tms:37}}
+};
+
+function resistColor(v){
+  if(v===null||v===undefined) return '#B4B2A9';
+  if(v>=100) return '#888780';
+  if(v>=70) return '#A32D2D';
+  if(v>=50) return '#E24B4A';
+  if(v>=35) return '#EF9F27';
+  if(v>=20) return '#FAEEDA';
+  if(v>=10) return '#C0DD97';
+  return '#EAF3DE';
+}
+function resistLabel(v){
+  if(v===null) return 'No data';
+  if(v>=100) return 'Intrinsically resistant';
+  if(v>=70) return 'Very High (≥70%)';
+  if(v>=50) return 'High (50–69%)';
+  if(v>=35) return 'Moderate-High (35–49%)';
+  if(v>=20) return 'Moderate (20–34%)';
+  if(v>=10) return 'Low-Moderate (10–19%)';
+  return 'Low (<10%)';
+}
+function rClass(v){
+  if(v===null||v>=100) return 'r-none';
+  if(v>=70) return 'r-vhigh';
+  if(v>=35) return 'r-high';
+  if(v>=15) return 'r-mod';
+  return 'r-low';
+}
+
+const rmapTooltip = document.getElementById('tooltip');
+function showTT(e,html){ rmapTooltip.innerHTML=html; rmapTooltip.style.display='block'; moveTT(e); }
+function moveTT(e){
+  let x=e.clientX+14,y=e.clientY-10;
+  if(x+250>window.innerWidth) x=e.clientX-260;
+  rmapTooltip.style.left=x+'px';rmapTooltip.style.top=y+'px';
+}
+function hideTT(){rmapTooltip.style.display='none';}
+
+let worldTopo=null,indiaTopo=null;
+
+function renderWorld(){
+  const pathogen=document.getElementById('wPathogen').value;
+  const drug=document.getElementById('wDrug').value;
+  const data=(WORLD_DATA[pathogen]||{})[drug]||{};
+  const svg=d3.select('#world-map');
+  svg.selectAll('*').remove();
+  if(!worldTopo){return;}
+  const proj=d3.geoNaturalEarth1().scale(145).translate([450,240]);
+  const path=d3.geoPath(proj);
+  const features=topojson.feature(worldTopo,worldTopo.objects.countries).features;
+  svg.selectAll('path').data(features).join('path')
+    .attr('d',path)
+    .attr('stroke','rgba(255,255,255,0.4)')
+    .attr('stroke-width',0.4)
+    .attr('fill',d=>{
+      const code=ISO_NUM[String(d.id)];
+      const v=code?data[code]:null;
+      return resistColor(v);
+    })
+    .on('mousemove',(e,d)=>{
+      const code=ISO_NUM[String(d.id)];
+      const name=COUNTRY_NAMES[code]||'Unknown';
+      const v=code?data[code]:null;
+      if(!code) return;
+      showTT(e,`<div class="tt-country">${name}</div>
+        <div class="tt-row"><span>${PATHOGENS[pathogen].label}</span></div>
+        <div class="tt-row"><span>${DRUGS[drug].label.split('(')[0]}</span><span class="tt-val"><span class="resistance-pill ${rClass(v)}">${v===null?'—':v>=100?'Intrinsic':v+'%'}</span></span></div>
+        <div class="tt-row"><span style="font-size:11px;color:var(--color-text-tertiary)">${resistLabel(v)}</span></div>`);
+    })
+    .on('mouseleave',hideTT)
+    .on('click',(e,d)=>{
+      const code=ISO_NUM[String(d.id)];
+      if(!code) return;
+      showWorldDetail(code,pathogen);
+    });
+}
+
+function showWorldDetail(code,pathogen){
+  const name=COUNTRY_NAMES[code];
+  const pd=WORLD_DATA[pathogen];
+  const drugs=Object.keys(DRUGS);
+  let rows=drugs.map(dr=>{
+    const v=(pd[dr]||{})[code];
+    if(v===undefined) return '';
+    const bar=v>=100?0:v;
+    return `<tr>
+      <td>${DRUGS[dr].label.split('(')[0].trim()}</td>
+      <td><span class="resistance-pill ${rClass(v)}">${v>=100?'Intrinsic':v+'%'}</span></td>
+      <td><div class="bar-wrap"><div class="bar-bg"><div class="bar-fill" style="width:${bar}%;background:${resistColor(v)}"></div></div></div></td>
+    </tr>`;
+  }).join('');
+  document.getElementById('world-selected').innerHTML=`
+    <div style="font-size:13px;font-weight:600;margin-bottom:8px">${name} — ${PATHOGENS[pathogen].label} resistance profile</div>
+    <div style="overflow-x:auto"><table class="data-table"><thead><tr><th>Antibiotic</th><th>Resistance</th><th style="min-width:120px">Level</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+}
+
+function renderIndia(){
+  const pathogen=document.getElementById('iPathogen').value;
+  const drug=document.getElementById('iDrug').value;
+  const svg=d3.select('#india-map');
+  svg.selectAll('*').remove();
+  if(!indiaTopo) return;
+  const proj=d3.geoMercator().fitSize([500,560],topojson.feature(indiaTopo,indiaTopo.objects.ind));
+  const path=d3.geoPath(proj);
+  const features=topojson.feature(indiaTopo,indiaTopo.objects.ind).features;
+  svg.selectAll('path').data(features).join('path')
+    .attr('d',path)
+    .attr('stroke','rgba(255,255,255,0.5)')
+    .attr('stroke-width',0.8)
+    .attr('fill',d=>{
+      const name=d.properties.NAME_1||d.properties.name||'';
+      const sd=INDIA_STATES[name];
+      const v=sd?(sd[pathogen]||{})[drug]:null;
+      return resistColor(v);
+    })
+    .on('mousemove',(e,d)=>{
+      const name=d.properties.NAME_1||d.properties.name||'';
+      const sd=INDIA_STATES[name];
+      const v=sd?(sd[pathogen]||{})[drug]:null;
+      showTT(e,`<div class="tt-country">${name||'State'}</div>
+        <div class="tt-row"><span>${PATHOGENS[pathogen].label}</span></div>
+        <div class="tt-row"><span>Resistance</span><span class="tt-val"><span class="resistance-pill ${rClass(v)}">${v===null?'No data':v>=100?'Intrinsic':v+'%'}</span></span></div>`);
+    })
+    .on('mouseleave',hideTT)
+    .on('click',(e,d)=>{
+      const name=d.properties.NAME_1||d.properties.name||'';
+      const sd=INDIA_STATES[name];
+      if(!sd) return;
+      let rows=Object.keys(DRUGS).filter(dr=>dr!=='carb').map(dr=>{
+        const v=(sd[pathogen]||{})[dr];
+        if(v===undefined) return '';
+        return `<div style="margin-bottom:8px">
+          <div style="display:flex;justify-content:space-between;margin-bottom:3px">
+            <span style="font-size:12px;color:var(--color-text-secondary)">${DRUGS[dr].label.split('(')[0].trim()}</span>
+            <span class="resistance-pill ${rClass(v)}" style="font-size:11px">${v>=100?'Intrinsic':v+'%'}</span>
+          </div>
+          <div class="bar-bg"><div class="bar-fill" style="width:${v>=100?100:v}%;background:${resistColor(v)}"></div></div>
+        </div>`;
+      }).join('');
+      document.getElementById('india-state-detail').innerHTML=`
+        <div style="font-size:13px;font-weight:600;margin-bottom:10px">${name}</div>
+        <div style="font-size:11px;color:var(--color-text-secondary);margin-bottom:8px">${PATHOGENS[pathogen].label}</div>
+        ${rows}
+        <div style="font-size:10px;color:var(--color-text-tertiary);margin-top:8px">Sources: ICMR AMR Network, CSIR-IGIB</div>`;
+    });
+}
+
+function buildTable(){
+  const activeP=document.querySelector('#resistance-map .ptab.active')?.dataset.p||'spneu';
+  const drugs=['pen','macro','fq','ceph','tet','tms','carb'];
+  const countries=Object.keys(COUNTRY_NAMES);
+  const pd=WORLD_DATA[activeP]||{};
+  let head=`<th>Country</th>`+drugs.map(d=>`<th style="white-space:nowrap;font-size:11px">${DRUGS[d].label.split('(')[0].split('/')[0].trim()}</th>`).join('');
+  document.getElementById('table-head').innerHTML=head;
+  let rows=countries.map(code=>{
+    let cells=drugs.map(dr=>{
+      const v=(pd[dr]||{})[code];
+      if(v===undefined) return '<td>—</td>';
+      return `<td><span class="resistance-pill ${rClass(v)}" style="font-size:10px">${v>=100?'Intr.':v+'%'}</span></td>`;
+    }).join('');
+    return `<tr><td style="font-size:12px;white-space:nowrap">${COUNTRY_NAMES[code]}</td>${cells}</tr>`;
+  }).join('');
+  document.getElementById('table-body').innerHTML=rows;
+  const ptabs=Object.keys(PATHOGENS).map(k=>`<button class="ptab${k===activeP?' active':''}" data-p="${k}" onclick="activePTab(this,'${k}')">${PATHOGENS[k].label.split(' ').slice(0,2).join(' ')}</button>`).join('');
+  document.getElementById('ptabs').innerHTML=ptabs;
+  const vals=countries.flatMap(c=>drugs.map(d=>{const v=(pd[d]||{})[c];return(v!==undefined&&v<100)?v:null})).filter(v=>v!==null);
+  const avg=Math.round(vals.reduce((a,b)=>a+b,0)/vals.length);
+  const high=vals.filter(v=>v>=50).length;
+  document.getElementById('summary-stats').innerHTML=`
+    <div class="stat-card"><div class="stat-label">Avg resistance</div><div class="stat-val">${avg}%</div><div class="stat-sub">${PATHOGENS[activeP].label}</div></div>
+    <div class="stat-card"><div class="stat-label">High resistance combos</div><div class="stat-val">${high}</div><div class="stat-sub">≥50% across all countries/drugs</div></div>
+    <div class="stat-card"><div class="stat-label">Countries tracked</div><div class="stat-val">${countries.length}</div><div class="stat-sub">Globally</div></div>
+    <div class="stat-card"><div class="stat-label">Pathogen type</div><div class="stat-val" style="font-size:14px">${PATHOGENS[activeP].type}</div><div class="stat-sub">for CABP</div></div>`;
+}
+function activePTab(el,p){
+  document.querySelectorAll('#resistance-map .ptab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  buildTable();
+}
+
+function buildDrugs(){
+  const drugList=[
+    {key:'pen',activity:{spneu:'Variable (20–45% resistance globally)',hi:'Poor (β-lactamase in ~40–65%)',mcat:'Poor (β-lactamase in ~90–96%)',sa:'Poor (MRSA prevalent)',kp:'None (intrinsically resistant)',mp:'None (no cell wall)',cp:'None (no cell wall)',lp:'None (no cell wall)'},notes:'Amoxicillin ± clavulanate is first-line for mild CAP caused by susceptible pneumococci. CLSI/IDSA recommend PO amoxicillin for outpatient non-severe CAP.'},
+    {key:'macro',activity:{spneu:'Variable — very high resistance in East Asia (China 96%, Japan 88%, Korea 72%). Moderate in India (~48%)',hi:'Moderate activity; azithromycin used as adjunct',mcat:'Good activity — low resistance globally',sa:'Partial coverage',kp:'None (intrinsically resistant)',mp:'Primary agent — resistance rising in East Asia (China 90%)',cp:'Primary agent — generally susceptible',lp:'Primary agent — fluoroquinolones preferred'},notes:'Azithromycin 500 mg OD × 3–5 days is a WHO-recommended CABP treatment. Nafithromycin (Miqnaf) — 800mg OD × 3 days — shows activity against macrolide-resistant M. pneumoniae via a unique mechanism.'},
+    {key:'fq',activity:{spneu:'Excellent — resistance <5% globally',hi:'Good — low resistance',mcat:'Good activity',sa:'Moderate; resistance rising in South Asia',kp:'Moderate — high resistance in South Asia (45–55%)',mp:'Excellent — resistance rare (<3%)',cp:'Excellent coverage',lp:'Preferred agent — very low resistance'},notes:'Levofloxacin 750mg OD or moxifloxacin 400mg OD are respiratory quinolones with dual typical + atypical coverage. WHO AWaRe: Watch category — use judiciously.'},
+    {key:'ceph',activity:{spneu:'Good — ceftriaxone/cefotaxime for moderate-severe CAP',hi:'Good — most H. influenzae susceptible',mcat:'Good activity',sa:'Moderate; variable in MDR strains',kp:'Poor in ESBL producers (common in India/South Asia)',mp:'None (intrinsically resistant)',cp:'None (intrinsically resistant)',lp:'None (intrinsically resistant)'},notes:'IV ceftriaxone 1–2g OD is standard hospital treatment for moderate-severe CABP. High ESBL prevalence in India (55–65%) limits effectiveness against K. pneumoniae.'},
+    {key:'tet',activity:{spneu:'Moderate — resistance 30–55% in Asia',hi:'Moderate activity',mcat:'Moderate — reasonable coverage',sa:'Moderate coverage',kp:'Variable — moderate resistance',mp:'Active — doxycycline is atypical-spectrum alternative',cp:'Active coverage',lp:'Active coverage'},notes:'Doxycycline 100mg BD is an alternative atypical-coverage agent for outpatient mild CAP. Often paired with a β-lactam for comprehensive CABP coverage in guidelines.'},
+    {key:'tms',activity:{spneu:'Poor — resistance 55–65% in India, Southeast Asia',hi:'Poor — very high resistance (60–70%) in South Asia',mcat:'Moderate activity',sa:'Poor — high resistance',kp:'Poor — widespread resistance',mp:'None (intrinsically resistant)',cp:'None (intrinsically resistant)',lp:'None (intrinsically resistant)'},notes:'TMP-SMX resistance is very high across South and Southeast Asia. Not recommended for empiric CABP therapy in India. WHO AWaRe: Access category.'},
+    {key:'carb',activity:{spneu:'Not used — overkill for CAP',hi:'Not typically needed',mcat:'Not typically needed',sa:'Active against MRSA (except some MCR variants)',kp:'Active against non-carbapenemase producers; CRE rising in India (35%)',mp:'None (intrinsically resistant)',cp:'None (intrinsically resistant)',lp:'None (intrinsically resistant)'},notes:'Reserved for severe/ICU CAP with suspected MDR Gram-negative organisms. Carbapenem resistance (CRE/CRAB) is a major concern in Indian ICUs — use only with microbiological guidance. WHO AWaRe: Reserve.'}
+  ];
+  let html='';
+  drugList.forEach(d=>{
+    const drug=DRUGS[d.key];
+    const awClass=d.key==='carb'?'r-vhigh':d.key==='fq'?'r-mod':d.key==='pen'||d.key==='tms'?'r-low':'r-low';
+    const awLabel=d.key==='carb'?'Reserve':d.key==='fq'?'Watch':d.key==='pen'||d.key==='tms'?'Access':'Access';
+    html+=`<div style="border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:14px 16px;margin-bottom:12px">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px">
+        <div>
+          <div style="font-size:14px;font-weight:600">${drug.label}</div>
+          <div style="font-size:12px;color:var(--color-text-secondary);margin-top:2px">Class: ${drug.class} · ${drug.cabp}</div>
+        </div>
+        <span class="resistance-pill ${awClass}" style="font-size:11px">WHO AWaRe: ${awLabel}</span>
+      </div>
+      <div style="font-size:12px;color:var(--color-text-secondary);margin-bottom:10px;line-height:1.6;padding:8px 12px;background:var(--color-background-secondary);border-radius:var(--border-radius-md)">${d.notes}</div>
+      <div class="section-title" style="margin-top:8px;margin-bottom:6px">Activity against CABP pathogens</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:6px">
+        ${Object.entries(d.activity).map(([p,act])=>`
+          <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:7px 10px">
+            <div style="font-size:11px;font-weight:600;color:var(--color-text-primary);margin-bottom:2px">${PATHOGENS[p].label}</div>
+            <div style="font-size:11px;color:var(--color-text-secondary)">${act}</div>
+          </div>`).join('')}
+      </div>
+    </div>`;
+  });
+  document.getElementById('drug-profiles').innerHTML=html;
+}
+
+function buildSources(){
+  document.getElementById('sources-content').innerHTML=`
+    <div class="section-title">Global resistance data sources</div>
+    <div style="display:grid;gap:8px;margin-bottom:16px">
+      ${[
+        ['ATLAS (Pfizer)','https://atlas-surveillance.com','Global antibiotic resistance surveillance — S. pneumoniae, H. influenzae, M. catarrhalis, K. pneumoniae, S. aureus data used for CABP pathogens across 50+ countries','2018–2023'],
+        ['SOAR Study','https://pubmed.ncbi.nlm.nih.gov/','Survey of Antibiotic Resistance in respiratory pathogens — Asia-Pacific, Middle East, Africa focus','2018–2022'],
+        ['GASP/GLASS (WHO)','https://www.who.int/glass','Global Antimicrobial Resistance Surveillance System — standardised AMR data from 70+ countries','2017–2024'],
+        ['ResistanceMap (One Health Trust)','https://resistancemap.onehealthtrust.org','S. pneumoniae macrolide, penicillin, fluoroquinolone resistance by country','2015–2023'],
+        ['EUCAST / EARS-Net','https://www.ecdc.europa.eu/en/antimicrobial-resistance','European antimicrobial resistance surveillance network — gold standard for EU country data','2019–2024'],
+        ['SENTRY Program','https://www.jmilabs.com','Worldwide resistance surveillance for CAP pathogens','2018–2022'],
+        ['FU et al. 2021 meta-analysis','https://pubmed.ncbi.nlm.nih.gov/33460826/','Global M. pneumoniae macrolide resistance meta-analysis (PMID 33460826)','2020–2021'],
+        ['KEYSTONE Studies','https://clinicaltrials.gov','Nafithromycin (WCK 4873) clinical trials — resistance profiling data','2020–2024']
+      ].map(([name,url,desc,years])=>`
+        <div style="border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:10px 14px">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:4px">
+            <a href="${url}" target="_blank" rel="noopener" style="font-size:13px;font-weight:600;color:#185FA5;text-decoration:none">${name}</a>
+            <span style="font-size:11px;padding:2px 8px;background:var(--color-background-info);color:var(--color-text-info);border-radius:10px">${years}</span>
+          </div>
+          <div style="font-size:12px;color:var(--color-text-secondary)">${desc}</div>
+        </div>`).join('')}
+    </div>
+    <div class="section-title">India-specific sources</div>
+    <div style="display:grid;gap:8px;margin-bottom:16px">
+      ${[
+        ['ICMR AMR Network','https://main.icmr.nic.in/content/amr','Annual reports from 30 sentinel sites across India — primary source for state-level resistance patterns','2019–2024'],
+        ['ICMR Annual Report 2023','https://icmr.gov.in','Comprehensive resistance data for S. pneumoniae, H. influenzae, K. pneumoniae in India','2023'],
+        ['CSIR-IGIB AMR Genomics','https://www.igib.res.in','Whole-genome sequencing of clinical isolates — resistance mechanism characterization','2020–2024'],
+        ['IndiCAT / AMRSN','https://ncdc.gov.in/','National Centre for Disease Control India surveillance data','2018–2023'],
+        ['ISPAT Study (India)','https://pubmed.ncbi.nlm.nih.gov/','India Surveillance Program for Antibiotic Treatment — respiratory pathogens','2018–2022']
+      ].map(([name,url,desc,years])=>`
+        <div style="border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:10px 14px">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:4px">
+            <a href="${url}" target="_blank" rel="noopener" style="font-size:13px;font-weight:600;color:#185FA5;text-decoration:none">${name}</a>
+            <span style="font-size:11px;padding:2px 8px;background:var(--color-background-info);color:var(--color-text-info);border-radius:10px">${years}</span>
+          </div>
+          <div style="font-size:12px;color:var(--color-text-secondary)">${desc}</div>
+        </div>`).join('')}
+    </div>
+    <div class="source-box">
+      <div style="font-weight:600;margin-bottom:4px;color:var(--color-text-primary)">Data notes &amp; methodology</div>
+      Resistance values shown are approximate aggregated rates derived from published surveillance data. Country-level values represent weighted averages across available studies. State-level India data is modelled from ICMR sentinel site networks. All values should be interpreted alongside local antibiogram data. Intrinsically resistant combinations (e.g. β-lactams vs atypical pathogens) are indicated separately. Data period: primarily 2018–2024.
+    </div>`;
+}
+
+function rmapSwitchTab(name){
+  document.querySelectorAll('#resistance-map .tab-btn').forEach((b,i)=>{
+    const tabs=['world','india','table','drugs','sources'];
+    b.classList.toggle('active',tabs[i]===name);
+  });
+  document.querySelectorAll('#resistance-map .tab-pane').forEach(p=>p.classList.remove('active'));
+  document.getElementById('rmap-tab-'+name).classList.add('active');
+  if(name==='table') buildTable();
+  if(name==='drugs') buildDrugs();
+  if(name==='sources') buildSources();
+}
+
+// Defer the topojson fetch + SVG map render until the section nears the
+// viewport — avoids a load-time network + layout spike on every page open.
+function initRmapMaps(){
+  if(initRmapMaps._done) return;
+  initRmapMaps._done = true;
+  Promise.all([
+    d3.json('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json'),
+    d3.json('https://cdn.jsdelivr.net/npm/datamaps@0.5.10/src/js/data/ind.topo.json')
+  ]).then(([world,india])=>{
+    worldTopo=world;
+    indiaTopo=india;
+    renderWorld();
+    renderIndia();
+  }).catch(e=>{
+    d3.json('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json').then(world=>{
+      worldTopo=world;
+      renderWorld();
+    });
+  });
+}
+(function(){
+  var sec = document.getElementById('resistance-map');
+  if(!sec || !('IntersectionObserver' in window)){ initRmapMaps(); return; }
+  var obs = new IntersectionObserver(function(entries){
+    if(entries.some(function(en){ return en.isIntersecting; })){
+      obs.disconnect(); initRmapMaps();
+    }
+  }, {rootMargin:'500px 0px'});
+  obs.observe(sec);
+})();
+</script>

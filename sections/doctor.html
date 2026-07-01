@@ -11,24 +11,30 @@
 
                 <div class="dropdown-row stagger-children">
                     <div class="filter-table" id="doc-dropdown">
-                        <div class="filter-head">
+                        <div class="filter-head" id="doc-head">
                             Doctor's Name
-                            <svg width="10" height="6" viewBox="0 0 14 8" style="margin-top: 4px;"><polyline points="1,1 7,7 13,1" fill="none" stroke="white" stroke-width="1.5"/></svg>
+                            <svg width="10" height="6" viewBox="0 0 14 8" aria-hidden="true" style="margin-top: 4px;"><polyline points="1,1 7,7 13,1" fill="none" stroke="white" stroke-width="1.5"/></svg>
                         </div>
-                        <div class="filter-selected doc-selected" id="doctor-selected-text">Dr. Sonam Solanki</div>
-                        <div class="filter-list doc-list"></div>
+                        <div class="filter-selected doc-selected" id="doctor-selected-text"
+                             role="button" tabindex="0"
+                             aria-haspopup="listbox" aria-expanded="false"
+                             aria-controls="doc-listbox" aria-labelledby="doc-head doctor-selected-text">Dr. Sonam Solanki</div>
+                        <div class="filter-list doc-list" id="doc-listbox" role="listbox" aria-label="Doctors"></div>
                     </div>
 
                     <div class="filter-table" id="city-dropdown">
-                        <div class="filter-head">
+                        <div class="filter-head" id="city-head">
                             City
-                            <svg width="10" height="6" viewBox="0 0 14 8" style="margin-top: 4px;"><polyline points="1,1 7,7 13,1" fill="none" stroke="white" stroke-width="1.5"/></svg>
+                            <svg width="10" height="6" viewBox="0 0 14 8" aria-hidden="true" style="margin-top: 4px;"><polyline points="1,1 7,7 13,1" fill="none" stroke="white" stroke-width="1.5"/></svg>
                         </div>
-                        <div class="filter-selected city-selected" id="city-selected-text">Mumbai</div>
-                        <div class="filter-list city-list">
-                            <div class="filter-option city-option" data-city="mumbai" style="display: none;">Mumbai</div>
-                            <div class="filter-option city-option" data-city="chennai">Chennai</div>
-                            <div class="filter-option city-option" data-city="punjab">Punjab</div>
+                        <div class="filter-selected city-selected" id="city-selected-text"
+                             role="button" tabindex="0"
+                             aria-haspopup="listbox" aria-expanded="false"
+                             aria-controls="city-listbox" aria-labelledby="city-head city-selected-text">Mumbai</div>
+                        <div class="filter-list city-list" id="city-listbox" role="listbox" aria-label="Cities">
+                            <div class="filter-option city-option" data-city="mumbai" role="option" tabindex="-1" aria-selected="true" style="display: none;">Mumbai</div>
+                            <div class="filter-option city-option" data-city="chennai" role="option" tabindex="-1" aria-selected="false">Chennai</div>
+                            <div class="filter-option city-option" data-city="punjab" role="option" tabindex="-1" aria-selected="false">Punjab</div>
                         </div>
                     </div>
                 </div>

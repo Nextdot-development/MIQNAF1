@@ -56,12 +56,13 @@
 
 html {
     scroll-behavior: smooth;
+    scroll-padding-top: 100px; /* = navbar height, so anchor jumps land the section right under it */
     min-height: 100%;
     -webkit-text-size-adjust: 100%;
+    /* single flat background — texture removed so the navbar, page and all
+       sections share ONE uniform tone (no two-white seam, and no scroll lag). */
     background-color: var(--bg-light);
-    background-image: var(--bg-texture);
-    background-repeat: repeat;
-    background-attachment: fixed;
+    background-image: none;
 }
 
 body,
@@ -126,39 +127,50 @@ button, a {
     }
 }
 
-/* NAVBAR — solid background, no texture (avoids seam with page) */
+/* ============================================================
+   HEADER — rebuilt from scratch with CSS Grid (3 fixed columns)
+   [ LOGO 260 ]      [ NAVIGATION 1fr ]      [ MAP 180 ]
+   No absolute positioning, no negative margins, no manual offsets.
+   ============================================================ */
 .navbar,
 .navbar.scrolled {
     position: fixed;
     top: 0;
+    left: 0;
     width: 100%;
     z-index: 100;
-    padding: 1rem 0;
     display: flex;
     justify-content: center;
     background-color: var(--bg-light);
     background-image: none;
-    transition: all 0.3s ease;
-    border-bottom: 2px solid rgba(0, 0, 0, 0.05);
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+    transition: box-shadow 0.3s ease, background-color 0.3s ease;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.02);
     transform: translateY(-100%);
     animation: navbar-slide-down 0.7s cubic-bezier(0.22, 0.61, 0.36, 1) 0.1s forwards;
 }
 
 .navbar.scrolled {
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.07);
 }
 
+/* the fixed side columns always reserve space for the logo and the MAP
+   button, so the centre navigation can never overlap either of them. */
 .nav-container {
-    width: 1350px; /* Aligned with the content width we set earlier */
-    max-width: 90%;
-    display: flex;
-    justify-content: space-between;
+    width: 100%;
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0 48px;
+    height: 100px;
+    display: grid;
+    grid-template-columns: 260px 1fr 180px;
     align-items: center;
 }
 
+/* ---- column 1: logo (left) ---- */
 .nav-logo {
-    display: flex;
+    justify-self: start;
+    display: inline-flex;
     align-items: center;
     transition: transform var(--mi-duration) var(--mi-ease);
 }
@@ -168,17 +180,23 @@ button, a {
 }
 
 .logo-img {
-    height: 42px;
-    width: auto;
+    width: 220px;
+    height: auto;
     object-fit: contain;
-    transform: scale(1.1);
-    transform-origin: center;
+    display: block;
 }
 
+/* ---- column 2: navigation (centre) ---- */
 .nav-links {
+    min-width: 0;        /* keep the centre track from overflowing its column */
     list-style: none;
+    margin: 0;
+    padding: 0;
     display: flex;
-    gap: 5rem;
+    align-items: center;
+    justify-content: center;
+    /* 56px target; shrinks on narrower screens so it never crowds the MAP */
+    gap: clamp(22px, 3vw, 56px);
 }
 
 .nav-links li {
@@ -186,55 +204,99 @@ button, a {
 }
 
 .nav-links li a {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
     text-decoration: none;
     font-family: 'Acumin Variable', sans-serif;
-    font-weight: 600;
-    color: var(--brand-red);
-    font-size: 1.15rem;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    position: relative;
-    transition: transform var(--mi-duration) var(--mi-ease);
+    font-weight: 700;
+    font-size: clamp(14px, 1.05vw, 18px);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--brand-navy);
+    white-space: nowrap;
+    padding: 6px 0;
+    transition: color 0.25s ease, transform var(--mi-duration) var(--mi-ease);
 }
 
+.nav-links li a:hover {
+    color: var(--brand-red);
+    transform: translateY(-1px);
+}
+
+/* animated underline */
 .nav-links li a::after {
     content: '';
     position: absolute;
     left: 0;
-    bottom: -6px;
+    bottom: -2px;
     width: 0;
     height: 2px;
-    background: var(--brand-red);
     border-radius: 2px;
+    background: var(--brand-red);
     transition: width 0.3s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
+.nav-links li a:hover::after,
 .nav-links li a.active::after {
     width: 100%;
 }
 
-.nav-chevron {
-    width: 8px;
-    height: 8px;
-    border-right: 2px solid var(--brand-red);
-    border-bottom: 2px solid var(--brand-red);
-    transform: rotate(45deg);
-    margin-top: -4px;
-    opacity: 0.8;
-}
-
 .nav-links li a.active {
-    font-weight: 800;
+    color: var(--brand-red);
 }
 
-/* Mobile Menu Toggle */
+/* ---- column 3: MAP button (right) ---- */
+.nav-cta {
+    justify-self: end;
+    flex-shrink: 0;
+    white-space: nowrap;
+    width: 140px;
+    height: 54px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px; /* space between the map icon and the label */
+    text-decoration: none;
+    font-family: 'Acumin Variable', sans-serif;
+    font-weight: 800;
+    font-size: 15px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #fff;
+    background: var(--orange-section);
+    box-shadow: 0 6px 16px -6px rgba(239, 106, 43, 0.7);
+    transition: transform var(--mi-duration) var(--mi-ease), box-shadow var(--mi-duration) var(--mi-ease), background-color 0.2s ease;
+}
+
+.nav-cta:hover {
+    background: #d8551c;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 22px -6px rgba(239, 106, 43, 0.8);
+}
+
+/* small map-pin icon inside the MAP button */
+.nav-cta-icon {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    fill: none;
+    stroke: #fff;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    margin-top: -1px;
+}
+
+/* ---- hamburger (mobile only) ---- */
 .menu-toggle {
     display: none;
+    flex: 0 0 auto;
     flex-direction: column;
     justify-content: space-between;
-    width: 30px;
-    height: 21px;
+    width: 28px;
+    height: 20px;
     background: transparent;
     border: none;
     cursor: pointer;
@@ -244,35 +306,54 @@ button, a {
 .menu-toggle span {
     width: 100%;
     height: 3px;
-    background-color: var(--brand-red);
+    background-color: var(--brand-navy);
     border-radius: 10px;
     transition: all 0.3s ease;
 }
 
-/* Responsive Styles for Navbar */
+/* ============== Responsive ============== */
 @media (max-width: 992px) {
+    .nav-container {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        height: 72px;
+        padding: 0 24px;
+    }
+
     .logo-img {
-        height: 28px;
+        width: 150px;
     }
 
     .menu-toggle {
         display: flex;
+        order: 3;
+    }
+
+    /* MAP pill sits just left of the hamburger */
+    .nav-cta {
+        order: 2;
+        margin-left: auto;
+        margin-right: 16px;
+        width: 112px;
+        height: 44px;
+        font-size: 14px;
     }
 
     .nav-links {
         position: fixed;
         right: -100%;
         top: 0;
-        width: 70%;
+        width: 72%;
+        max-width: 340px;
         height: 100vh;
-        background-color: rgba(242, 244, 246, 0.97);
-        background-image: none;
+        background-color: rgba(242, 244, 246, 0.98);
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        gap: 3rem;
+        gap: 2.4rem;
         transition: right 0.4s ease;
-        box-shadow: -5px 0 20px rgba(0,0,0,0.1);
+        box-shadow: -5px 0 24px rgba(0, 0, 0, 0.12);
         z-index: 100;
         padding-top: 80px;
     }
@@ -281,31 +362,37 @@ button, a {
         right: 0;
     }
 
-    /* Animate Hamburger to X */
-    .menu-toggle.active span:nth-child(1) {
-        transform: translateY(9px) rotate(45deg);
+    .nav-links li a {
+        font-size: 1.05rem;
+        letter-spacing: 0.08em;
     }
-    .menu-toggle.active span:nth-child(2) {
-        opacity: 0;
-    }
-    .menu-toggle.active span:nth-child(3) {
-        transform: translateY(-9px) rotate(-45deg);
-    }
+
+    /* hamburger -> X */
+    .menu-toggle.active span:nth-child(1) { transform: translateY(8.5px) rotate(45deg); }
+    .menu-toggle.active span:nth-child(2) { opacity: 0; }
+    .menu-toggle.active span:nth-child(3) { transform: translateY(-8.5px) rotate(-45deg); }
 }
 
-/* Extra small phones - adjust nav menu */
 @media (max-width: 480px) {
+    .nav-container {
+        padding: 0 16px;
+        height: 64px;
+    }
+
     .logo-img {
-        height: 22px;
+        width: 128px;
+    }
+
+    .nav-cta {
+        margin-right: 12px;
+        width: 96px;
+        height: 40px;
+        font-size: 13px;
     }
 
     .nav-links {
         width: 100%;
-        gap: 1.5rem;
-    }
-
-    .nav-links li a {
-        font-size: 0.95rem;
+        max-width: none;
     }
 }
 
@@ -830,14 +917,29 @@ body.page-loaded .hero-headline-wrap {
     border-radius: 0 0 16px 16px;
 }
 
-#doc-dropdown .filter-option:hover {
+#doc-dropdown .filter-option:hover,
+#doc-dropdown .filter-option:focus,
+#doc-dropdown .filter-option:focus-visible {
     background: var(--orange-section);
     color: #fff;
 }
 
-#city-dropdown .filter-option:hover {
+#city-dropdown .filter-option:hover,
+#city-dropdown .filter-option:focus,
+#city-dropdown .filter-option:focus-visible {
     background: #f5c718;
     color: #fff;
+}
+
+/* Clear keyboard focus indicators (mouse hover relies on background alone). */
+#doctor .filter-option:focus-visible {
+    outline: 2px solid #111;
+    outline-offset: -2px;
+}
+
+.filter-selected:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: -2px;
 }
 
 #doc-dropdown .filter-option.active-select {
@@ -1302,6 +1404,11 @@ body.doctor-modal-open {
     margin-top: -12.5rem;
     display: flex;
     justify-content: center;
+}
+
+/* Picture wrappers must not affect layout — the inner <img> keeps all sizing. */
+picture {
+    display: contents;
 }
 
 .about-timeline-gif {
@@ -1928,9 +2035,13 @@ body.doctor-modal-open {
 }
 
 @media (max-width: 640px) {
+    .stats-section {
+        padding: 1rem 1rem 2rem;
+    }
+
     .stats-circles-grid {
-        gap: 1.5rem;
-        padding: 1.5rem 0.5rem;
+        gap: 1rem;
+        padding: 0.5rem 0.5rem;
     }
 
     .stats-circle-card,
@@ -2367,7 +2478,7 @@ body.page-loaded .reveal-up {
     .hero-content {
         width: 100%;
         flex-direction: column;
-        gap: 2rem;
+        gap: 1rem;
         align-items: center;
     }
 
@@ -2433,7 +2544,7 @@ body.page-loaded .reveal-up {
     .hero-brand {
         display: flex;
         justify-content: center;
-        margin-bottom: 1.5rem;
+        margin-bottom: 0.5rem;
     }
 
     .hero-logo-img {
@@ -2646,7 +2757,7 @@ body.page-loaded .reveal-up {
 
     .footer-disclaimer {
         font-size: 0.65rem;
-        margin-top: 1.5rem;
+        margin-top: 0.5rem;
     }
 
     .qr-section {
@@ -2672,8 +2783,8 @@ body.page-loaded .reveal-up {
     }
 
     .disclaimer-text {
-        font-size: 0.65rem;
-        line-height: 1.6;
+        font-size: 0.72rem;
+        line-height: 1.7;
     }
 
     .footer-bottom {
@@ -2884,10 +2995,10 @@ body.page-loaded .reveal-up {
 
     .hero-graphics img,
     .hero-people-img {
-        width: 80%;
-        max-width: 300px;
+        width: 92%;
+        max-width: 380px;
         height: auto;
-        margin-top: 20px;
+        margin-top: 8px;
         position: static;
     }
 
@@ -2898,7 +3009,7 @@ body.page-loaded .reveal-up {
     .hero-brand {
         display: flex;
         justify-content: center;
-        margin-bottom: 2rem;
+        margin-bottom: 0.75rem;
     }
 
     .hero-logo-img {
@@ -2953,7 +3064,7 @@ body.page-loaded .reveal-up {
     /* Footer Tablet */
     .pharma-footer {
         padding: 1.5rem 1.5rem 1.25rem;
-        margin-top: 1.75rem;
+        margin-top: 0.5rem;
     }
 
     .footer-content {
@@ -3370,21 +3481,30 @@ button,
     will-change: transform;
 }
 
+/* precise inner dot — small orange accent with a soft glow */
 .cursor-dot {
-    width: 5px;
-    height: 5px;
+    width: 6px;
+    height: 6px;
     border-radius: 50%;
-    background: var(--brand-red);
+    background: var(--orange-section);
+    box-shadow: 0 0 10px 1px rgba(239, 106, 43, 0.45);
     transform: translate3d(-100px, -100px, 0) translate(-50%, -50%);
+    transition: width 0.2s ease, height 0.2s ease, background-color 0.2s ease;
 }
 
+/* outer ring — a thin brand-gradient "donut" (conic gradient masked to a ring) */
 .cursor-ring {
-    width: 28px;
-    height: 28px;
+    width: 30px;
+    height: 30px;
     border-radius: 50%;
-    border: 1.5px solid rgba(153, 31, 37, 0.35);
+    background: conic-gradient(from 130deg,
+        var(--brand-navy), var(--brand-red), var(--orange-section), var(--brand-navy));
+    -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 1.6px), #000 calc(100% - 1.6px));
+            mask: radial-gradient(farthest-side, transparent calc(100% - 1.6px), #000 calc(100% - 1.6px));
     transform: translate3d(-100px, -100px, 0) translate(-50%, -50%);
-    transition: width 0.25s ease, height 0.25s ease, border-color 0.25s ease, opacity 0.2s ease;
+    transition: width 0.28s cubic-bezier(0.22, 0.61, 0.36, 1),
+                height 0.28s cubic-bezier(0.22, 0.61, 0.36, 1),
+                opacity 0.2s ease;
 }
 
 body.custom-cursor-active .cursor-dot,
@@ -3392,16 +3512,16 @@ body.custom-cursor-active .cursor-ring {
     opacity: 1;
 }
 
+/* over links / buttons — ring opens up wide */
 .cursor-ring.is-hover {
-    width: 44px;
-    height: 44px;
-    border-color: rgba(41, 57, 127, 0.45);
+    width: 50px;
+    height: 50px;
 }
 
+/* over text — ring tightens a touch */
 .cursor-ring.is-text {
-    width: 36px;
-    height: 36px;
-    border-color: rgba(153, 31, 37, 0.55);
+    width: 38px;
+    height: 38px;
 }
 
 /* ============ POLISH PASS ============
@@ -3610,46 +3730,23 @@ section[id] {
 }
 
 
-/* ============ BIGGER NAVBAR + MODERN NAV ANIMATIONS ============
-   Desktop only (so mobile layout is untouched). Same colors/fonts. */
+/* ============ NAV LINK ENTRANCE ANIMATION (desktop) ============
+   NOTE: the old "BIGGER NAVBAR" block here used to override the header
+   layout (padding 1.7rem, logo 62px, gap 5.5rem, font 1.35rem) and was the
+   root cause of the gap/overlap bugs. Removed — the header layout now lives
+   only in the grid block above. This block keeps only the staggered fade-in. */
 @media (min-width: 993px) {
-    /* Larger navbar */
-    .navbar {
-        padding: 1.7rem 0;
-    }
-
-    .logo-img {
-        height: 62px;
-        transition: height 0.3s ease;
-    }
-
-    .nav-links {
-        gap: 5.5rem;
-    }
-
-    .nav-links li a {
-        font-size: 1.35rem;
-    }
-
-    /* Modern shrink-on-scroll: navbar gets a touch more compact once you
-       start scrolling (the navbar already transitions, so it animates). */
-    .navbar.scrolled {
-        padding: 1.05rem 0;
-    }
-
-    .navbar.scrolled .logo-img {
-        height: 48px;
-    }
-
-    /* Nav links fade/slide in one-by-one just after the bar drops down. */
     .navbar .nav-links li {
         opacity: 0;
         animation: nav-item-in 0.5s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
     }
 
-    .navbar .nav-links li:nth-child(1) { animation-delay: 0.70s; }
-    .navbar .nav-links li:nth-child(2) { animation-delay: 0.82s; }
-    .navbar .nav-links li:nth-child(3) { animation-delay: 0.94s; }
+    .navbar .nav-links li:nth-child(1) { animation-delay: 0.40s; }
+    .navbar .nav-links li:nth-child(2) { animation-delay: 0.47s; }
+    .navbar .nav-links li:nth-child(3) { animation-delay: 0.54s; }
+    .navbar .nav-links li:nth-child(4) { animation-delay: 0.61s; }
+    .navbar .nav-links li:nth-child(5) { animation-delay: 0.68s; }
+    .navbar .nav-links li:nth-child(6) { animation-delay: 0.75s; }
 }
 
 @keyframes nav-item-in {

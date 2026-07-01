@@ -1,0 +1,200 @@
+<!-- 3D MOLECULAR STRUCTURE -->
+<section id="molecule-3d" class="m3d-section fade-in-on-scroll">
+  <style>
+    .m3d-section{width:100%;padding:2.5rem 1rem 5rem;overflow:hidden;background:transparent}
+    .m3d-container{width:100%;max-width:1300px;margin:0 auto}
+    .m3d-head{margin-bottom:2.2rem}
+    .m3d-eyebrow{font-family:'Acumin Variable',sans-serif;font-size:.8rem;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--orange-section);margin-bottom:.6rem}
+    .m3d-title{font-family:'Acumin Variable',sans-serif;font-size:clamp(2rem,3.4vw,3.3rem);font-weight:800;line-height:1.12;color:var(--brand-navy);margin:0}
+    .m3d-title em{font-style:italic;color:var(--brand-red)}
+    .m3d-sub{font-family:'Acumin Variable',sans-serif;font-size:clamp(1rem,1.4vw,1.2rem);font-weight:600;color:var(--text-muted);margin-top:.7rem;max-width:62ch}
+
+    .m3d-card{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid rgba(41,57,127,.1);border-radius:22px;overflow:hidden;background:#fff;
+      box-shadow:0 1px 4px rgba(0,0,0,.05),0 16px 40px rgba(0,0,0,.06)}
+    .m3d-info{padding:42px 40px;display:flex;flex-direction:column;justify-content:center}
+    .m3d-callouts{display:flex;flex-direction:column;gap:14px;margin-bottom:26px}
+    .m3d-call{display:flex;align-items:flex-start;gap:12px;font-family:'Acumin Variable',sans-serif;font-size:.95rem;font-weight:500;line-height:1.55;color:var(--text-muted)}
+    .m3d-call::before{content:'';width:9px;height:9px;border-radius:50%;background:var(--brand-navy);margin-top:6px;flex-shrink:0}
+    .m3d-call.red::before{background:var(--brand-red)}
+    .m3d-call.orange::before{background:var(--orange-section)}
+    .m3d-call strong{color:var(--text-dark);font-weight:800}
+    .m3d-stats{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .m3d-stat{background:var(--bg-light);border:1px solid rgba(41,57,127,.1);border-radius:14px;padding:14px 16px}
+    .m3d-stat .m3d-sl{font-family:'Acumin Variable',sans-serif;font-size:.66rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--text-grey);margin-bottom:5px}
+    .m3d-stat .m3d-sv{font-family:'Acumin Variable',sans-serif;font-size:1.18rem;font-weight:800;color:var(--brand-navy);line-height:1.1}
+    .m3d-stat .m3d-sv small{font-size:.7rem;font-weight:600;color:var(--text-grey);margin-left:4px}
+
+    .m3d-viewer{position:relative;min-height:480px;border-left:1px solid rgba(41,57,127,.1);overflow:hidden;cursor:grab;
+      background:radial-gradient(620px 420px at 50% 45%,#1A2D45 0%,#0F1C2E 100%)}
+    .m3d-viewer:active{cursor:grabbing}
+    .m3d-loader{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;color:rgba(255,255,255,.7);
+      font-family:'Acumin Variable',sans-serif;font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;font-weight:700;z-index:5}
+    .m3d-spin{width:36px;height:36px;border:3px solid rgba(255,255,255,.15);border-top-color:var(--orange-section);border-radius:50%;margin-bottom:14px;animation:m3dspin 1s linear infinite}
+    @keyframes m3dspin{to{transform:rotate(360deg)}}
+    .m3d-controls{position:absolute;bottom:14px;left:14px;right:14px;display:flex;gap:8px;flex-wrap:wrap;z-index:4}
+    .m3d-btn{font-family:'Acumin Variable',sans-serif;background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.22);padding:7px 14px;border-radius:999px;
+      font-size:.72rem;font-weight:700;letter-spacing:.02em;cursor:pointer;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);transition:all .2s}
+    .m3d-btn:hover{background:rgba(255,255,255,.2)}
+    .m3d-btn.active{background:var(--orange-section);border-color:var(--orange-section);box-shadow:0 4px 16px -4px rgba(239,106,43,.6)}
+    .m3d-icon{position:absolute;top:14px;width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.22);
+      display:flex;align-items:center;justify-content:center;cursor:pointer;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);transition:all .2s;z-index:4}
+    .m3d-icon:hover{background:rgba(255,255,255,.2)}
+    .m3d-icon svg{width:17px;height:17px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+    .m3d-icon.spin{right:14px}.m3d-icon.reset{right:60px}.m3d-icon.fs{right:106px}
+    .m3d-icon.active{background:#1A7A42;border-color:#1A7A42}
+    @media(max-width:980px){.m3d-card{grid-template-columns:1fr}.m3d-info{padding:34px 28px}
+      .m3d-viewer{border-left:none;border-top:1px solid rgba(41,57,127,.1);min-height:400px}}
+  </style>
+
+  <div class="m3d-container">
+    <div class="m3d-head">
+      <div class="m3d-eyebrow">3D Conformer &middot; Rotate &middot; Zoom &middot; Explore</div>
+      <h2 class="m3d-title">The Molecule in <em>3 Dimensions</em></h2>
+      <p class="m3d-sub">Drag to rotate, scroll to zoom and explore the MMFF-optimised conformer of the lactone-ketolide.</p>
+    </div>
+
+    <div class="m3d-card">
+      <div class="m3d-info">
+        <div class="m3d-callouts">
+          <div class="m3d-call"><div><strong>14-membered lactone ring</strong> &mdash; the signature macrolide core that anchors ribosomal binding at Domain V.</div></div>
+          <div class="m3d-call red"><div><strong>Pyridyl-thiazole side chain</strong> &mdash; the extended aryl arm engages Domain II, defeating erm(B) methylation.</div></div>
+          <div class="m3d-call orange"><div><strong>Desosamine sugar (N,N-dimethylamino)</strong> &mdash; stabilises binding and contributes to tissue retention.</div></div>
+        </div>
+        <div class="m3d-stats">
+          <div class="m3d-stat"><div class="m3d-sl">Formula</div><div class="m3d-sv">C&#8324;&#8322;H&#8326;&#8325;N&#8325;O&#8321;&#8320;S</div></div>
+          <div class="m3d-stat"><div class="m3d-sl">Molecular Weight</div><div class="m3d-sv">859.05<small>g/mol</small></div></div>
+          <div class="m3d-stat"><div class="m3d-sl">PubChem CID</div><div class="m3d-sv">117 587 595</div></div>
+          <div class="m3d-stat"><div class="m3d-sl">CAS</div><div class="m3d-sv">1691240-78-4</div></div>
+        </div>
+      </div>
+      <div class="m3d-viewer" id="m3d-viewer">
+        <div class="m3d-loader" id="m3d-loader"><div class="m3d-spin"></div>Loading nafithromycin&hellip;</div>
+        <button class="m3d-icon fs" id="m3d-fs" title="Fullscreen" aria-label="Fullscreen"><svg viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3m13-5v3a2 2 0 0 1-2 2h-3"/></svg></button>
+        <button class="m3d-icon reset" id="m3d-reset" title="Reset view" aria-label="Reset view"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9 9 0 0 0-6.4 2.6L3 8"/><path d="M3 3v5h5"/></svg></button>
+        <button class="m3d-icon spin active" id="m3d-spin" title="Toggle rotation" aria-label="Toggle rotation"><svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg></button>
+        <div class="m3d-controls">
+          <button class="m3d-btn" data-style="line">Line</button>
+          <button class="m3d-btn active" data-style="stick">Stick</button>
+          <button class="m3d-btn" data-style="bs">Ball &amp; Stick</button>
+          <button class="m3d-btn" data-style="sphere">Sphere</button>
+          <button class="m3d-btn" data-style="cartoon">Surface</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<script>window.__NAF_SDF_B64__ = "CiAgICAgUkRLaXQgICAgICAgICAgM0QKCjEyMjEyNiAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMDk5OSBWMjAwMAogICAgMS4xMDQ3ICAgLTIuMTcwMiAgIC01LjU1ODAgQyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDEuODUzMyAgIC0xLjExMzQgICAtNC43NTY2IEMgICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgICAxLjM2MTggICAtMC44NjgwICAgLTMuMzEyOCBDICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAgMS40NzQ2ICAgLTIuMDgzMiAgIC0yLjMwNjYgQyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDEuODk4NiAgIC0xLjYwNDMgICAtMC44NjkzIEMgICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgICAwLjg4NTcgICAtMS44MjMyICAgIDAuMjk3MyBDICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAgMS4yMjMzICAgLTAuODgxNiAgICAxLjQ2NjcgQyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDIuMDgwMCAgIC0xLjIyNTEgICAgMi4yODcwIE8gICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgICAwLjYxNTggICAgMC41MzA1ICAgIDEuNTgzNyBDICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtMC42NjQzICAgIDAuODQ3NCAgICAwLjc4MDYgQyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTIuMDQ5MiAgICAwLjY2MjIgICAgMS40NjQ5IEMgICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC0zLjE5MzUgICAgMC40MzQ5ICAgIDAuMzc4NiBDICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtMy40OTA4ICAgIDEuNDk3MyAgIC0wLjcwOTIgQyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTIuMzM2NCAgICAxLjkxMTMgICAtMS42NDU1IEMgICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC0xLjgxOTAgICAgMy4wMjY3ICAgLTEuNTA2MCBPICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtMS44NTUwICAgIDEuMDAyNSAgIC0yLjc4NDcgQyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTAuMzc1OSAgICAwLjY2OTAgICAtMi42NTE2IEMgICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgICAwLjQyNDQgICAgMS4yODAwICAgLTEuOTYxOCBPICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtMC4wMTg0ICAgLTAuNDAzNSAgIC0zLjM5OTUgTyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTIuNzE0NCAgIC0wLjIzMTMgICAtMy4wNTE2IEMgICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC00LjIwMTQgICAgMi43NTE2ICAgLTAuMTc5MSBDICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtNC40MjkzICAgIDAuMjE3NCAgICAxLjA5NDYgTyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTUuMjMzNyAgIC0wLjg4NzIgICAgMC42ODk2IEMgICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC02LjQ3OTkgICAtMC40MDk3ICAgLTAuMDkxNiBDICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtNy43NDM4ICAgLTAuNDQzMSAgICAwLjgwOTUgQyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTcuMzY0MCAgICAwLjA5NDEgICAgMi4xOTc5IEMgICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC02LjI5ODMgICAtMC44MTIzICAgIDIuODMzMSBDICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtNS42MTc5ICAgLTEuNjE5NiAgICAxLjg2MDUgTyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTYuOTMwMCAgIC0xLjc2NDQgICAgMy44NDc5IEMgICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC04LjkxNDAgICAgMC4xODE5ICAgIDAuMTM1NyBOICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtOC44MTE2ICAgIDEuNjM3MiAgIC0wLjAwOTQgQyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAtMTAuMTczOSAgIC0wLjE2NTEgICAgMC43OTk3IEMgICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC02LjY5NDQgICAtMS4yMjY5ICAgLTEuMjU1NyBPICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtMi4wMzM2ICAgLTAuNjA2MyAgICAyLjM1NTcgQyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTIuNDM4NSAgICAxLjcwMjMgICAgMi4zNzg3IE8gICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC0xLjY5NDkgICAgMi45MDg5ICAgIDIuNDQzNiBDICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAgMS43MjEyICAgIDEuNTQxOSAgICAxLjI0NjMgQyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDAuNzkzNSAgIC0zLjI3MDYgICAgMC44MTM0IEMgICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgICAzLjI2OTYgICAtMi4yNjgzICAgLTAuNjIxMyBDICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAgMy40MDgwICAgLTMuMjMyMyAgIC0xLjc1NjMgQyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDQuMjA3NiAgIC00LjE1MzggICAtMS44MDg0IE8gICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgICAyLjU0MDEgICAtMi45NDY1ICAgLTIuNzUzOSBPICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAgNC40OTU4ICAgLTEuMzU3MCAgIC0wLjU1MDggQyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDQuMzQwOCAgIC0wLjA2MTUgICAtMC41Mjc1IE4gICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgICA1LjYwNzkgICAgMC41NjkxICAgLTAuNTA0MiBPICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAgNS42NTYzICAgIDEuNTUxNSAgICAwLjU0MzQgQyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDUuMjI2MSAgICAyLjkwNTMgICAgMC4wMDMxIEMgICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgICA3LjA2NzYgICAgMS41NDU4ICAgIDEuMDY1MiBDICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAgNy4zOTIwICAgIDEuMzIxMiAgICAyLjMyMzEgTiAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDguNzU4MSAgICAxLjI4MjMgICAgMi41MTg4IE4gICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgICA5LjQzNzcgICAgMS40ODkxICAgIDEuNDAzNCBDICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAgOC40MjU5ICAgIDEuNzczMSAgICAwLjAzOTIgUyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgMTAuOTA0MyAgICAxLjQ1NjMgICAgMS4yOTA3IEMgICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIDExLjY5ODIgICAgMS4xNDE0ICAgIDIuMzkzOSBDICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAxMy4wODQ4ICAgIDEuMTAwMiAgICAyLjI0MjUgQyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgMTMuNjQxMCAgICAxLjM3NzIgICAgMS4wMDIxIEMgICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIDEyLjc4NjcgICAgMS42Nzg5ICAgLTAuMDQ1NCBDICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAxMS40Mzk2ICAgIDEuNzIzOSAgICAwLjA2OTggTiAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDUuNzIzNyAgIC0xLjk2NDkgICAtMC40ODQ0IE4gICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgICAwLjIwNzAgICAtMi45NTc2ICAgLTIuMzYxMiBDICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAgMS40MTk3ICAgLTIuMTI2NCAgIC02LjYwNDggSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDEuMzMwNyAgIC0zLjE3NDggICAtNS4xOTIwIEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgICAwLjAyMTIgICAtMi4wMTY0ICAgLTUuNTIzNiBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAgMi45MTQ4ICAgLTEuMzY1OCAgIC00Ljc0ODggSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDEuNzU5MCAgIC0wLjE2ODEgICAtNS4zMDYzIEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgICAyLjAwNzQgICAtMC4wNTg1ICAgLTIuOTU5NSBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAgMi4wMjk2ICAgLTAuNTIxMyAgIC0wLjkxNzQgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTAuMTEzNyAgIC0xLjU4NjYgICAtMC4wNTQxIEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgICAwLjQwMjEgICAgMC42NjYwICAgIDIuNjUwNCBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtMC41OTQ1ICAgIDEuODc0OSAgICAwLjQyMTIgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTAuNjc3NyAgICAwLjIyNzYgICAtMC4xMDQ0IEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC0yLjkxMjEgICAtMC40ODgwICAgLTAuMTM4MyBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtNC4yNDg3ICAgIDEuMDYzNiAgIC0xLjM3MzMgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTEuOTMwNCAgICAxLjYyNzQgICAtMy42ODU2IEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC0yLjYyNzggICAtMC45NzA1ICAgLTIuMjUzMSBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtMy43NzIwICAgIDAuMDMwMyAgIC0zLjE2ODEgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTIuNDEyMSAgIC0wLjcyMzUgICAtMy45ODcyIEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC0zLjU3MTEgICAgMy4zMzcwICAgIDAuNDkyOSBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtNC40NzgyICAgIDMuNDE4NyAgIC0xLjAxMDAgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTUuMTIyOSAgICAyLjUwNjggICAgMC4zNTk5IEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC00LjY1MTMgICAtMS41ODIwICAgIDAuMDc4OSBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtNi4zMDIzICAgIDAuNTk1MSAgIC0wLjQ3NDggSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTguMDEwOCAgIC0xLjUwNDggICAgMC45MjM0IEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC04LjIzMTEgICAgMC4yMDA2ICAgIDIuODYxNyBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtNi45Mzk4ICAgIDEuMTAzMCAgICAyLjA5OTcgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTUuNTU1NSAgIC0wLjIwMzMgICAgMy4zNjI1IEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC03Ljc2OTYgICAtMi4zMDk0ICAgIDMuMzkzNiBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtNi4yMDYzICAgLTIuNTE4OSAgICA0LjE4NjAgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTcuMzA1NiAgIC0xLjIyMDIgICAgNC43MjI4IEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC04LjA0MjIgICAgMS44OTY4ICAgLTAuNzUyMyBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtOC41ODE1ICAgIDIuMTQ5NCAgICAwLjkzNDIgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTkuNzQ3NCAgICAyLjA2MTcgICAtMC4zODYyIEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgLTEwLjI2NDUgICAgMC4yNjYxICAgIDEuODAxOCBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogIC0xMS4wMTk2ICAgIDAuMTg0MSAgICAwLjE5OTIgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAtMTAuMjg0NiAgIC0xLjI1MjcgICAgMC44Nzc5IEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC03LjY3MDYgICAtMS4zMDg5ICAgLTEuMzQ1MiBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtMS4zMTMyICAgLTAuNTI3NCAgICAzLjE3NjMgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTIuOTk0OCAgIC0wLjc2NjYgICAgMi44NTQ0IEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC0xLjc5ODcgICAtMS41MDMyICAgIDEuNzczNiBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtMi4xNTUwICAgIDMuNTQ4OCAgICAzLjIwNDEgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTAuNjU4NiAgICAyLjczMDkgICAgMi43MzEyIEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC0xLjc0MjUgICAgMy40NDcxICAgIDEuNDk0NyBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAgMS40NDA1ICAgIDIuNTUyNiAgICAxLjU4MzQgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDIuNjYwOCAgICAxLjI4NDYgICAgMS43NDk4IEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgICAxLjkyMDMgICAgMS41ODUyICAgIDAuMTY3MyBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtMC4yNTcwICAgLTMuNTIzOSAgICAxLjAxNjggSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDEuMTYyNSAgIC00LjAwNjkgICAgMC4wOTk1IEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgICAxLjMzMjkgICAtMy40MzY0ICAgIDEuNzU1MCBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAgMy4yNjgyICAgLTIuODQ5OSAgICAwLjMwNzEgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDQuOTg5NCAgICAxLjI1NDYgICAgMS4zNjU3IEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgICA1Ljg2NjkgICAgMy4yMzQwICAgLTAuODIxOCBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAgNS4yNDY1ICAgIDMuNjc1NiAgICAwLjc3ODMgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDQuMjA5MiAgICAyLjg1MDMgICAtMC40MDE2IEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIDExLjI0NjUgICAgMC45MjM2ICAgIDMuMzYxNCBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAxMy43MTkyICAgIDAuODU1OSAgICAzLjA5MDkgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgMTQuNzE0MCAgICAxLjM1MzcgICAgMC44NTE3IEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIDEzLjE3MjkgICAgMS44OTkxICAgLTEuMDM4NyBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAgNi41MTE0ICAgLTEuMzc2NyAgIC0wLjIzMTcgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDUuODAyNiAgIC0yLjk1NjggICAtMC4yNjczIEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC0wLjY3NDMgICAtMi40NzE3ICAgLTEuOTM1NiBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtMC4wNTAxICAgLTMuMjMwMiAgIC0zLjM4NjIgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDAuMzYwMSAgIC0zLjkxNjkgICAtMS44NTc1IEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgMSAgMiAgMSAgMAogIDIgIDMgIDEgIDAKICAzICA0ICAxICAwCiAgNCAgNSAgMSAgMAogIDUgIDYgIDEgIDAKICA2ICA3ICAxICAwCiAgNyAgOCAgMiAgMAogIDcgIDkgIDEgIDAKICA5IDEwICAxICAwCiAxMCAxMSAgMSAgMAogMTEgMTIgIDEgIDAKIDEyIDEzICAxICAwCiAxMyAxNCAgMSAgMAogMTQgMTUgIDIgIDAKIDE0IDE2ICAxICAwCiAxNiAxNyAgMSAgMAogMTcgMTggIDIgIDAKIDE3IDE5ICAxICAwCiAxNiAyMCAgMSAgMAogMTMgMjEgIDEgIDAKIDEyIDIyICAxICAwCiAyMiAyMyAgMSAgMAogMjMgMjQgIDEgIDAKIDI0IDI1ICAxICAwCiAyNSAyNiAgMSAgMAogMjYgMjcgIDEgIDAKIDI3IDI4ICAxICAwCiAyNyAyOSAgMSAgMAogMjUgMzAgIDEgIDAKIDMwIDMxICAxICAwCiAzMCAzMiAgMSAgMAogMjQgMzMgIDEgIDAKIDExIDM0ICAxICAwCiAxMSAzNSAgMSAgMAogMzUgMzYgIDEgIDAKICA5IDM3ICAxICAwCiAgNiAzOCAgMSAgMAogIDUgMzkgIDEgIDAKIDM5IDQwICAxICAwCiA0MCA0MSAgMiAgMAogNDAgNDIgIDEgIDAKIDM5IDQzICAxICAwCiA0MyA0NCAgMiAgMwogNDQgNDUgIDEgIDAKIDQ1IDQ2ICAxICAwCiA0NiA0NyAgMSAgMAogNDYgNDggIDEgIDAKIDQ4IDQ5ICAyICAwCiA0OSA1MCAgMSAgMAogNTAgNTEgIDIgIDAKIDUxIDUyICAxICAwCiA1MSA1MyAgMSAgMAogNTMgNTQgIDIgIDAKIDU0IDU1ICAxICAwCiA1NSA1NiAgMiAgMAogNTYgNTcgIDEgIDAKIDU3IDU4ICAyICAwCiA0MyA1OSAgMSAgMAogIDQgNjAgIDEgIDAKIDE5ICAzICAxICAwCiA0MiAgNCAgMSAgMAogMjggMjMgIDEgIDAKIDUyIDQ4ICAxICAwCiA1OCA1MyAgMSAgMAogIDEgNjEgIDEgIDAKICAxIDYyICAxICAwCiAgMSA2MyAgMSAgMAogIDIgNjQgIDEgIDAKICAyIDY1ICAxICAwCiAgMyA2NiAgMSAgMAogIDUgNjcgIDEgIDAKICA2IDY4ICAxICAwCiAgOSA2OSAgMSAgMAogMTAgNzAgIDEgIDAKIDEwIDcxICAxICAwCiAxMiA3MiAgMSAgMAogMTMgNzMgIDEgIDAKIDE2IDc0ICAxICAwCiAyMCA3NSAgMSAgMAogMjAgNzYgIDEgIDAKIDIwIDc3ICAxICAwCiAyMSA3OCAgMSAgMAogMjEgNzkgIDEgIDAKIDIxIDgwICAxICAwCiAyMyA4MSAgMSAgMAogMjQgODIgIDEgIDAKIDI1IDgzICAxICAwCiAyNiA4NCAgMSAgMAogMjYgODUgIDEgIDAKIDI3IDg2ICAxICAwCiAyOSA4NyAgMSAgMAogMjkgODggIDEgIDAKIDI5IDg5ICAxICAwCiAzMSA5MCAgMSAgMAogMzEgOTEgIDEgIDAKIDMxIDkyICAxICAwCiAzMiA5MyAgMSAgMAogMzIgOTQgIDEgIDAKIDMyIDk1ICAxICAwCiAzMyA5NiAgMSAgMAogMzQgOTcgIDEgIDAKIDM0IDk4ICAxICAwCiAzNCA5OSAgMSAgMAogMzYxMDAgIDEgIDAKIDM2MTAxICAxICAwCiAzNjEwMiAgMSAgMAogMzcxMDMgIDEgIDAKIDM3MTA0ICAxICAwCiAzNzEwNSAgMSAgMAogMzgxMDYgIDEgIDAKIDM4MTA3ICAxICAwCiAzODEwOCAgMSAgMAogMzkxMDkgIDEgIDAKIDQ2MTEwICAxICAwCiA0NzExMSAgMSAgMAogNDcxMTIgIDEgIDAKIDQ3MTEzICAxICAwCiA1NDExNCAgMSAgMAogNTUxMTUgIDEgIDAKIDU2MTE2ICAxICAwCiA1NzExNyAgMSAgMAogNTkxMTggIDEgIDAKIDU5MTE5ICAxICAwCiA2MDEyMCAgMSAgMAogNjAxMjEgIDEgIDAKIDYwMTIyICAxICAwCk0gIEVORAo=";</script>
+<script>
+(function(){
+  var CDNS = [
+    'https://3Dmol.org/build/3Dmol-min.js',
+    'https://cdn.jsdelivr.net/npm/3dmol@2.4.2/build/3Dmol-min.js',
+    'https://unpkg.com/3dmol@2.4.2/build/3Dmol-min.js'
+  ];
+  function fail(msg){
+    var loader = document.getElementById('m3d-loader');
+    if(loader) loader.innerHTML = '<div style="color:#ff9b9b;font-size:.78rem;text-align:center;line-height:1.5">'+(msg||'3D viewer unavailable')+'</div>';
+  }
+  // Load the 3Dmol library, trying each CDN in turn.
+  function loadLib(i){
+    if(typeof window.$3Dmol !== 'undefined'){ render3D(); return; }
+    if(i >= CDNS.length){ fail('Could not load the 3D engine.<br>Check your internet connection.'); return; }
+    var s = document.createElement('script');
+    s.src = CDNS[i];
+    s.async = true;
+    s.onload = function(){ if(typeof window.$3Dmol !== 'undefined') render3D(); else loadLib(i+1); };
+    s.onerror = function(){ loadLib(i+1); };
+    document.head.appendChild(s);
+  }
+  function render3D(){
+    if(!window.__NAF_SDF_B64__){ fail('Structure data missing.'); return; }
+    var el = document.getElementById('m3d-viewer');
+    if(!el) return;
+    var loader = document.getElementById('m3d-loader');
+    var sdf = atob(window.__NAF_SDF_B64__);
+    var viewer = null, isSpinning = true;
+    function applyStyle(style){
+      if(!viewer) return;
+      try { viewer.removeAllSurfaces(); } catch(e){}
+      viewer.setStyle({}, {});
+      if(style==='line') viewer.setStyle({}, {line:{linewidth:2, colorscheme:'Jmol'}});
+      else if(style==='stick') viewer.setStyle({}, {stick:{radius:0.16, colorscheme:'Jmol'}});
+      else if(style==='bs') viewer.setStyle({}, {stick:{radius:0.12, colorscheme:'Jmol'}, sphere:{scale:0.28, colorscheme:'Jmol'}});
+      else if(style==='sphere') viewer.setStyle({}, {sphere:{scale:0.45, colorscheme:'Jmol'}});
+      else if(style==='cartoon'){
+        viewer.setStyle({}, {stick:{radius:0.08, colorscheme:'Jmol'}});
+        try { viewer.addSurface($3Dmol.SurfaceType.VDW, {opacity:0.55, color:'#2E6EC8'}); } catch(e){}
+      }
+      viewer.render();
+    }
+    try {
+      // NOTE: pass backgroundAlpha (not an rgba string) — 3Dmol's colour
+      // parser rejects 'rgba(...)' strings and throws inside the constructor.
+      viewer = $3Dmol.createViewer(el, {backgroundAlpha:0});
+      viewer.addModel(sdf, 'sdf');
+      viewer.setStyle({}, {stick:{radius:0.16, colorscheme:'Jmol'}});
+      try { viewer.setBackgroundColor(0x0F1C2E, 0); } catch(e){}
+      viewer.zoomTo();
+      viewer.render();
+      try { viewer.spin('y', 0.5); } catch(e){ isSpinning = false; }
+      if(loader) loader.style.display = 'none';
+
+      document.querySelectorAll('#molecule-3d .m3d-btn').forEach(function(btn){
+        btn.addEventListener('click', function(){
+          document.querySelectorAll('#molecule-3d .m3d-btn').forEach(function(b){ b.classList.remove('active'); });
+          btn.classList.add('active');
+          applyStyle(btn.dataset.style);
+        });
+      });
+      var spinBtn = document.getElementById('m3d-spin');
+      if(spinBtn) spinBtn.addEventListener('click', function(){
+        isSpinning = !isSpinning;
+        try { viewer.spin(isSpinning ? 'y' : false); } catch(e){}
+        spinBtn.classList.toggle('active', isSpinning);
+      });
+      var resetBtn = document.getElementById('m3d-reset');
+      if(resetBtn) resetBtn.addEventListener('click', function(){ viewer.zoomTo(); viewer.render(); });
+      var fsBtn = document.getElementById('m3d-fs');
+      if(fsBtn) fsBtn.addEventListener('click', function(){
+        if(!document.fullscreenElement){ if(el.requestFullscreen) el.requestFullscreen(); }
+        else { if(document.exitFullscreen) document.exitFullscreen(); }
+        setTimeout(function(){ try{ viewer.resize(); viewer.zoomTo(); viewer.render(); }catch(e){} }, 300);
+      });
+      window.addEventListener('resize', function(){ try{ viewer.resize(); }catch(e){} });
+
+      // Pause the WebGL spin loop whenever the molecule is off-screen so it
+      // doesn't burn GPU/CPU while the user is reading other sections.
+      if('IntersectionObserver' in window){
+        var visObs = new IntersectionObserver(function(entries){
+          entries.forEach(function(en){
+            try {
+              if(en.isIntersecting){ if(isSpinning) viewer.spin('y', 0.5); }
+              else { viewer.spin(false); }
+            } catch(e){}
+          });
+        }, {threshold:0.05});
+        visObs.observe(el);
+      }
+    } catch(err){
+      console.error('[MIQNAF 3D] viewer error:', err);
+      fail('3D viewer failed to initialise.<br>' + (err && err.message ? err.message : ''));
+    }
+  }
+  // Don't fetch the ~1 MB 3Dmol library or build the viewer until the section
+  // is near the viewport — keeps initial page load light and scroll-smooth.
+  function start(){
+    var el = document.getElementById('m3d-viewer');
+    if(!el || !('IntersectionObserver' in window)){ loadLib(0); return; }
+    var started = false;
+    var obs = new IntersectionObserver(function(entries){
+      if(started) return;
+      if(entries.some(function(en){ return en.isIntersecting; })){
+        started = true; obs.disconnect(); loadLib(0);
+      }
+    }, {rootMargin:'600px 0px'});
+    obs.observe(el);
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start);
+  else start();
+})();
+</script>

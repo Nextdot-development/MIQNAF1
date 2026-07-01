@@ -9,7 +9,10 @@
 
                 <div class="about-bridge-row">
                     <span class="about-bridge-text">Today, the gap is bridged with</span>
-                    <img src="MIQNAF logo.png" alt="MIQNAF" class="about-bridge-logo">
+                    <picture>
+                        <source srcset="assests/miqnaf-logo.webp" type="image/webp">
+                        <img src="assests/miqnaf-logo.png" alt="MIQNAF" class="about-bridge-logo">
+                    </picture>
                     <div class="about-tagline-wrap">
                         <div class="about-tagline-ribbon">
                             <span>Delivering Guaranteed Results, Every Time</span>
@@ -21,12 +24,16 @@
 
         <!-- Timeline GIF + overlay -->
         <div class="about-timeline-visual">
-            <img
-                src="assests/timeline1.gif"
-                alt="Macrolide discovery timeline animation"
-                class="about-timeline-gif"
-                loading="lazy"
-            >
+            <picture>
+                <!-- Animated WebP keeps the transparent background and is ~75% lighter than the GIF. -->
+                <source srcset="assests/timeline1.webp" type="image/webp">
+                <img
+                    src="assests/timeline1.gif"
+                    alt="Macrolide discovery timeline animation"
+                    class="about-timeline-gif"
+                    loading="lazy"
+                >
+            </picture>
 
             <div class="about-timeline-overlay">
                 <div class="about-timeline-overlay-inner">
@@ -35,12 +42,12 @@
                         <div class="about-timeline-entry">
                             <p class="about-entry-year">1952</p>
                             <p class="about-entry-drug">Erythromycin</p>
-                            <p class="about-entry-company">Eli lly (USA)</p>
+                            <p class="about-entry-company">Eli Lilly (USA)</p>
                         </div>
                         <div class="about-timeline-entry">
                             <p class="about-entry-year">1987</p>
                             <p class="about-entry-drug">Roxithromycin</p>
-                            <p class="about-entry-company">Roussel uclaf (France)</p>
+                            <p class="about-entry-company">Roussel Uclaf (France)</p>
                         </div>
                         <div class="about-timeline-entry">
                             <p class="about-entry-year">1988</p>
@@ -50,7 +57,7 @@
                         <div class="about-timeline-entry">
                             <p class="about-entry-year">1990</p>
                             <p class="about-entry-drug">Clarithromycin</p>
-                            <p class="about-entry-company">Taisho pharma (USA)</p>
+                            <p class="about-entry-company">Taisho Pharma (USA)</p>
                         </div>
                     </div>
 
