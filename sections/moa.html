@@ -2,63 +2,88 @@
 <section id="moa" class="moa-section fade-in-on-scroll">
   <style>
     .moa-section{width:100%;padding:2.5rem 1rem 5rem;overflow:hidden;background:transparent}
-    /* staggered fade-in (opacity only — keeps card hover transforms intact) */
-    .moa-card,.moa-cmp{opacity:0}
-    .moa-section.in-view .moa-card,.moa-section.in-view .moa-cmp{animation:moaFade .7s ease forwards}
-    .moa-section.in-view .moa-card:nth-child(1){animation-delay:.10s}
-    .moa-section.in-view .moa-card:nth-child(2){animation-delay:.20s}
-    .moa-section.in-view .moa-card:nth-child(3){animation-delay:.30s}
-    .moa-section.in-view .moa-cmp:nth-child(1){animation-delay:.38s}
-    .moa-section.in-view .moa-cmp:nth-child(2){animation-delay:.46s}
-    .moa-section.in-view .moa-cmp:nth-child(3){animation-delay:.54s}
+    /* staggered fade-in (opacity only — keeps hover transforms intact) */
+    .moa-board,.moa-cmp{opacity:0}
+    .moa-section.in-view .moa-board{animation:moaFade .7s ease forwards}
+    .moa-section.in-view .moa-cmp{animation:moaFade .7s ease forwards}
+    .moa-section.in-view .moa-cmp:nth-child(1){animation-delay:.30s}
+    .moa-section.in-view .moa-cmp:nth-child(2){animation-delay:.38s}
+    .moa-section.in-view .moa-cmp:nth-child(3){animation-delay:.46s}
     @keyframes moaFade{from{opacity:0}to{opacity:1}}
-    @media(prefers-reduced-motion:reduce){.moa-card,.moa-cmp{opacity:1;animation:none}}
+    @media(prefers-reduced-motion:reduce){.moa-board,.moa-cmp{opacity:1;animation:none}}
     .moa-container{width:100%;max-width:1300px;margin:0 auto}
-    .moa-head{margin-bottom:2.5rem}
+    .moa-head{margin-bottom:2.2rem}
     .moa-eyebrow{font-family:'Acumin Variable',sans-serif;font-size:.8rem;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--orange-section);margin-bottom:.6rem}
     .moa-title{font-family:'Acumin Variable',sans-serif;font-size:clamp(2rem,3.4vw,3.3rem);font-weight:800;line-height:1.12;color:var(--brand-navy);margin:0}
     .moa-title em{font-style:italic;color:var(--brand-red)}
     .moa-sub{font-family:'Acumin Variable',sans-serif;font-size:clamp(1rem,1.4vw,1.2rem);font-weight:600;color:var(--text-muted);margin-top:.7rem;max-width:64ch}
 
-    .moa-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-bottom:30px}
-    .moa-card{background:#fff;border:1px solid rgba(41,57,127,.1);border-radius:20px;padding:34px 30px;position:relative;overflow:hidden;
-      box-shadow:0 1px 4px rgba(0,0,0,.05),0 14px 36px rgba(0,0,0,.05);transition:transform var(--mi-duration) var(--mi-ease),box-shadow var(--mi-duration) var(--mi-ease)}
-    .moa-card:hover{transform:translateY(-4px);box-shadow:0 18px 44px rgba(41,57,127,.14)}
-    .moa-card::before{content:'';position:absolute;top:0;left:0;right:0;height:5px}
-    .moa-card.c-red::before{background:var(--brand-red)}
-    .moa-card.c-navy::before{background:var(--brand-navy)}
-    .moa-card.c-orange::before{background:var(--orange-section)}
-    .moa-num{font-family:'Acumin Variable',sans-serif;font-size:3.4rem;font-weight:800;line-height:1;letter-spacing:-.03em;opacity:.12;position:absolute;top:14px;right:22px}
-    .moa-card.c-red .moa-num{color:var(--brand-red)}
-    .moa-card.c-navy .moa-num{color:var(--brand-navy)}
-    .moa-card.c-orange .moa-num{color:var(--orange-section)}
-    .moa-tag{font-family:'Acumin Variable',sans-serif;font-size:.72rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;margin-bottom:14px}
-    .moa-card.c-red .moa-tag{color:var(--brand-red)}
-    .moa-card.c-navy .moa-tag{color:var(--brand-navy)}
-    .moa-card.c-orange .moa-tag{color:var(--orange-section)}
-    .moa-card h3{font-family:'Acumin Variable',sans-serif;font-size:1.32rem;font-weight:800;color:var(--text-dark);line-height:1.2;margin-bottom:12px}
-    .moa-card p{font-family:'Acumin Variable',sans-serif;font-size:.98rem;font-weight:500;line-height:1.6;color:var(--text-muted)}
-    .moa-card p sup{font-size:.6em;opacity:.6}
+    /* ===== dual-binding board ===== */
+    .moa-board{display:grid;grid-template-columns:1.05fr 1fr;gap:0;border:1px solid rgba(41,57,127,.1);border-radius:24px;overflow:hidden;background:#fff;
+      box-shadow:0 1px 4px rgba(0,0,0,.05),0 18px 46px rgba(41,57,127,.08);margin-bottom:34px}
+    /* left: diagram on a dark panel */
+    .moa-viz{position:relative;padding:30px 26px;background:radial-gradient(680px 460px at 40% 40%,#1c3252 0%,#0f1c2e 100%);display:flex;flex-direction:column}
+    .moa-viz-tag{font-family:'Acumin Variable',sans-serif;font-size:.66rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.55);margin-bottom:6px}
+    .moa-viz-h{font-family:'Acumin Variable',sans-serif;font-size:1.28rem;font-weight:800;color:#fff;line-height:1.2;margin-bottom:14px}
+    .moa-viz-h span{color:var(--orange-section)}
+    .moa-svg{width:100%;height:auto;flex:1;min-height:270px}
+    .moa-pocket{transform-box:fill-box;transform-origin:center;animation:moaPulse 2.4s ease-in-out infinite}
+    .moa-pocket.v2{animation-delay:1.2s}
+    @keyframes moaPulse{0%,100%{opacity:.55}50%{opacity:1}}
+    .moa-viz-key{display:flex;flex-wrap:wrap;gap:14px;margin-top:14px}
+    .moa-vk{display:inline-flex;align-items:center;gap:8px;font-family:'Acumin Variable',sans-serif;font-size:.74rem;font-weight:700;color:rgba(255,255,255,.82)}
+    .moa-vk i{width:22px;height:3px;border-radius:3px}
+    .moa-vk.mi i{background:var(--orange-section)}
+    .moa-vk.az i{background:#8b93ad}
+    @media(prefers-reduced-motion:reduce){.moa-pocket{animation:none;opacity:1}}
 
-    .moa-compare{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:1px solid rgba(41,57,127,.1);border-radius:20px;overflow:hidden;background:#fff}
-    .moa-cmp{padding:28px 26px;border-right:1px solid rgba(41,57,127,.1)}
-    .moa-cmp:last-child{border-right:none}
-    .moa-cmp.featured{background:linear-gradient(180deg,rgba(239,106,43,.07),rgba(255,255,255,0));border-top:4px solid var(--orange-section)}
-    .moa-cmp-drug{font-family:'Acumin Variable',sans-serif;font-size:1.12rem;font-weight:800;color:var(--text-dark);margin-bottom:4px}
+    /* right: stepped mechanism points */
+    .moa-points{list-style:none;margin:0;padding:34px 34px;display:flex;flex-direction:column;gap:0;counter-reset:moa}
+    .moa-pt{position:relative;padding:0 0 26px 56px}
+    .moa-pt:last-child{padding-bottom:0}
+    .moa-pt::before{counter-increment:moa;content:counter(moa);position:absolute;left:0;top:0;width:38px;height:38px;border-radius:12px;
+      display:flex;align-items:center;justify-content:center;font-family:'Acumin Variable',sans-serif;font-size:1.05rem;font-weight:800;color:#fff;z-index:2}
+    /* connector line down the badges */
+    .moa-pt::after{content:'';position:absolute;left:18px;top:38px;bottom:2px;width:2px;background:rgba(41,57,127,.14)}
+    .moa-pt:last-child::after{display:none}
+    .moa-pt.c-red::before{background:linear-gradient(135deg,var(--brand-red),#c0343a)}
+    .moa-pt.c-navy::before{background:linear-gradient(135deg,var(--brand-navy),#3d51a6)}
+    .moa-pt.c-orange::before{background:linear-gradient(135deg,var(--orange-section),#f0863f)}
+    .moa-pt h3{font-family:'Acumin Variable',sans-serif;font-size:1.08rem;font-weight:800;color:var(--text-dark);line-height:1.25;margin:6px 0 6px}
+    .moa-pt .moa-pt-tag{font-family:'Acumin Variable',sans-serif;font-size:.64rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;margin-bottom:2px;display:block}
+    .moa-pt.c-red .moa-pt-tag{color:var(--brand-red)}
+    .moa-pt.c-navy .moa-pt-tag{color:var(--brand-navy)}
+    .moa-pt.c-orange .moa-pt-tag{color:var(--orange-section)}
+    .moa-pt p{font-family:'Acumin Variable',sans-serif;font-size:.92rem;font-weight:500;line-height:1.6;color:var(--text-muted)}
+    .moa-pt p sup{font-size:.6em;opacity:.6}
+
+    /* ===== comparison ===== */
+    .moa-cmp-head{font-family:'Acumin Variable',sans-serif;font-size:.72rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--text-grey);margin:0 0 14px 2px}
+    .moa-compare{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    .moa-cmp{padding:26px 24px 24px;border:1px solid rgba(41,57,127,.1);border-radius:18px;background:#fff;position:relative;
+      box-shadow:0 1px 4px rgba(0,0,0,.04),0 12px 30px rgba(0,0,0,.05)}
+    .moa-cmp.featured{border:2px solid var(--orange-section);background:linear-gradient(180deg,rgba(239,106,43,.08),#fff 55%);
+      box-shadow:0 3px 10px rgba(239,106,43,.12),0 18px 44px rgba(239,106,43,.14);transform:translateY(-6px)}
+    .moa-cmp-flag{position:absolute;top:-11px;left:50%;transform:translateX(-50%);white-space:nowrap;font-family:'Acumin Variable',sans-serif;
+      font-size:.6rem;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:#fff;background:linear-gradient(135deg,var(--orange-section),#f0863f);
+      border-radius:999px;padding:5px 14px;box-shadow:0 6px 16px -4px rgba(239,106,43,.6)}
+    .moa-cmp-drug{font-family:'Acumin Variable',sans-serif;font-size:1.1rem;font-weight:800;color:var(--text-dark);margin-bottom:4px;line-height:1.2}
     .moa-cmp.featured .moa-cmp-drug{color:var(--orange-section)}
-    .moa-cmp-class{font-family:'Acumin Variable',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text-grey);margin-bottom:18px}
-    .moa-site{display:flex;align-items:center;gap:10px;padding:7px 0;font-family:'Acumin Variable',sans-serif;font-size:.92rem;font-weight:600}
+    .moa-cmp-class{font-family:'Acumin Variable',sans-serif;font-size:.7rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--text-grey);margin-bottom:16px}
+    .moa-site{display:flex;align-items:center;gap:10px;padding:8px 0;font-family:'Acumin Variable',sans-serif;font-size:.9rem;font-weight:600;border-top:1px solid rgba(41,57,127,.07)}
+    .moa-site:first-of-type{border-top:none}
     .moa-site.on{color:var(--text-dark)}
-    .moa-site.off{color:rgba(51,51,51,.32);text-decoration:line-through}
-    .moa-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
-    .moa-site.on .moa-dot{background:#1A7A42}
-    .moa-site.off .moa-dot{background:rgba(51,51,51,.2)}
-    .moa-dot.blue{background:var(--brand-navy)!important}
-    .moa-cmp-note{font-family:'Acumin Variable',sans-serif;font-size:.78rem;font-weight:600;line-height:1.5;margin-top:14px;color:var(--text-grey)}
+    .moa-site.off{color:rgba(51,51,51,.4)}
+    .moa-ic{width:19px;height:19px;flex-shrink:0;border-radius:50%;display:flex;align-items:center;justify-content:center}
+    .moa-ic svg{width:11px;height:11px;stroke:#fff;fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+    .moa-site.on .moa-ic{background:#1A7A42}
+    .moa-site.off .moa-ic{background:rgba(51,51,51,.22)}
+    .moa-ic.blue{background:var(--brand-navy)!important}
+    .moa-cmp-note{font-family:'Acumin Variable',sans-serif;font-size:.76rem;font-weight:600;line-height:1.55;margin-top:16px;padding-top:14px;border-top:1px dashed rgba(41,57,127,.14);color:var(--text-grey)}
     .moa-cmp.featured .moa-cmp-note{color:var(--text-muted)}
 
-    @media(max-width:980px){.moa-grid{grid-template-columns:1fr}.moa-compare{grid-template-columns:1fr}
-      .moa-cmp{border-right:none;border-bottom:1px solid rgba(41,57,127,.1)}.moa-cmp:last-child{border-bottom:none}}
+    @media(max-width:980px){.moa-board{grid-template-columns:1fr}.moa-points{padding:30px 26px}
+      .moa-compare{grid-template-columns:1fr;gap:20px}.moa-cmp.featured{transform:none}}
   </style>
 
   <div class="moa-container">
@@ -68,47 +93,106 @@
       <p class="moa-sub">Nafithromycin anchors at two ribosomal sites at once &mdash; so neither erm(B) methylation nor mef(A) efflux can switch it off.</p>
     </div>
 
-    <div class="moa-grid">
-      <div class="moa-card c-red">
-        <span class="moa-num">I</span>
-        <div class="moa-tag">Domain II Binding</div>
-        <h3>Defeats erm(B) methylase resistance</h3>
-        <p>The pyridyl-thiadiazole arm contacts the L22 protein at domain II of 23S rRNA &mdash; a site unaffected by A2058 methylation. Active even when domain V is blocked.<sup>5</sup></p>
+    <div class="moa-board">
+      <!-- left: dual-binding schematic -->
+      <div class="moa-viz">
+        <div class="moa-viz-tag">50S subunit &middot; 23S rRNA</div>
+        <div class="moa-viz-h">One drug, <span>two anchors</span></div>
+        <svg class="moa-svg" viewBox="0 0 480 360" role="img" aria-label="Nafithromycin binds Domain II and Domain V of the ribosome; azithromycin binds Domain V only">
+          <defs>
+            <linearGradient id="moaRibo" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#3a63a8"/><stop offset="1" stop-color="#20335a"/>
+            </linearGradient>
+            <linearGradient id="moaMi" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#f0863f"/><stop offset="1" stop-color="#ea5d22"/>
+            </linearGradient>
+          </defs>
+
+          <!-- ribosome body -->
+          <rect x="312" y="46" width="132" height="268" rx="60" fill="url(#moaRibo)" stroke="rgba(255,255,255,.14)" stroke-width="1.5"/>
+          <text x="378" y="300" text-anchor="middle" font-family="'Acumin Variable',sans-serif" font-size="12" font-weight="800" fill="rgba(255,255,255,.6)">Ribosome</text>
+
+          <!-- connectors: MIQNAF (orange, solid) to both domains -->
+          <path d="M150 128 C 220 108, 262 118, 306 122" fill="none" stroke="url(#moaMi)" stroke-width="4.5" stroke-linecap="round"/>
+          <path d="M150 150 C 220 196, 262 236, 306 246" fill="none" stroke="url(#moaMi)" stroke-width="4.5" stroke-linecap="round"/>
+          <!-- connectors: Azithromycin (grey): solid to Domain V, broken to Domain II -->
+          <path d="M150 268 C 220 262, 262 254, 306 248" fill="none" stroke="#8b93ad" stroke-width="3.5" stroke-linecap="round"/>
+          <path d="M150 258 C 216 210, 250 160, 292 128" fill="none" stroke="#8b93ad" stroke-width="3" stroke-dasharray="3 8" stroke-linecap="round" opacity=".8"/>
+
+          <!-- binding pockets -->
+          <circle class="moa-pocket" cx="306" cy="122" r="17" fill="#ef6a2b" opacity=".9"/>
+          <circle class="moa-pocket v2" cx="306" cy="247" r="17" fill="#ef6a2b" opacity=".9"/>
+          <circle cx="306" cy="122" r="17" fill="none" stroke="#fff" stroke-width="2"/>
+          <circle cx="306" cy="247" r="17" fill="none" stroke="#fff" stroke-width="2"/>
+
+          <!-- domain labels -->
+          <text x="250" y="96" text-anchor="middle" font-family="'Acumin Variable',sans-serif" font-size="12.5" font-weight="800" fill="#fff">Domain II</text>
+          <text x="250" y="278" text-anchor="middle" font-family="'Acumin Variable',sans-serif" font-size="12.5" font-weight="800" fill="#fff">Domain V</text>
+
+          <!-- azithromycin failure marker at Domain II -->
+          <g transform="translate(286,110)">
+            <circle r="10" fill="#991f25"/>
+            <path d="M-4 -4 L4 4 M4 -4 L-4 4" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/>
+          </g>
+
+          <!-- MIQNAF drug node -->
+          <rect x="26" y="104" width="126" height="52" rx="15" fill="url(#moaMi)"/>
+          <text x="89" y="127" text-anchor="middle" font-family="'Acumin Variable',sans-serif" font-size="14.5" font-weight="800" fill="#fff">MIQNAF&#174;</text>
+          <text x="89" y="144" text-anchor="middle" font-family="'Acumin Variable',sans-serif" font-size="9.5" font-weight="700" letter-spacing=".6" fill="rgba(255,255,255,.85)">DUAL ANCHOR</text>
+
+          <!-- Azithromycin drug node -->
+          <rect x="26" y="244" width="126" height="48" rx="15" fill="rgba(255,255,255,.08)" stroke="#8b93ad" stroke-width="1.5"/>
+          <text x="89" y="266" text-anchor="middle" font-family="'Acumin Variable',sans-serif" font-size="13" font-weight="800" fill="#cfd4e2">Azithromycin</text>
+          <text x="89" y="281" text-anchor="middle" font-family="'Acumin Variable',sans-serif" font-size="9" font-weight="700" letter-spacing=".5" fill="rgba(255,255,255,.5)">1 SITE ONLY</text>
+        </svg>
+        <div class="moa-viz-key">
+          <span class="moa-vk mi"><i></i>MIQNAF&reg; &mdash; binds Domain II + V</span>
+          <span class="moa-vk az"><i></i>Azithromycin &mdash; Domain V only</span>
+        </div>
       </div>
-      <div class="moa-card c-navy">
-        <span class="moa-num">II</span>
-        <div class="moa-tag">Domain V Binding</div>
-        <h3>Defeats mef(A) efflux resistance</h3>
-        <p>Classical desosamine binding at domain V is retained. The dual-anchor affinity stays below the efflux pump&rsquo;s clearance threshold, keeping activity against mef(A) isolates.<sup>3</sup></p>
-      </div>
-      <div class="moa-card c-orange">
-        <span class="moa-num">III</span>
-        <div class="moa-tag">vs. Classical Macrolides</div>
-        <h3>Neither gene overcomes both sites</h3>
-        <p>Azithromycin binds domain V only &mdash; one methylation or efflux event ends all activity. MIQNAF&rsquo;s two contacts are additive: block one, the other holds.<sup>3,5</sup></p>
-      </div>
+
+      <!-- right: mechanism points -->
+      <ol class="moa-points">
+        <li class="moa-pt c-red">
+          <span class="moa-pt-tag">Domain II Binding</span>
+          <h3>Defeats erm(B) methylase resistance</h3>
+          <p>The pyridyl-thiadiazole arm contacts the L22 protein at Domain II of 23S rRNA &mdash; a site unaffected by A2058 methylation. Active even when Domain V is blocked.<sup>5</sup></p>
+        </li>
+        <li class="moa-pt c-navy">
+          <span class="moa-pt-tag">Domain V Binding</span>
+          <h3>Defeats mef(A) efflux resistance</h3>
+          <p>Classical desosamine binding at Domain V is retained. The dual-anchor affinity stays below the efflux pump&rsquo;s clearance threshold, keeping activity against mef(A) isolates.<sup>3</sup></p>
+        </li>
+        <li class="moa-pt c-orange">
+          <span class="moa-pt-tag">vs. Classical Macrolides</span>
+          <h3>Neither gene overcomes both sites</h3>
+          <p>Azithromycin binds Domain V only &mdash; one methylation or efflux event ends all activity. MIQNAF&rsquo;s two contacts are additive: block one, the other holds.<sup>3,5</sup></p>
+        </li>
+      </ol>
     </div>
 
+    <div class="moa-cmp-head">Ribosomal binding at a glance</div>
     <div class="moa-compare">
       <div class="moa-cmp">
         <div class="moa-cmp-drug">Azithromycin</div>
         <div class="moa-cmp-class">Classical Macrolide &middot; 1 site</div>
-        <div class="moa-site off"><span class="moa-dot"></span>Domain II &mdash; not contacted</div>
-        <div class="moa-site on"><span class="moa-dot"></span>Domain V (A2058 &middot; 23S rRNA)</div>
+        <div class="moa-site off"><span class="moa-ic"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></span>Domain II &mdash; not contacted</div>
+        <div class="moa-site on"><span class="moa-ic"><svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg></span>Domain V (A2058 &middot; 23S rRNA)</div>
         <div class="moa-cmp-note">erm(B) &rarr; activity lost<br>mef(A) &rarr; activity lost</div>
       </div>
       <div class="moa-cmp featured">
+        <span class="moa-cmp-flag">Dual anchor &middot; wins both</span>
         <div class="moa-cmp-drug">MIQNAF&reg; Nafithromycin</div>
         <div class="moa-cmp-class">Lactone-Ketolide &middot; 2 sites</div>
-        <div class="moa-site on"><span class="moa-dot"></span>Domain II (L22 &middot; 23S rRNA) &check;</div>
-        <div class="moa-site on"><span class="moa-dot"></span>Domain V (A2058 &middot; 23S rRNA) &check;</div>
+        <div class="moa-site on"><span class="moa-ic"><svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg></span>Domain II (L22 &middot; 23S rRNA)</div>
+        <div class="moa-site on"><span class="moa-ic"><svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg></span>Domain V (A2058 &middot; 23S rRNA)</div>
         <div class="moa-cmp-note">erm(B) &rarr; domain II binding retained<br>mef(A) &rarr; activity retained (low MIC&#8336;&#8320;)<sup>3</sup></div>
       </div>
       <div class="moa-cmp">
         <div class="moa-cmp-drug">Moxifloxacin</div>
         <div class="moa-cmp-class">Fluoroquinolone &middot; different target</div>
-        <div class="moa-site on"><span class="moa-dot blue"></span>GyrA / GyrB (DNA gyrase)</div>
-        <div class="moa-site on"><span class="moa-dot blue"></span>ParC / ParE (Topo IV)</div>
+        <div class="moa-site on"><span class="moa-ic blue"><svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg></span>GyrA / GyrB (DNA gyrase)</div>
+        <div class="moa-site on"><span class="moa-ic blue"><svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg></span>ParC / ParE (Topo IV)</div>
         <div class="moa-cmp-note">Different class &mdash; retains activity<br>FQ safety warnings apply</div>
       </div>
     </div>

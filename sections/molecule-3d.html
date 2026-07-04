@@ -24,26 +24,54 @@
     .m3d-stat .m3d-sv{font-family:'Acumin Variable',sans-serif;font-size:1.18rem;font-weight:800;color:var(--brand-navy);line-height:1.1}
     .m3d-stat .m3d-sv small{font-size:.7rem;font-weight:600;color:var(--text-grey);margin-left:4px}
 
-    .m3d-viewer{position:relative;min-height:480px;border-left:1px solid rgba(41,57,127,.1);overflow:hidden;cursor:grab;
-      background:radial-gradient(620px 420px at 50% 45%,#1A2D45 0%,#0F1C2E 100%)}
+    .m3d-viewer{position:relative;min-height:560px;border-left:1px solid rgba(41,57,127,.1);overflow:hidden;cursor:grab;
+      background:radial-gradient(105% 80% at 50% 32%,#22436f 0%,#152c4c 46%,#0a1830 100%)}
     .m3d-viewer:active{cursor:grabbing}
+    /* soft glow behind the molecule — premium bloom-like halo */
+    .m3d-glow{position:absolute;top:45%;left:50%;width:64%;height:68%;transform:translate(-50%,-50%);z-index:0;pointer-events:none;
+      background:radial-gradient(circle,rgba(70,138,236,.36) 0%,rgba(70,138,236,.12) 46%,rgba(70,138,236,0) 72%);filter:blur(38px)}
     .m3d-loader{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;color:rgba(255,255,255,.7);
-      font-family:'Acumin Variable',sans-serif;font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;font-weight:700;z-index:5}
-    .m3d-spin{width:36px;height:36px;border:3px solid rgba(255,255,255,.15);border-top-color:var(--orange-section);border-radius:50%;margin-bottom:14px;animation:m3dspin 1s linear infinite}
+      font-family:'Acumin Variable',sans-serif;font-size:.76rem;letter-spacing:.08em;text-transform:uppercase;font-weight:700;z-index:6}
+    .m3d-spin{width:34px;height:34px;border:3px solid rgba(255,255,255,.15);border-top-color:var(--orange-section);border-radius:50%;margin-bottom:14px;animation:m3dspin 1s linear infinite}
     @keyframes m3dspin{to{transform:rotate(360deg)}}
-    .m3d-controls{position:absolute;bottom:14px;left:14px;right:14px;display:flex;gap:8px;flex-wrap:wrap;z-index:4}
-    .m3d-btn{font-family:'Acumin Variable',sans-serif;background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.22);padding:7px 14px;border-radius:999px;
-      font-size:.72rem;font-weight:700;letter-spacing:.02em;cursor:pointer;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);transition:all .2s}
-    .m3d-btn:hover{background:rgba(255,255,255,.2)}
+    /* compact molecule name */
+    .m3d-name{position:absolute;top:15px;left:17px;z-index:4;display:flex;flex-direction:column;gap:1px;pointer-events:none}
+    .m3d-name-main{font-family:'Acumin Variable',sans-serif;font-size:.92rem;font-weight:800;color:#fff;line-height:1.05;text-shadow:0 1px 10px rgba(0,0,0,.4)}
+    .m3d-name-sub{display:inline-flex;align-items:center;gap:6px;font-family:'Acumin Variable',sans-serif;font-size:.55rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--orange-section)}
+    .m3d-name-sub::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--orange-section)}
+    .m3d-hint{position:absolute;top:55px;left:17px;z-index:4;font-family:'Acumin Variable',sans-serif;font-size:.6rem;font-weight:600;letter-spacing:.03em;color:rgba(255,255,255,.5);pointer-events:none}
+    /* collapsible element key (glassmorphism) */
+    .m3d-legend{position:absolute;top:14px;right:14px;z-index:5}
+    .m3d-legend summary{list-style:none;display:inline-flex;align-items:center;gap:7px;cursor:pointer;
+      font-family:'Acumin Variable',sans-serif;font-size:.62rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#fff;
+      background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.2);border-radius:999px;padding:6px 12px;
+      -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);transition:background .2s}
+    .m3d-legend summary::-webkit-details-marker{display:none}
+    .m3d-legend summary:hover{background:rgba(255,255,255,.17)}
+    .m3d-legend summary .dot{width:10px;height:10px;border-radius:50%;background:conic-gradient(#909090,#3050F8,#FF0D0D,#FFFF30,#fff,#909090)}
+    .m3d-legend summary svg{width:11px;height:11px;stroke:#fff;fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;opacity:.8;transition:transform .2s}
+    .m3d-legend[open] summary svg{transform:rotate(180deg)}
+    .m3d-legend-panel{margin-top:8px;margin-left:auto;width:max-content;display:flex;flex-direction:column;gap:7px;padding:13px 15px;border-radius:14px;
+      background:rgba(11,22,40,.74);border:1px solid rgba(255,255,255,.14);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);box-shadow:0 16px 40px rgba(0,0,0,.4)}
+    .m3d-el{display:inline-flex;align-items:center;gap:8px;font-family:'Acumin Variable',sans-serif;font-size:.72rem;font-weight:700;color:#fff}
+    .m3d-el i{width:10px;height:10px;border-radius:50%;box-shadow:0 0 0 1px rgba(0,0,0,.3),0 0 8px rgba(255,255,255,.14)}
+    .m3d-el small{font-weight:600;font-size:.64rem;opacity:.66;text-transform:none;letter-spacing:.01em}
+    /* style controls (glass, compact) — bottom-left */
+    .m3d-controls{position:absolute;bottom:15px;left:15px;display:flex;gap:6px;flex-wrap:wrap;max-width:64%;z-index:4}
+    .m3d-btn{font-family:'Acumin Variable',sans-serif;background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.18);padding:6px 12px;border-radius:999px;
+      font-size:.68rem;font-weight:700;letter-spacing:.02em;cursor:pointer;-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);transition:all .2s}
+    .m3d-btn:hover{background:rgba(255,255,255,.18)}
     .m3d-btn.active{background:var(--orange-section);border-color:var(--orange-section);box-shadow:0 4px 16px -4px rgba(239,106,43,.6)}
-    .m3d-icon{position:absolute;top:14px;width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.22);
-      display:flex;align-items:center;justify-content:center;cursor:pointer;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);transition:all .2s;z-index:4}
-    .m3d-icon:hover{background:rgba(255,255,255,.2)}
-    .m3d-icon svg{width:17px;height:17px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-    .m3d-icon.spin{right:14px}.m3d-icon.reset{right:60px}.m3d-icon.fs{right:106px}
-    .m3d-icon.active{background:#1A7A42;border-color:#1A7A42}
+    /* corner icon controls (glass) — bottom-right */
+    .m3d-icon{position:absolute;bottom:15px;width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.18);
+      display:flex;align-items:center;justify-content:center;cursor:pointer;-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);transition:all .2s;z-index:4}
+    .m3d-icon:hover{background:rgba(255,255,255,.18)}
+    .m3d-icon svg{width:15px;height:15px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+    .m3d-icon.spin{right:15px}.m3d-icon.reset{right:57px}.m3d-icon.fs{right:99px}
+    .m3d-icon.active{background:var(--orange-section);border-color:var(--orange-section)}
     @media(max-width:980px){.m3d-card{grid-template-columns:1fr}.m3d-info{padding:34px 28px}
-      .m3d-viewer{border-left:none;border-top:1px solid rgba(41,57,127,.1);min-height:400px}}
+      .m3d-viewer{border-left:none;border-top:1px solid rgba(41,57,127,.1);min-height:460px}}
+    @media(max-width:560px){.m3d-controls{max-width:calc(100% - 30px)}}
   </style>
 
   <div class="m3d-container">
@@ -68,16 +96,31 @@
         </div>
       </div>
       <div class="m3d-viewer" id="m3d-viewer">
+        <div class="m3d-glow"></div>
         <div class="m3d-loader" id="m3d-loader"><div class="m3d-spin"></div>Loading nafithromycin&hellip;</div>
-        <button class="m3d-icon fs" id="m3d-fs" title="Fullscreen" aria-label="Fullscreen"><svg viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3m13-5v3a2 2 0 0 1-2 2h-3"/></svg></button>
-        <button class="m3d-icon reset" id="m3d-reset" title="Reset view" aria-label="Reset view"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9 9 0 0 0-6.4 2.6L3 8"/><path d="M3 3v5h5"/></svg></button>
-        <button class="m3d-icon spin active" id="m3d-spin" title="Toggle rotation" aria-label="Toggle rotation"><svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg></button>
+        <div class="m3d-name"><span class="m3d-name-main">Nafithromycin</span><span class="m3d-name-sub">MIQNAF&reg; &middot; Lactone-Ketolide</span></div>
+        <div class="m3d-hint">Hover an atom to identify it</div>
+
+        <details class="m3d-legend">
+          <summary><span class="dot"></span>Elements <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+          <div class="m3d-legend-panel">
+            <span class="m3d-el"><i style="background:#909090"></i>C <small>Carbon</small></span>
+            <span class="m3d-el"><i style="background:#3050F8"></i>N <small>Nitrogen</small></span>
+            <span class="m3d-el"><i style="background:#FF0D0D"></i>O <small>Oxygen</small></span>
+            <span class="m3d-el"><i style="background:#FFFF30"></i>S <small>Sulfur</small></span>
+            <span class="m3d-el"><i style="background:#FFFFFF"></i>H <small>Hydrogen</small></span>
+          </div>
+        </details>
+
+        <button type="button" class="m3d-icon fs" id="m3d-fs" title="Fullscreen" aria-label="Fullscreen"><svg viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3m13-5v3a2 2 0 0 1-2 2h-3"/></svg></button>
+        <button type="button" class="m3d-icon reset" id="m3d-reset" title="Reset view" aria-label="Reset view"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9 9 0 0 0-6.4 2.6L3 8"/><path d="M3 3v5h5"/></svg></button>
+        <button type="button" class="m3d-icon spin active" id="m3d-spin" title="Toggle rotation" aria-label="Toggle rotation"><svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg></button>
         <div class="m3d-controls">
-          <button class="m3d-btn" data-style="line">Line</button>
-          <button class="m3d-btn active" data-style="stick">Stick</button>
-          <button class="m3d-btn" data-style="bs">Ball &amp; Stick</button>
-          <button class="m3d-btn" data-style="sphere">Sphere</button>
-          <button class="m3d-btn" data-style="cartoon">Surface</button>
+          <button type="button" class="m3d-btn" data-style="line">Line</button>
+          <button type="button" class="m3d-btn" data-style="stick">Stick</button>
+          <button type="button" class="m3d-btn active" data-style="bs">Ball &amp; Stick</button>
+          <button type="button" class="m3d-btn" data-style="sphere">Sphere</button>
+          <button type="button" class="m3d-btn" data-style="cartoon">Surface</button>
         </div>
       </div>
     </div>
@@ -112,14 +155,14 @@
     if(!el) return;
     var loader = document.getElementById('m3d-loader');
     var sdf = atob(window.__NAF_SDF_B64__);
-    var viewer = null, isSpinning = true;
+    var viewer = null, isSpinning = true, homeView = null;
     function applyStyle(style){
       if(!viewer) return;
       try { viewer.removeAllSurfaces(); } catch(e){}
       viewer.setStyle({}, {});
       if(style==='line') viewer.setStyle({}, {line:{linewidth:2, colorscheme:'Jmol'}});
       else if(style==='stick') viewer.setStyle({}, {stick:{radius:0.16, colorscheme:'Jmol'}});
-      else if(style==='bs') viewer.setStyle({}, {stick:{radius:0.12, colorscheme:'Jmol'}, sphere:{scale:0.28, colorscheme:'Jmol'}});
+      else if(style==='bs') viewer.setStyle({}, {stick:{radius:0.14, colorscheme:'Jmol'}, sphere:{scale:0.30, colorscheme:'Jmol'}});
       else if(style==='sphere') viewer.setStyle({}, {sphere:{scale:0.45, colorscheme:'Jmol'}});
       else if(style==='cartoon'){
         viewer.setStyle({}, {stick:{radius:0.08, colorscheme:'Jmol'}});
@@ -130,35 +173,70 @@
     try {
       // NOTE: pass backgroundAlpha (not an rgba string) — 3Dmol's colour
       // parser rejects 'rgba(...)' strings and throws inside the constructor.
-      viewer = $3Dmol.createViewer(el, {backgroundAlpha:0});
+      // antialias = the FXAA-equivalent edge smoothing 3Dmol exposes.
+      viewer = $3Dmol.createViewer(el, {backgroundAlpha:0, antialias:true});
       viewer.addModel(sdf, 'sdf');
-      viewer.setStyle({}, {stick:{radius:0.16, colorscheme:'Jmol'}});
-      try { viewer.setBackgroundColor(0x0F1C2E, 0); } catch(e){}
+      // premium ball-&-stick default — more depth than bare sticks
+      viewer.setStyle({}, {stick:{radius:0.14, colorscheme:'Jmol'}, sphere:{scale:0.30, colorscheme:'Jmol'}});
+      try { viewer.setBackgroundColor(0x0a1830, 0); } catch(e){}
       viewer.zoomTo();
+      // clean isometric-ish angle, enlarge ~28% and keep it centred
+      try { viewer.rotate(22, 'x'); viewer.rotate(-32, 'y'); viewer.zoom(1.28); } catch(e){}
       viewer.render();
-      try { viewer.spin('y', 0.5); } catch(e){ isSpinning = false; }
+      try { homeView = viewer.getView(); } catch(e){}
+      try { viewer.spin('y', 0.25); } catch(e){ isSpinning = false; }
       if(loader) loader.style.display = 'none';
 
-      document.querySelectorAll('#molecule-3d .m3d-btn').forEach(function(btn){
+      document.querySelectorAll('#molecule-3d .m3d-btn[data-style]').forEach(function(btn){
         btn.addEventListener('click', function(){
-          document.querySelectorAll('#molecule-3d .m3d-btn').forEach(function(b){ b.classList.remove('active'); });
+          document.querySelectorAll('#molecule-3d .m3d-btn[data-style]').forEach(function(b){ b.classList.remove('active'); });
           btn.classList.add('active');
           applyStyle(btn.dataset.style);
         });
       });
+
+      // No permanent labels — the structure stays clean and reads by element
+      // colour alone. Element identity appears only on hover (premium tooltip).
+      var EL_COLORS = {C:'#c3c9d4', N:'#7d93ff', O:'#ff6a6a', S:'#ffe23d', H:'#e8ecf3'};
+      var EL_NAMES  = {C:'Carbon', N:'Nitrogen', O:'Oxygen', S:'Sulfur', H:'Hydrogen'};
+      try { viewer.setHoverDuration(60); } catch(e){}
+      try {
+        viewer.setHoverable({}, true,
+          function(atom, v){
+            if(atom.__lbl) return;
+            atom.__lbl = v.addLabel((EL_NAMES[atom.elem] || atom.elem) + '  ·  ' + atom.elem, {
+              position:{x:atom.x, y:atom.y, z:atom.z}, inFront:true, alignment:'center',
+              font:'Helvetica', fontSize:13, fontColor:'#0a1524',
+              backgroundColor:'#ffffff', backgroundOpacity:0.94,
+              borderColor: EL_COLORS[atom.elem] || '#8899bb', borderThickness:1.6
+            });
+            v.render();
+          },
+          function(atom, v){
+            if(atom.__lbl){ v.removeLabel(atom.__lbl); delete atom.__lbl; v.render(); }
+          }
+        );
+        // 3Dmol only wires hover picking into the atom geometry on the next
+        // style build — rebuild the default style once so hover works from the
+        // start (otherwise it stays dormant until you switch styles manually).
+        applyStyle('bs');
+      } catch(e){}
       var spinBtn = document.getElementById('m3d-spin');
       if(spinBtn) spinBtn.addEventListener('click', function(){
         isSpinning = !isSpinning;
-        try { viewer.spin(isSpinning ? 'y' : false); } catch(e){}
+        try { if(isSpinning) viewer.spin('y', 0.25); else viewer.spin(false); } catch(e){}
         spinBtn.classList.toggle('active', isSpinning);
       });
       var resetBtn = document.getElementById('m3d-reset');
-      if(resetBtn) resetBtn.addEventListener('click', function(){ viewer.zoomTo(); viewer.render(); });
+      if(resetBtn) resetBtn.addEventListener('click', function(){
+        try { if(homeView) viewer.setView(homeView); else viewer.zoomTo(); } catch(e){ viewer.zoomTo(); }
+        viewer.render();
+      });
       var fsBtn = document.getElementById('m3d-fs');
       if(fsBtn) fsBtn.addEventListener('click', function(){
         if(!document.fullscreenElement){ if(el.requestFullscreen) el.requestFullscreen(); }
         else { if(document.exitFullscreen) document.exitFullscreen(); }
-        setTimeout(function(){ try{ viewer.resize(); viewer.zoomTo(); viewer.render(); }catch(e){} }, 300);
+        setTimeout(function(){ try{ viewer.resize(); viewer.zoomTo(); viewer.zoom(1.28); viewer.render(); }catch(e){} }, 300);
       });
       window.addEventListener('resize', function(){ try{ viewer.resize(); }catch(e){} });
 
@@ -168,7 +246,7 @@
         var visObs = new IntersectionObserver(function(entries){
           entries.forEach(function(en){
             try {
-              if(en.isIntersecting){ if(isSpinning) viewer.spin('y', 0.5); }
+              if(en.isIntersecting){ if(isSpinning) viewer.spin('y', 0.25); }
               else { viewer.spin(false); }
             } catch(e){}
           });
