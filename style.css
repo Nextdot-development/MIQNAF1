@@ -1067,8 +1067,9 @@ body.page-loaded .hero-headline-wrap {
 
 .image-container {
     position: relative;
-    width: 420px;
-    height: 500px;
+    /* 9:16 — the doctor thumbnails are portrait posters */
+    width: 400px;
+    height: 711px;
 }
 
 .video-container {
@@ -1138,8 +1139,8 @@ body.page-loaded .hero-headline-wrap {
 }
 
 #video-container {
-    width: 420px;
-    height: 500px;
+    width: 400px;
+    height: 711px;
     position: relative;
     background: transparent;
     overflow: visible;
@@ -2756,14 +2757,14 @@ body.page-loaded .reveal-up {
 
     #video-container {
         width: min(100%, 300px);
-        height: 350px;
+        height: 533px;
         margin: 0 auto;
     }
 
     .image-container {
         width: 100%;
         max-width: 300px;
-        height: 350px;
+        height: 533px;
     }
 
     .doctor-info {
@@ -2961,14 +2962,14 @@ body.page-loaded .reveal-up {
 
     #video-container {
         width: min(100%, 350px);
-        height: 400px;
+        height: 622px;
         margin: 0 auto;
     }
 
     .image-container {
         width: 100%;
         max-width: 350px;
-        height: 400px;
+        height: 622px;
     }
 
     .hero-brand {
