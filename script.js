@@ -327,8 +327,11 @@ function initializeDoctorSystem() {
                 spec: 'Chest Physician'
             },
             {
-                doctor: 'Dr. Raja',
-                spec: 'Chest Physician'
+                doctor: 'Dr. Raja Dhar',
+                spec: 'Pulmonologist',
+                type: 'gdrive',
+                video: 'https://drive.google.com/file/d/1NjwexlkM1IxdVlh1rjB8gB2E_h2IwSda/preview',
+                thumb: 'thumbnails/dr-raja-dhar.jpg'
             }
         ],
         delhi: [
