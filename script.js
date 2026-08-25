@@ -323,8 +323,11 @@ function initializeDoctorSystem() {
         ],
         kolkata: [
             {
-                doctor: 'Dr. Indranil',
-                spec: 'Chest Physician'
+                doctor: 'Dr. Indranil Haldar',
+                spec: 'Pulmonologist',
+                type: 'gdrive',
+                video: 'https://drive.google.com/file/d/1AHWJVx6kVciOn16FezpDPFX64hIhioqi/preview',
+                thumb: 'thumbnails/dr-indranil-haldar.jpg'
             },
             {
                 doctor: 'Dr. Raja Dhar',
@@ -336,8 +339,11 @@ function initializeDoctorSystem() {
         ],
         delhi: [
             {
-                doctor: 'Dr. Randeep',
-                spec: 'Chest Physician'
+                doctor: 'Dr. Randeep Guleria',
+                spec: 'Pulmonologist',
+                type: 'gdrive',
+                video: 'https://drive.google.com/file/d/14JasufTbBaFpZEFLZwKLfm_TFlHNaqOb/preview',
+                thumb: 'thumbnails/dr-randeep-guleria.jpg'
             }
         ]
     };
