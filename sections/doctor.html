@@ -3,7 +3,7 @@
     <div class="doctor-container">
         <div class="doctor-layout-row">
             <div class="left-section">
-                <div class="doctor-section-title-wrap">
+                <div class="doctor-section-title-wrap" id="doctor-video">
                     <h2 class="doctor-section-title bouncing-title" data-text="The Proven Solution Trusted by Doctors Nationwide">
                         The Proven Solution Trusted by Doctors Nationwide
                     </h2>
@@ -34,7 +34,8 @@
                         <div class="filter-list city-list" id="city-listbox" role="listbox" aria-label="Cities">
                             <div class="filter-option city-option" data-city="mumbai" role="option" tabindex="-1" aria-selected="true" style="display: none;">Mumbai</div>
                             <div class="filter-option city-option" data-city="chennai" role="option" tabindex="-1" aria-selected="false">Chennai</div>
-                            <div class="filter-option city-option" data-city="punjab" role="option" tabindex="-1" aria-selected="false">Punjab</div>
+                            <div class="filter-option city-option" data-city="kolkata" role="option" tabindex="-1" aria-selected="false">Kolkata</div>
+                            <div class="filter-option city-option" data-city="delhi" role="option" tabindex="-1" aria-selected="false">Delhi</div>
                         </div>
                     </div>
                 </div>
@@ -55,6 +56,11 @@
             <div class="doctor-image-content">
                 <div class="image-container" id="video-container" style="cursor:pointer;">
                     <img id="display-thumbnail" class="doctor-thumbnail" src="thumbnails/dr-sonam-solanki.jpg" alt="Dr. Sonam Solanki">
+                    <div id="display-placeholder" class="doctor-thumb-placeholder" hidden aria-hidden="true">
+                        <img src="assests/MIQNAF Logo.svg" alt="" class="doctor-thumb-placeholder-logo">
+                        <span class="doctor-thumb-placeholder-name"></span>
+                        <span class="doctor-thumb-placeholder-note">Video coming soon</span>
+                    </div>
                     <div id="display-play-btn" class="doctor-play-btn">
                         <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><polygon points="5,3 19,12 5,21"/></svg>
                     </div>

@@ -44,6 +44,68 @@ function initializeNavbar() {
             navMenu?.classList.remove('active');
         });
     });
+
+    // ---- anchor jumps ----
+    // Several sections above the fold grow as their images and reveal
+    // animations settle, so the browser's native fragment jump — whose offset
+    // is fixed the moment it fires — can land short of the target and leave
+    // you staring at the blank run-up to a section. Recomputing the position
+    // at click time (layout settled by then) puts the heading where the CSS
+    // scroll-margin says it should be.
+    function scrollToHash(hash, behavior) {
+        let target = null;
+        try { target = document.querySelector(hash); } catch (e) { return false; }
+        if (!target) return false;
+
+        const offsetFor = (el) => parseFloat(getComputedStyle(el).scrollMarginTop)
+                               || (navbar?.offsetHeight || 0) + 18;
+        const positionFor = (el) => Math.max(
+            0, el.getBoundingClientRect().top + window.pageYOffset - offsetFor(el)
+        );
+
+        window.scrollTo({ top: positionFor(target), behavior: behavior || 'smooth' });
+
+        // Images above the target can finish loading mid-scroll and shift it,
+        // so re-check once the scroll has settled — unless the reader has
+        // taken over in the meantime.
+        let takenOver = false;
+        const release = () => { takenOver = true; };
+        ['wheel', 'touchstart', 'keydown'].forEach(
+            (ev) => window.addEventListener(ev, release, { once: true, passive: true })
+        );
+        setTimeout(() => {
+            ['wheel', 'touchstart', 'keydown'].forEach(
+                (ev) => window.removeEventListener(ev, release)
+            );
+            if (takenOver) return;
+            const settled = positionFor(target);
+            if (Math.abs(settled - window.pageYOffset) > 10) {
+                window.scrollTo({ top: settled, behavior: 'auto' });
+            }
+        }, 700);
+
+        return true;
+    }
+
+    document.querySelectorAll('.navbar a[href^="#"]').forEach(link => {
+        link.addEventListener('click', (e) => {
+            const hash = link.getAttribute('href');
+            if (!hash || hash === '#') return;
+            if (scrollToHash(hash)) {
+                e.preventDefault();
+                history.replaceState(null, '', hash);
+            }
+        });
+    });
+
+    // Deep links (/#doctor-video) land before images have reserved their space,
+    // so re-apply the same offset once everything has loaded.
+    if (window.location.hash) {
+        const deepLink = window.location.hash;
+        window.addEventListener('load', () => {
+            setTimeout(() => scrollToHash(deepLink, 'auto'), 60);
+        });
+    }
 }
 
 // ========== SCROLL ANIMATIONS ==========
@@ -223,7 +285,9 @@ function initializeDoctorSystem() {
         return doctorInfo.video || '';
     }
 
-    // Doctor data — each entry has a local thumbnail path + video URL
+    // Doctor data — each entry has a local thumbnail path + video URL.
+    // Entries whose video/thumb are not in yet simply omit them; the UI then
+    // falls back to a branded "video coming soon" card instead of a broken image.
     const data = {
         mumbai: [
             {
@@ -246,34 +310,6 @@ function initializeDoctorSystem() {
                 type: 'gdrive',
                 video: 'https://drive.google.com/file/d/17dEXA8utX1hWI_WF3ytw94NWPOwZZqWo/preview',
                 thumb: 'thumbnails/dr-swami-pawar.jpg'
-            },
-            {
-                doctor: 'Dr. Harshal Shah',
-                spec: 'Chest Physician',
-                type: 'gdrive',
-                video: 'https://drive.google.com/file/d/1GNjlgCpFlLtvmcj35WTAhfI2DZjoOU_s/preview',
-                thumb: 'thumbnails/dr-harshal-shah.jpg'
-            },
-            {
-                doctor: 'Dr. Pankaj Bang',
-                spec: 'Chest Physician',
-                type: 'gdrive',
-                video: 'https://drive.google.com/file/d/1-vrNNm2iyvpHAOhktKApy7LFI4a5hKvk/preview',
-                thumb: 'thumbnails/dr-pankaj-bang.jpg'
-            },
-            {
-                doctor: 'Dr. Satyey G. Tayade',
-                spec: 'Chest Physician',
-                type: 'youtube',
-                videoId: 'fZbT5g0hFTQ',
-                thumb: 'thumbnails/dr-satyey-tayade.jpg'
-            },
-            {
-                doctor: 'Dr. Parag Mehta',
-                spec: 'Chest specialist',
-                type: 'youtube',
-                videoId: '64zcRFUmGDM',
-                thumb: 'thumbnails/dr-parag-mehta.jpg'
             }
         ],
         chennai: [
@@ -285,20 +321,20 @@ function initializeDoctorSystem() {
                 thumb: 'thumbnails/dr-suresh-kanna.jpg'
             }
         ],
-        punjab: [
+        kolkata: [
             {
-                doctor: 'Dr. Ajaypal Singh',
-                spec: 'Chest Physician',
-                type: 'gdrive',
-                video: 'https://drive.google.com/file/d/12JIsAz0wY59hSZEa_zdwBwrNfr957qVI/preview',
-                thumb: 'thumbnails/dr-ajaypal-singh.jpg'
+                doctor: 'Dr. Indranil',
+                spec: 'Chest Physician'
             },
             {
-                doctor: 'Dr. Mohit Kaushal',
-                spec: 'Consultant Pulmonology & Critical Care',
-                type: 'gdrive',
-                video: 'https://drive.google.com/file/d/1v-w3BlPxFEUZ9pXjhIxcQvop53Bow1lg/preview',
-                thumb: 'thumbnails/dr-mohit-kaushal.jpg'
+                doctor: 'Dr. Raja',
+                spec: 'Chest Physician'
+            }
+        ],
+        delhi: [
+            {
+                doctor: 'Dr. Randeep',
+                spec: 'Chest Physician'
             }
         ]
     };
@@ -311,6 +347,7 @@ function initializeDoctorSystem() {
     const displayName  = document.getElementById('display-name');
     const displaySpec  = document.getElementById('display-spec');
     const displayThumb = document.getElementById('display-thumbnail');
+    const placeholder  = document.getElementById('display-placeholder');
     const docList      = document.querySelector('.doc-list');
     const videoContainer = document.getElementById('video-container');
 
@@ -355,14 +392,41 @@ function initializeDoctorSystem() {
         videoContainer?.querySelectorAll('iframe').forEach(el => el.remove());
     }
 
+    // A doctor is only playable once both a thumbnail and a video source exist.
+    function hasVideo(doctorInfo) {
+        if (!doctorInfo) return false;
+        return doctorInfo.type === 'youtube' ? Boolean(doctorInfo.videoId) : Boolean(doctorInfo.video);
+    }
+
+    // Branded stand-in shown when a doctor's thumbnail/video is not in yet —
+    // keeps the card intact instead of rendering a broken image.
+    function showPlaceholder(doctorInfo) {
+        if (!placeholder) return;
+        const nameEl = placeholder.querySelector('.doctor-thumb-placeholder-name');
+        if (nameEl) nameEl.textContent = doctorInfo?.doctor || '';
+        placeholder.hidden = false;
+    }
+
+    function hidePlaceholder() {
+        if (placeholder) placeholder.hidden = true;
+    }
+
     function restoreThumbnail(doctorInfo) {
         clearIframes();
+        const thumb = doctorInfo && doctorInfo.thumb;
         if (displayThumb) {
-            displayThumb.src    = doctorInfo.thumb || '';
-            displayThumb.alt    = doctorInfo.doctor;
-            displayThumb.style.display = '';
+            if (thumb) {
+                displayThumb.src = thumb;
+                displayThumb.alt = doctorInfo.doctor;
+                displayThumb.style.display = '';
+            } else {
+                displayThumb.removeAttribute('src');
+                displayThumb.alt = '';
+                displayThumb.style.display = 'none';
+            }
         }
-        if (playBtn) playBtn.style.display = '';
+        if (thumb) hidePlaceholder(); else showPlaceholder(doctorInfo);
+        if (playBtn) playBtn.style.display = hasVideo(doctorInfo) ? '' : 'none';
     }
 
     function updateThumbnailDisplay(doctorInfo) {
@@ -370,8 +434,17 @@ function initializeDoctorSystem() {
 
         if (!videoContainer) return;
 
+        // No video for this doctor yet — leave the card static rather than
+        // opening an empty iframe.
+        if (!hasVideo(doctorInfo)) {
+            videoContainer.style.cursor = 'default';
+            videoContainer.onclick = null;
+            return;
+        }
+
         videoContainer.style.cursor = 'pointer';
         videoContainer.onclick = () => {
+            hidePlaceholder();
             if (displayThumb) displayThumb.style.display = 'none';
             if (playBtn) playBtn.style.display = 'none';
 
@@ -405,8 +478,9 @@ function initializeDoctorSystem() {
         displayName.textContent = '';
         displaySpec.textContent = '';
         clearIframes();
-        if (displayThumb) { displayThumb.src = ''; displayThumb.style.display = ''; }
-        if (playBtn) playBtn.style.display = '';
+        if (displayThumb) { displayThumb.removeAttribute('src'); displayThumb.alt = ''; displayThumb.style.display = 'none'; }
+        showPlaceholder(null);
+        if (playBtn) playBtn.style.display = 'none';
         if (videoContainer) { videoContainer.style.cursor = ''; videoContainer.onclick = null; }
         updateCityOptions(cityKey);
         renderDoctorOptions(cityKey, -1);
