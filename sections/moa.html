@@ -3,17 +3,10 @@
   <style>
     .moa-section{width:100%;padding:2.5rem 1rem 5rem;overflow:hidden;background:transparent}
     /* staggered fade-in (opacity only — keeps hover transforms intact) */
-    .moa-board,.moa-cmp,.moa-pt{opacity:0}
+    .moa-board{opacity:0}
     .moa-section.in-view .moa-board{animation:moaFade .7s ease forwards}
-    .moa-section.in-view .moa-pt{animation:moaFade .7s ease forwards}
-    .moa-section.in-view .moa-pt:nth-child(1){animation-delay:.24s}
-    .moa-section.in-view .moa-pt:nth-child(2){animation-delay:.32s}
-    .moa-section.in-view .moa-pt:nth-child(3){animation-delay:.40s}
-    .moa-section.in-view .moa-cmp{animation:moaFade .7s ease forwards}
-    .moa-section.in-view .moa-cmp:nth-child(1){animation-delay:.30s}
-    .moa-section.in-view .moa-cmp:nth-child(2){animation-delay:.38s}
     @keyframes moaFade{from{opacity:0}to{opacity:1}}
-    @media(prefers-reduced-motion:reduce){.moa-board,.moa-cmp,.moa-pt{opacity:1;animation:none}}
+    @media(prefers-reduced-motion:reduce){.moa-board{opacity:1;animation:none}}
     .moa-container{width:100%;max-width:1300px;margin:0 auto}
     .moa-head{margin-bottom:2.2rem}
     .moa-eyebrow{font-family:'Acumin Variable',sans-serif;font-size:.8rem;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--orange-section);margin-bottom:.6rem}
@@ -29,7 +22,7 @@
     .moa-viz-tag{font-family:'Acumin Variable',sans-serif;font-size:.66rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.55);margin-bottom:6px}
     .moa-viz-h{font-family:'Acumin Variable',sans-serif;font-size:1.28rem;font-weight:800;color:#fff;line-height:1.2;margin-bottom:14px}
     .moa-viz-h span{color:var(--orange-section)}
-    .moa-svg{width:100%;height:auto;flex:1;min-height:270px;max-height:420px}
+    .moa-svg{width:100%;height:auto;flex:1;min-height:300px;max-height:440px}
     .moa-pocket{transform-box:fill-box;transform-origin:center;animation:moaPulse 2.4s ease-in-out infinite}
     .moa-pocket.v2{animation-delay:1.2s}
     @keyframes moaPulse{0%,100%{opacity:.55}50%{opacity:1}}
@@ -89,62 +82,6 @@
     @media(max-width:980px){.moa-board{grid-template-columns:1fr}
       .moa-viz{padding:28px 20px 24px}
       .m3d-viewer{border-left:none;border-top:1px solid rgba(255,255,255,.1);min-height:460px}}
-    /* narrow screens: lift the style pills onto their own row so they stop
-       colliding with the fullscreen / reset / spin icons in the corner */
-    @media(max-width:620px){.m3d-controls{bottom:60px;max-width:calc(100% - 30px)}}
-
-    /* below the visual: the three mechanism points -- heading + subheading only */
-    .moa-points{list-style:none;margin:0 0 48px;padding:0;display:grid;grid-template-columns:repeat(3,1fr);gap:22px;counter-reset:moa}
-    .moa-pt{position:relative;display:flex;flex-direction:column;min-height:210px;padding:34px 32px 32px;overflow:hidden;
-      border:1px solid rgba(41,57,127,.1);border-radius:22px;background:#fff;
-      box-shadow:0 1px 4px rgba(0,0,0,.04),0 14px 34px rgba(0,0,0,.06);transition:transform .28s ease,box-shadow .28s ease}
-    .moa-pt:hover{transform:translateY(-6px);box-shadow:0 4px 12px rgba(0,0,0,.07),0 22px 48px rgba(41,57,127,.14)}
-    /* colour bar across the top edge */
-    .moa-pt::after{content:'';position:absolute;top:0;left:0;right:0;height:5px}
-    .moa-pt.c-red::after{background:linear-gradient(90deg,var(--brand-red),#c0343a)}
-    .moa-pt.c-navy::after{background:linear-gradient(90deg,var(--brand-navy),#3d51a6)}
-    .moa-pt.c-orange::after{background:linear-gradient(90deg,var(--orange-section),#f0863f)}
-    .moa-pt::before{counter-increment:moa;content:counter(moa);width:54px;height:54px;border-radius:16px;margin-bottom:20px;
-      display:flex;align-items:center;justify-content:center;font-family:'Acumin Variable',sans-serif;font-size:1.5rem;font-weight:800;color:#fff}
-    .moa-pt.c-red::before{background:linear-gradient(135deg,var(--brand-red),#c0343a);box-shadow:0 8px 20px -6px rgba(153,31,37,.55)}
-    .moa-pt.c-navy::before{background:linear-gradient(135deg,var(--brand-navy),#3d51a6);box-shadow:0 8px 20px -6px rgba(41,57,127,.55)}
-    .moa-pt.c-orange::before{background:linear-gradient(135deg,var(--orange-section),#f0863f);box-shadow:0 8px 20px -6px rgba(239,106,43,.55)}
-    .moa-pt h3{font-family:'Acumin Variable',sans-serif;font-size:1.32rem;font-weight:800;color:var(--text-dark);line-height:1.3;margin:8px 0 0}
-    .moa-pt .moa-pt-tag{font-family:'Acumin Variable',sans-serif;font-size:.72rem;font-weight:800;letter-spacing:.13em;text-transform:uppercase;margin-bottom:4px;display:block}
-    .moa-pt.c-red .moa-pt-tag{color:var(--brand-red)}
-    .moa-pt.c-navy .moa-pt-tag{color:var(--brand-navy)}
-    .moa-pt.c-orange .moa-pt-tag{color:var(--orange-section)}
-
-    /* ===== comparison ===== */
-    .moa-cmp-head{font-family:'Acumin Variable',sans-serif;font-size:.72rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--text-grey);margin:0 auto 16px;max-width:880px;text-align:center}
-    .moa-compare{display:grid;grid-template-columns:repeat(2,1fr);gap:22px;max-width:880px;margin:0 auto;align-items:stretch}
-    .moa-cmp{padding:26px 24px 24px;border:1px solid rgba(41,57,127,.1);border-radius:18px;background:#fff;position:relative;display:flex;flex-direction:column;
-      box-shadow:0 1px 4px rgba(0,0,0,.04),0 12px 30px rgba(0,0,0,.05)}
-    .moa-cmp.featured{border:2px solid var(--orange-section);background:linear-gradient(180deg,rgba(239,106,43,.08),#fff 55%);
-      box-shadow:0 3px 10px rgba(239,106,43,.12),0 18px 44px rgba(239,106,43,.14);transform:translateY(-6px)}
-    .moa-cmp-flag{position:absolute;top:-11px;left:50%;transform:translateX(-50%);white-space:nowrap;font-family:'Acumin Variable',sans-serif;
-      font-size:.6rem;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:#fff;background:linear-gradient(135deg,var(--orange-section),#f0863f);
-      border-radius:999px;padding:5px 14px;box-shadow:0 6px 16px -4px rgba(239,106,43,.6)}
-    .moa-cmp-drug{font-family:'Acumin Variable',sans-serif;font-size:1.1rem;font-weight:800;color:var(--text-dark);margin-bottom:4px;line-height:1.2}
-    .moa-cmp.featured .moa-cmp-drug{color:var(--orange-section)}
-    .moa-cmp-class{font-family:'Acumin Variable',sans-serif;font-size:.7rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--text-grey);margin-bottom:16px}
-    .moa-site{display:flex;align-items:center;gap:10px;padding:8px 0;font-family:'Acumin Variable',sans-serif;font-size:.9rem;font-weight:600;border-top:1px solid rgba(41,57,127,.07)}
-    .moa-site:first-of-type{border-top:none}
-    .moa-site.on{color:var(--text-dark)}
-    .moa-site.off{color:rgba(51,51,51,.4)}
-    .moa-ic{width:19px;height:19px;flex-shrink:0;border-radius:50%;display:flex;align-items:center;justify-content:center}
-    .moa-ic svg{width:11px;height:11px;stroke:#fff;fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
-    .moa-site.on .moa-ic{background:#1A7A42}
-    .moa-site.off .moa-ic{background:rgba(51,51,51,.22)}
-    .moa-cmp-note{font-family:'Acumin Variable',sans-serif;font-size:.76rem;font-weight:600;line-height:1.55;margin-top:auto;padding-top:14px;border-top:1px dashed rgba(41,57,127,.14);color:var(--text-grey)}
-    .moa-cmp.featured .moa-cmp-note{color:var(--text-muted)}
-
-    @media(max-width:980px){
-      .moa-points{grid-template-columns:1fr;gap:16px;margin-bottom:38px}
-      .moa-pt{min-height:0;padding:26px 26px 24px}
-      .moa-pt::before{width:46px;height:46px;font-size:1.28rem;margin-bottom:16px}
-      .moa-pt h3{font-size:1.18rem}
-      .moa-compare{grid-template-columns:1fr;gap:20px;max-width:520px}.moa-cmp.featured{transform:none}}
   </style>
 
   <div class="moa-container">
@@ -158,52 +95,68 @@
       <div class="moa-viz">
         <div class="moa-viz-tag">50S subunit &middot; 23S rRNA</div>
         <div class="moa-viz-h">One drug, <span>two anchors</span></div>
-        <svg class="moa-svg" viewBox="0 0 480 360" role="img" aria-label="Nafithromycin binds Domain II and Domain V of the ribosome; azithromycin binds Domain V only">
+        <svg class="moa-svg" viewBox="0 0 560 400" role="img" aria-label="Nafithromycin anchors at Domain II and Domain V of the 50S subunit; azithromycin reaches Domain V only">
           <defs>
-            <linearGradient id="moaRibo" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0" stop-color="#3a63a8"/><stop offset="1" stop-color="#20335a"/>
+            <linearGradient id="moaSub" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#35538c"/><stop offset="1" stop-color="#1b2c4d"/>
             </linearGradient>
-            <linearGradient id="moaMi" x1="0" y1="0" x2="1" y2="1">
+            <linearGradient id="moaMi" x1="0" y1="0" x2="1" y2="0">
               <stop offset="0" stop-color="#f0863f"/><stop offset="1" stop-color="#ea5d22"/>
             </linearGradient>
           </defs>
 
-          <!-- ribosome body -->
-          <rect x="312" y="46" width="132" height="268" rx="60" fill="url(#moaRibo)" stroke="rgba(255,255,255,.14)" stroke-width="1.5"/>
-          <text x="378" y="300" text-anchor="middle" font-family="'Acumin Variable',sans-serif" font-size="12" font-weight="800" fill="rgba(255,255,255,.6)">Ribosome</text>
+          <!-- 50S subunit with the nascent-peptide exit tunnel running through it -->
+          <path d="M356 34 C444 34 508 96 508 200 C508 304 444 366 356 366 C332 366 332 340 336 322
+                   C300 300 288 254 288 200 C288 146 300 100 336 78 C332 60 332 34 356 34 Z"
+                fill="url(#moaSub)" stroke="rgba(255,255,255,.16)" stroke-width="1.5"/>
+          <path d="M352 96 C398 130 398 270 352 304" fill="none" stroke="rgba(255,255,255,.13)" stroke-width="13" stroke-linecap="round"/>
+          <text x="418" y="206" text-anchor="middle" font-family="'Acumin Variable',sans-serif" font-size="12.5" font-weight="800" fill="rgba(255,255,255,.62)">50S subunit</text>
+          <text x="418" y="224" text-anchor="middle" font-family="'Acumin Variable',sans-serif" font-size="9.5" font-weight="700" letter-spacing=".6" fill="rgba(255,255,255,.34)">23S rRNA</text>
 
-          <!-- connectors: MIQNAF (orange, solid) to both domains -->
-          <path d="M150 128 C 220 108, 262 118, 306 122" fill="none" stroke="url(#moaMi)" stroke-width="4.5" stroke-linecap="round"/>
-          <path d="M150 150 C 220 196, 262 236, 306 246" fill="none" stroke="url(#moaMi)" stroke-width="4.5" stroke-linecap="round"/>
-          <!-- connectors: Azithromycin (grey): solid to Domain V, broken to Domain II -->
-          <path d="M150 268 C 220 262, 262 254, 306 248" fill="none" stroke="#8b93ad" stroke-width="3.5" stroke-linecap="round"/>
-          <path d="M150 258 C 216 210, 250 160, 292 128" fill="none" stroke="#8b93ad" stroke-width="3" stroke-dasharray="3 8" stroke-linecap="round" opacity=".8"/>
+          <!-- MIQNAF: two solid anchors -->
+          <path d="M168 150 C 226 128, 262 122, 300 124" fill="none" stroke="url(#moaMi)" stroke-width="5" stroke-linecap="round"/>
+          <path d="M168 172 C 226 214, 262 258, 300 272" fill="none" stroke="url(#moaMi)" stroke-width="5" stroke-linecap="round"/>
+          <!-- Azithromycin: one reaches Domain V, the other is blocked -->
+          <path d="M168 300 C 226 292, 264 282, 300 276" fill="none" stroke="#8b93ad" stroke-width="3.5" stroke-linecap="round"/>
+          <path d="M168 288 C 224 240, 250 186, 284 140" fill="none" stroke="#8b93ad" stroke-width="3" stroke-dasharray="3 9" stroke-linecap="round" opacity=".75"/>
 
           <!-- binding pockets -->
-          <circle class="moa-pocket" cx="306" cy="122" r="17" fill="#ef6a2b" opacity=".9"/>
-          <circle class="moa-pocket v2" cx="306" cy="247" r="17" fill="#ef6a2b" opacity=".9"/>
-          <circle cx="306" cy="122" r="17" fill="none" stroke="#fff" stroke-width="2"/>
-          <circle cx="306" cy="247" r="17" fill="none" stroke="#fff" stroke-width="2"/>
+          <circle class="moa-pocket" cx="300" cy="124" r="18" fill="#ef6a2b" opacity=".9"/>
+          <circle cx="300" cy="124" r="18" fill="none" stroke="#fff" stroke-width="2"/>
+          <circle class="moa-pocket v2" cx="300" cy="273" r="18" fill="#ef6a2b" opacity=".9"/>
+          <circle cx="300" cy="273" r="18" fill="none" stroke="#fff" stroke-width="2"/>
 
           <!-- domain labels -->
-          <text x="250" y="96" text-anchor="middle" font-family="'Acumin Variable',sans-serif" font-size="12.5" font-weight="800" fill="#fff">Domain II</text>
-          <text x="250" y="278" text-anchor="middle" font-family="'Acumin Variable',sans-serif" font-size="12.5" font-weight="800" fill="#fff">Domain V</text>
+          <text x="246" y="88" text-anchor="middle" font-family="'Acumin Variable',sans-serif" font-size="13" font-weight="800" fill="#fff">Domain II</text>
+          <text x="246" y="104" text-anchor="middle" font-family="'Acumin Variable',sans-serif" font-size="9" font-weight="700" letter-spacing=".5" fill="rgba(255,255,255,.5)">L22 CONTACT</text>
+          <text x="246" y="322" text-anchor="middle" font-family="'Acumin Variable',sans-serif" font-size="13" font-weight="800" fill="#fff">Domain V</text>
+          <text x="246" y="338" text-anchor="middle" font-family="'Acumin Variable',sans-serif" font-size="9" font-weight="700" letter-spacing=".5" fill="rgba(255,255,255,.5)">A2058 CONTACT</text>
 
-          <!-- azithromycin failure marker at Domain II -->
-          <g transform="translate(286,110)">
-            <circle r="10" fill="#991f25"/>
-            <path d="M-4 -4 L4 4 M4 -4 L-4 4" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/>
+          <!-- anchor tags on the two orange lines -->
+          <g transform="translate(216,132)">
+            <rect x="-30" y="-11" width="60" height="22" rx="11" fill="rgba(239,106,43,.18)" stroke="rgba(239,106,43,.55)"/>
+            <text x="0" y="4" text-anchor="middle" font-family="'Acumin Variable',sans-serif" font-size="9.5" font-weight="800" letter-spacing=".5" fill="#ffb98c">ANCHOR 1</text>
+          </g>
+          <g transform="translate(216,244)">
+            <rect x="-30" y="-11" width="60" height="22" rx="11" fill="rgba(239,106,43,.18)" stroke="rgba(239,106,43,.55)"/>
+            <text x="0" y="4" text-anchor="middle" font-family="'Acumin Variable',sans-serif" font-size="9.5" font-weight="800" letter-spacing=".5" fill="#ffb98c">ANCHOR 2</text>
           </g>
 
-          <!-- MIQNAF drug node -->
-          <rect x="26" y="104" width="126" height="52" rx="15" fill="url(#moaMi)"/>
-          <text x="89" y="127" text-anchor="middle" font-family="'Acumin Variable',sans-serif" font-size="14.5" font-weight="800" fill="#fff">MIQNAF&#174;</text>
-          <text x="89" y="144" text-anchor="middle" font-family="'Acumin Variable',sans-serif" font-size="9.5" font-weight="700" letter-spacing=".6" fill="rgba(255,255,255,.85)">DUAL ANCHOR</text>
+          <!-- azithromycin cannot reach Domain II -->
+          <g transform="translate(246,196)">
+            <circle r="11" fill="#991f25"/>
+            <path d="M-4.4 -4.4 L4.4 4.4 M4.4 -4.4 L-4.4 4.4" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/>
+          </g>
 
-          <!-- Azithromycin drug node -->
-          <rect x="26" y="244" width="126" height="48" rx="15" fill="rgba(255,255,255,.08)" stroke="#8b93ad" stroke-width="1.5"/>
-          <text x="89" y="266" text-anchor="middle" font-family="'Acumin Variable',sans-serif" font-size="13" font-weight="800" fill="#cfd4e2">Azithromycin</text>
-          <text x="89" y="281" text-anchor="middle" font-family="'Acumin Variable',sans-serif" font-size="9" font-weight="700" letter-spacing=".5" fill="rgba(255,255,255,.5)">1 SITE ONLY</text>
+          <!-- MIQNAF chip -->
+          <rect x="26" y="134" width="140" height="56" rx="16" fill="url(#moaMi)"/>
+          <text x="96" y="159" text-anchor="middle" font-family="'Acumin Variable',sans-serif" font-size="15.5" font-weight="800" fill="#fff">MIQNAF&#174;</text>
+          <text x="96" y="176" text-anchor="middle" font-family="'Acumin Variable',sans-serif" font-size="9.5" font-weight="700" letter-spacing=".7" fill="rgba(255,255,255,.88)">BINDS BOTH SITES</text>
+
+          <!-- Azithromycin chip -->
+          <rect x="26" y="272" width="140" height="52" rx="16" fill="rgba(255,255,255,.07)" stroke="#8b93ad" stroke-width="1.5"/>
+          <text x="96" y="295" text-anchor="middle" font-family="'Acumin Variable',sans-serif" font-size="13.5" font-weight="800" fill="#cfd4e2">Azithromycin</text>
+          <text x="96" y="311" text-anchor="middle" font-family="'Acumin Variable',sans-serif" font-size="9" font-weight="700" letter-spacing=".6" fill="rgba(255,255,255,.5)">DOMAIN V ONLY</text>
         </svg>
         <div class="moa-viz-key">
           <span class="moa-vk mi"><i></i>MIQNAF&reg; &mdash; binds Domain II + V</span>
@@ -240,40 +193,6 @@
       </div>
     </div>
 
-    <!-- the three mechanism points, below the visual -->
-    <ol class="moa-points">
-      <li class="moa-pt c-red">
-        <span class="moa-pt-tag">Domain II Binding</span>
-        <h3>Defeats erm(B) methylase resistance</h3>
-      </li>
-      <li class="moa-pt c-navy">
-        <span class="moa-pt-tag">Domain V Binding</span>
-        <h3>Defeats mef(A) efflux resistance</h3>
-      </li>
-      <li class="moa-pt c-orange">
-        <span class="moa-pt-tag">vs. Classical Macrolides</span>
-        <h3>Neither gene overcomes both sites</h3>
-      </li>
-    </ol>
-
-    <div class="moa-cmp-head">Ribosomal binding at a glance</div>
-    <div class="moa-compare">
-      <div class="moa-cmp">
-        <div class="moa-cmp-drug">Azithromycin</div>
-        <div class="moa-cmp-class">Classical Macrolide &middot; 1 site</div>
-        <div class="moa-site off"><span class="moa-ic"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></span>Domain II &mdash; not contacted</div>
-        <div class="moa-site on"><span class="moa-ic"><svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg></span>Domain V (A2058 &middot; 23S rRNA)</div>
-        <div class="moa-cmp-note">erm(B) &rarr; activity lost<br>mef(A) &rarr; activity lost</div>
-      </div>
-      <div class="moa-cmp featured">
-        <span class="moa-cmp-flag">Dual anchor &middot; wins both</span>
-        <div class="moa-cmp-drug">MIQNAF&reg; Nafithromycin</div>
-        <div class="moa-cmp-class">Lactone-Ketolide &middot; 2 sites</div>
-        <div class="moa-site on"><span class="moa-ic"><svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg></span>Domain II (L22 &middot; 23S rRNA)</div>
-        <div class="moa-site on"><span class="moa-ic"><svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg></span>Domain V (A2058 &middot; 23S rRNA)</div>
-        <div class="moa-cmp-note">erm(B) &rarr; domain II binding retained<br>mef(A) &rarr; activity retained (low MIC&#8336;&#8320;)<sup>3</sup></div>
-      </div>
-    </div>
   </div>
 </section>
 <script>window.__NAF_SDF_B64__ = "CiAgICAgUkRLaXQgICAgICAgICAgM0QKCjEyMjEyNiAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMDk5OSBWMjAwMAogICAgMS4xMDQ3ICAgLTIuMTcwMiAgIC01LjU1ODAgQyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDEuODUzMyAgIC0xLjExMzQgICAtNC43NTY2IEMgICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgICAxLjM2MTggICAtMC44NjgwICAgLTMuMzEyOCBDICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAgMS40NzQ2ICAgLTIuMDgzMiAgIC0yLjMwNjYgQyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDEuODk4NiAgIC0xLjYwNDMgICAtMC44NjkzIEMgICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgICAwLjg4NTcgICAtMS44MjMyICAgIDAuMjk3MyBDICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAgMS4yMjMzICAgLTAuODgxNiAgICAxLjQ2NjcgQyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDIuMDgwMCAgIC0xLjIyNTEgICAgMi4yODcwIE8gICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgICAwLjYxNTggICAgMC41MzA1ICAgIDEuNTgzNyBDICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtMC42NjQzICAgIDAuODQ3NCAgICAwLjc4MDYgQyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTIuMDQ5MiAgICAwLjY2MjIgICAgMS40NjQ5IEMgICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC0zLjE5MzUgICAgMC40MzQ5ICAgIDAuMzc4NiBDICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtMy40OTA4ICAgIDEuNDk3MyAgIC0wLjcwOTIgQyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTIuMzM2NCAgICAxLjkxMTMgICAtMS42NDU1IEMgICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC0xLjgxOTAgICAgMy4wMjY3ICAgLTEuNTA2MCBPICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtMS44NTUwICAgIDEuMDAyNSAgIC0yLjc4NDcgQyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTAuMzc1OSAgICAwLjY2OTAgICAtMi42NTE2IEMgICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgICAwLjQyNDQgICAgMS4yODAwICAgLTEuOTYxOCBPICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtMC4wMTg0ICAgLTAuNDAzNSAgIC0zLjM5OTUgTyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTIuNzE0NCAgIC0wLjIzMTMgICAtMy4wNTE2IEMgICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC00LjIwMTQgICAgMi43NTE2ICAgLTAuMTc5MSBDICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtNC40MjkzICAgIDAuMjE3NCAgICAxLjA5NDYgTyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTUuMjMzNyAgIC0wLjg4NzIgICAgMC42ODk2IEMgICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC02LjQ3OTkgICAtMC40MDk3ICAgLTAuMDkxNiBDICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtNy43NDM4ICAgLTAuNDQzMSAgICAwLjgwOTUgQyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTcuMzY0MCAgICAwLjA5NDEgICAgMi4xOTc5IEMgICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC02LjI5ODMgICAtMC44MTIzICAgIDIuODMzMSBDICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtNS42MTc5ICAgLTEuNjE5NiAgICAxLjg2MDUgTyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTYuOTMwMCAgIC0xLjc2NDQgICAgMy44NDc5IEMgICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC04LjkxNDAgICAgMC4xODE5ICAgIDAuMTM1NyBOICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtOC44MTE2ICAgIDEuNjM3MiAgIC0wLjAwOTQgQyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAtMTAuMTczOSAgIC0wLjE2NTEgICAgMC43OTk3IEMgICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC02LjY5NDQgICAtMS4yMjY5ICAgLTEuMjU1NyBPICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtMi4wMzM2ICAgLTAuNjA2MyAgICAyLjM1NTcgQyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTIuNDM4NSAgICAxLjcwMjMgICAgMi4zNzg3IE8gICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC0xLjY5NDkgICAgMi45MDg5ICAgIDIuNDQzNiBDICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAgMS43MjEyICAgIDEuNTQxOSAgICAxLjI0NjMgQyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDAuNzkzNSAgIC0zLjI3MDYgICAgMC44MTM0IEMgICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgICAzLjI2OTYgICAtMi4yNjgzICAgLTAuNjIxMyBDICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAgMy40MDgwICAgLTMuMjMyMyAgIC0xLjc1NjMgQyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDQuMjA3NiAgIC00LjE1MzggICAtMS44MDg0IE8gICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgICAyLjU0MDEgICAtMi45NDY1ICAgLTIuNzUzOSBPICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAgNC40OTU4ICAgLTEuMzU3MCAgIC0wLjU1MDggQyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDQuMzQwOCAgIC0wLjA2MTUgICAtMC41Mjc1IE4gICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgICA1LjYwNzkgICAgMC41NjkxICAgLTAuNTA0MiBPICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAgNS42NTYzICAgIDEuNTUxNSAgICAwLjU0MzQgQyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDUuMjI2MSAgICAyLjkwNTMgICAgMC4wMDMxIEMgICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgICA3LjA2NzYgICAgMS41NDU4ICAgIDEuMDY1MiBDICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAgNy4zOTIwICAgIDEuMzIxMiAgICAyLjMyMzEgTiAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDguNzU4MSAgICAxLjI4MjMgICAgMi41MTg4IE4gICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgICA5LjQzNzcgICAgMS40ODkxICAgIDEuNDAzNCBDICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAgOC40MjU5ICAgIDEuNzczMSAgICAwLjAzOTIgUyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgMTAuOTA0MyAgICAxLjQ1NjMgICAgMS4yOTA3IEMgICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIDExLjY5ODIgICAgMS4xNDE0ICAgIDIuMzkzOSBDICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAxMy4wODQ4ICAgIDEuMTAwMiAgICAyLjI0MjUgQyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgMTMuNjQxMCAgICAxLjM3NzIgICAgMS4wMDIxIEMgICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIDEyLjc4NjcgICAgMS42Nzg5ICAgLTAuMDQ1NCBDICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAxMS40Mzk2ICAgIDEuNzIzOSAgICAwLjA2OTggTiAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDUuNzIzNyAgIC0xLjk2NDkgICAtMC40ODQ0IE4gICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgICAwLjIwNzAgICAtMi45NTc2ICAgLTIuMzYxMiBDICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAgMS40MTk3ICAgLTIuMTI2NCAgIC02LjYwNDggSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDEuMzMwNyAgIC0zLjE3NDggICAtNS4xOTIwIEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgICAwLjAyMTIgICAtMi4wMTY0ICAgLTUuNTIzNiBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAgMi45MTQ4ICAgLTEuMzY1OCAgIC00Ljc0ODggSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDEuNzU5MCAgIC0wLjE2ODEgICAtNS4zMDYzIEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgICAyLjAwNzQgICAtMC4wNTg1ICAgLTIuOTU5NSBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAgMi4wMjk2ICAgLTAuNTIxMyAgIC0wLjkxNzQgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTAuMTEzNyAgIC0xLjU4NjYgICAtMC4wNTQxIEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgICAwLjQwMjEgICAgMC42NjYwICAgIDIuNjUwNCBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtMC41OTQ1ICAgIDEuODc0OSAgICAwLjQyMTIgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTAuNjc3NyAgICAwLjIyNzYgICAtMC4xMDQ0IEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC0yLjkxMjEgICAtMC40ODgwICAgLTAuMTM4MyBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtNC4yNDg3ICAgIDEuMDYzNiAgIC0xLjM3MzMgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTEuOTMwNCAgICAxLjYyNzQgICAtMy42ODU2IEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC0yLjYyNzggICAtMC45NzA1ICAgLTIuMjUzMSBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtMy43NzIwICAgIDAuMDMwMyAgIC0zLjE2ODEgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTIuNDEyMSAgIC0wLjcyMzUgICAtMy45ODcyIEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC0zLjU3MTEgICAgMy4zMzcwICAgIDAuNDkyOSBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtNC40NzgyICAgIDMuNDE4NyAgIC0xLjAxMDAgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTUuMTIyOSAgICAyLjUwNjggICAgMC4zNTk5IEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC00LjY1MTMgICAtMS41ODIwICAgIDAuMDc4OSBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtNi4zMDIzICAgIDAuNTk1MSAgIC0wLjQ3NDggSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTguMDEwOCAgIC0xLjUwNDggICAgMC45MjM0IEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC04LjIzMTEgICAgMC4yMDA2ICAgIDIuODYxNyBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtNi45Mzk4ICAgIDEuMTAzMCAgICAyLjA5OTcgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTUuNTU1NSAgIC0wLjIwMzMgICAgMy4zNjI1IEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC03Ljc2OTYgICAtMi4zMDk0ICAgIDMuMzkzNiBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtNi4yMDYzICAgLTIuNTE4OSAgICA0LjE4NjAgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTcuMzA1NiAgIC0xLjIyMDIgICAgNC43MjI4IEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC04LjA0MjIgICAgMS44OTY4ICAgLTAuNzUyMyBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtOC41ODE1ICAgIDIuMTQ5NCAgICAwLjkzNDIgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTkuNzQ3NCAgICAyLjA2MTcgICAtMC4zODYyIEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgLTEwLjI2NDUgICAgMC4yNjYxICAgIDEuODAxOCBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogIC0xMS4wMTk2ICAgIDAuMTg0MSAgICAwLjE5OTIgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAtMTAuMjg0NiAgIC0xLjI1MjcgICAgMC44Nzc5IEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC03LjY3MDYgICAtMS4zMDg5ICAgLTEuMzQ1MiBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtMS4zMTMyICAgLTAuNTI3NCAgICAzLjE3NjMgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTIuOTk0OCAgIC0wLjc2NjYgICAgMi44NTQ0IEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC0xLjc5ODcgICAtMS41MDMyICAgIDEuNzczNiBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtMi4xNTUwICAgIDMuNTQ4OCAgICAzLjIwNDEgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTAuNjU4NiAgICAyLjczMDkgICAgMi43MzEyIEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC0xLjc0MjUgICAgMy40NDcxICAgIDEuNDk0NyBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAgMS40NDA1ICAgIDIuNTUyNiAgICAxLjU4MzQgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDIuNjYwOCAgICAxLjI4NDYgICAgMS43NDk4IEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgICAxLjkyMDMgICAgMS41ODUyICAgIDAuMTY3MyBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtMC4yNTcwICAgLTMuNTIzOSAgICAxLjAxNjggSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDEuMTYyNSAgIC00LjAwNjkgICAgMC4wOTk1IEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgICAxLjMzMjkgICAtMy40MzY0ICAgIDEuNzU1MCBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAgMy4yNjgyICAgLTIuODQ5OSAgICAwLjMwNzEgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDQuOTg5NCAgICAxLjI1NDYgICAgMS4zNjU3IEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgICA1Ljg2NjkgICAgMy4yMzQwICAgLTAuODIxOCBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAgNS4yNDY1ICAgIDMuNjc1NiAgICAwLjc3ODMgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDQuMjA5MiAgICAyLjg1MDMgICAtMC40MDE2IEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIDExLjI0NjUgICAgMC45MjM2ICAgIDMuMzYxNCBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAxMy43MTkyICAgIDAuODU1OSAgICAzLjA5MDkgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgMTQuNzE0MCAgICAxLjM1MzcgICAgMC44NTE3IEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIDEzLjE3MjkgICAgMS44OTkxICAgLTEuMDM4NyBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAgNi41MTE0ICAgLTEuMzc2NyAgIC0wLjIzMTcgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDUuODAyNiAgIC0yLjk1NjggICAtMC4yNjczIEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC0wLjY3NDMgICAtMi40NzE3ICAgLTEuOTM1NiBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtMC4wNTAxICAgLTMuMjMwMiAgIC0zLjM4NjIgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDAuMzYwMSAgIC0zLjkxNjkgICAtMS44NTc1IEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgMSAgMiAgMSAgMAogIDIgIDMgIDEgIDAKICAzICA0ICAxICAwCiAgNCAgNSAgMSAgMAogIDUgIDYgIDEgIDAKICA2ICA3ICAxICAwCiAgNyAgOCAgMiAgMAogIDcgIDkgIDEgIDAKICA5IDEwICAxICAwCiAxMCAxMSAgMSAgMAogMTEgMTIgIDEgIDAKIDEyIDEzICAxICAwCiAxMyAxNCAgMSAgMAogMTQgMTUgIDIgIDAKIDE0IDE2ICAxICAwCiAxNiAxNyAgMSAgMAogMTcgMTggIDIgIDAKIDE3IDE5ICAxICAwCiAxNiAyMCAgMSAgMAogMTMgMjEgIDEgIDAKIDEyIDIyICAxICAwCiAyMiAyMyAgMSAgMAogMjMgMjQgIDEgIDAKIDI0IDI1ICAxICAwCiAyNSAyNiAgMSAgMAogMjYgMjcgIDEgIDAKIDI3IDI4ICAxICAwCiAyNyAyOSAgMSAgMAogMjUgMzAgIDEgIDAKIDMwIDMxICAxICAwCiAzMCAzMiAgMSAgMAogMjQgMzMgIDEgIDAKIDExIDM0ICAxICAwCiAxMSAzNSAgMSAgMAogMzUgMzYgIDEgIDAKICA5IDM3ICAxICAwCiAgNiAzOCAgMSAgMAogIDUgMzkgIDEgIDAKIDM5IDQwICAxICAwCiA0MCA0MSAgMiAgMAogNDAgNDIgIDEgIDAKIDM5IDQzICAxICAwCiA0MyA0NCAgMiAgMwogNDQgNDUgIDEgIDAKIDQ1IDQ2ICAxICAwCiA0NiA0NyAgMSAgMAogNDYgNDggIDEgIDAKIDQ4IDQ5ICAyICAwCiA0OSA1MCAgMSAgMAogNTAgNTEgIDIgIDAKIDUxIDUyICAxICAwCiA1MSA1MyAgMSAgMAogNTMgNTQgIDIgIDAKIDU0IDU1ICAxICAwCiA1NSA1NiAgMiAgMAogNTYgNTcgIDEgIDAKIDU3IDU4ICAyICAwCiA0MyA1OSAgMSAgMAogIDQgNjAgIDEgIDAKIDE5ICAzICAxICAwCiA0MiAgNCAgMSAgMAogMjggMjMgIDEgIDAKIDUyIDQ4ICAxICAwCiA1OCA1MyAgMSAgMAogIDEgNjEgIDEgIDAKICAxIDYyICAxICAwCiAgMSA2MyAgMSAgMAogIDIgNjQgIDEgIDAKICAyIDY1ICAxICAwCiAgMyA2NiAgMSAgMAogIDUgNjcgIDEgIDAKICA2IDY4ICAxICAwCiAgOSA2OSAgMSAgMAogMTAgNzAgIDEgIDAKIDEwIDcxICAxICAwCiAxMiA3MiAgMSAgMAogMTMgNzMgIDEgIDAKIDE2IDc0ICAxICAwCiAyMCA3NSAgMSAgMAogMjAgNzYgIDEgIDAKIDIwIDc3ICAxICAwCiAyMSA3OCAgMSAgMAogMjEgNzkgIDEgIDAKIDIxIDgwICAxICAwCiAyMyA4MSAgMSAgMAogMjQgODIgIDEgIDAKIDI1IDgzICAxICAwCiAyNiA4NCAgMSAgMAogMjYgODUgIDEgIDAKIDI3IDg2ICAxICAwCiAyOSA4NyAgMSAgMAogMjkgODggIDEgIDAKIDI5IDg5ICAxICAwCiAzMSA5MCAgMSAgMAogMzEgOTEgIDEgIDAKIDMxIDkyICAxICAwCiAzMiA5MyAgMSAgMAogMzIgOTQgIDEgIDAKIDMyIDk1ICAxICAwCiAzMyA5NiAgMSAgMAogMzQgOTcgIDEgIDAKIDM0IDk4ICAxICAwCiAzNCA5OSAgMSAgMAogMzYxMDAgIDEgIDAKIDM2MTAxICAxICAwCiAzNjEwMiAgMSAgMAogMzcxMDMgIDEgIDAKIDM3MTA0ICAxICAwCiAzNzEwNSAgMSAgMAogMzgxMDYgIDEgIDAKIDM4MTA3ICAxICAwCiAzODEwOCAgMSAgMAogMzkxMDkgIDEgIDAKIDQ2MTEwICAxICAwCiA0NzExMSAgMSAgMAogNDcxMTIgIDEgIDAKIDQ3MTEzICAxICAwCiA1NDExNCAgMSAgMAogNTUxMTUgIDEgIDAKIDU2MTE2ICAxICAwCiA1NzExNyAgMSAgMAogNTkxMTggIDEgIDAKIDU5MTE5ICAxICAwCiA2MDEyMCAgMSAgMAogNjAxMjEgIDEgIDAKIDYwMTIyICAxICAwCk0gIEVORAo=";</script>

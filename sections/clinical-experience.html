@@ -1,79 +1,93 @@
-<!-- CONTENT SLIDES -->
-<section id="clinical-experience" class="content-slides">
-    
-    <!-- Slide 1: Red -->
-    <div class="slide bg-maroon slide-fade">
-        <div class="slide-container">
-            <div class="slide-image">
-                <div class="img-frame">
-                    <img src="assests/clinical-elderly.png" alt="Elderly" class="rounded-stroke-img bw-filter">
-                </div>
-            </div>
-            <div class="slide-text">
-                <h2 class="patient-heading">Elderly</h2>
-                <hr class="patient-line">
-                <h3 class="patient-subheading"></h3>
-                <p class="patient-body">Elderly patients are at higher risk of rapid disease progression and complications.
-Miqnaf supports early clinical improvement and timely recovery.<sup>3</sup></p>
-            </div>
-        </div>
+<!-- CLINICAL — the outcome figures that used to sit in the stats block -->
+<section id="clinical-experience" class="clin-section fade-in-on-scroll">
+  <style>
+    .clin-section{width:100%;padding:2.5rem 1rem 4rem;overflow:hidden;background:transparent}
+    .clin-container{width:100%;max-width:1300px;margin:0 auto}
+    .clin-head{margin-bottom:2.4rem}
+    .clin-eyebrow{font-family:'Acumin Variable',sans-serif;font-size:.8rem;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--orange-section);margin-bottom:.6rem}
+    .clin-title{font-family:'Acumin Variable',sans-serif;font-size:clamp(2rem,3.4vw,3.3rem);font-weight:800;line-height:1.12;color:var(--brand-navy);margin:0}
+    .clin-title em{font-style:italic;color:var(--brand-red)}
+    .clin-sub{font-family:'Acumin Variable',sans-serif;font-size:clamp(1rem,1.4vw,1.2rem);font-weight:600;color:var(--text-muted);margin-top:.7rem;max-width:64ch}
+  </style>
+
+  <div class="clin-container">
+    <div class="clin-head">
+      <div class="clin-eyebrow">Clinical Experience</div>
+      <h2 class="clin-title">What the numbers <em>show</em></h2>
+      <p class="clin-sub">Tissue penetration, cure rate and course length &mdash; the three measures that decide how a CABP course actually goes.</p>
     </div>
 
-    <!-- Slide 2: Blue -->
-    <div class="slide bg-navy slide-fade">
-        <div class="slide-container">
-            <div class="slide-image">
-                <div class="img-frame">
-                    <img src="assests/clinical-professional.png" alt="Professional" class="rounded-stroke-img bw-filter">
-                </div>
-            </div>
-            <div class="slide-text">
-                <h2 class="patient-heading">Comorbid</h2>
-                <hr class="patient-line">
-                <h3 class="patient-subheading"></h3>
-                <p class="patient-body">CABP can exacerbate respiratory (asthma/COPD) and cardio metabolic comorbidities, leading to hospitalization.
-Miqnaf provides comprehensive coverage, early clinical response and reassured safety<sup>1</sup>,<sup>3</sup></p>
-            </div>
+    <div class="stats-circles-grid">
+
+      <!-- Circle 1 -->
+      <div class="stats-circle-card stats-circle-card--navy fade-in-on-scroll" data-prefix="~" data-target="8" data-max="10" data-suffix="x" data-delay="0">
+        <div class="stats-circle-wrap">
+          <svg viewBox="0 0 100 100" class="stats-circle-svg" aria-hidden="true">
+            <defs>
+              <linearGradient id="grad1" x1="100%" y1="0%" x2="0%" y2="0%">
+                <stop offset="0%" stop-color="#29397f"/>
+                <stop offset="50%" stop-color="#3d4f9a"/>
+                <stop offset="100%" stop-color="#29397f"/>
+              </linearGradient>
+            </defs>
+            <circle class="stats-ring-base" cx="50" cy="50" r="44" fill="none" stroke="url(#grad1)" stroke-width="0.5"/>
+            <circle class="stats-ring-progress" cx="50" cy="50" r="44" fill="none" stroke="url(#grad1)" stroke-width="7" transform="rotate(90 50 50)"/>
+          </svg>
+          <div class="stats-circle-content">
+            <span class="stats-counter">~8x</span>
+            <span class="stats-value">Higher lung concentration vs azithromycin<sup>¹²</sup></span>
+            <div class="stats-icon-badge stats-icon-badge--navy"></div>
+            <img src="assests/Icons for MIQNAF-01.svg" alt="" class="stats-icon stats-icon-scale-1">
+          </div>
         </div>
-    </div>
+      </div>
 
-    <!-- Slide 3: Orange -->
-    <div class="slide bg-orange slide-fade">
-        <div class="slide-container">
-            <div class="slide-image">
-                <div class="img-frame">
-                    <img src="assests/clinical-hospitalized.png" alt="Hospitalized" class="rounded-stroke-img bw-filter">
-                </div>
-            </div>
-            <div class="slide-text">
-                <h2 class="patient-heading">Hospitalized</h2>
-                <hr class="patient-line">
-                <h3 class="patient-subheading"></h3>
-                <p class="patient-body">In moderate to severe hospitalized CABP, early clinical stabilization, shorter hospital stay, atypical coverage and safety remain key treatment goals.
-Miqnaf provides potent activity against atypical pathogens, enabling early clinical improvement with better safety over traditional macrolides.<sup>1</sup>,<sup>3</sup></p>
-            </div>
+      <!-- Circle 2 -->
+      <div class="stats-circle-card stats-circle-card--red fade-in-on-scroll" data-prefix="~" data-target="97" data-max="110" data-suffix="%" data-delay="180">
+        <div class="stats-circle-wrap">
+          <svg viewBox="0 0 100 100" class="stats-circle-svg" aria-hidden="true">
+            <defs>
+              <linearGradient id="grad2" x1="100%" y1="0%" x2="0%" y2="0%">
+                <stop offset="0%" stop-color="#991f25"/>
+                <stop offset="50%" stop-color="#b52a30"/>
+                <stop offset="100%" stop-color="#991f25"/>
+              </linearGradient>
+            </defs>
+            <circle class="stats-ring-base" cx="50" cy="50" r="44" fill="none" stroke="url(#grad2)" stroke-width="0.5"/>
+            <circle class="stats-ring-progress" cx="50" cy="50" r="44" fill="none" stroke="url(#grad2)" stroke-width="7" transform="rotate(90 50 50)"/>
+          </svg>
+          <div class="stats-circle-content">
+            <span class="stats-counter">~97%</span>
+            <span class="stats-value">cure rate<sup>⁴</sup></span>
+            <div class="stats-icon-badge stats-icon-badge--red"></div>
+            <img src="assests/Icons for MIQNAF-02.svg" alt="" class="stats-icon stats-icon-scale-065">
+          </div>
         </div>
-    </div>
+      </div>
 
-
-<!-- Slide 5: Prior Treatment Failure -->
-    <div class="slide bg-maroon slide-fade">
-        <div class="slide-container">
-            <div class="slide-image">
-                <div class="img-frame">
-                    <img src="assests/clinical-elderly.png" alt="Prior Treatment Failure" class="rounded-stroke-img bw-filter">
-                </div>
-            </div>
-            <div class="slide-text">
-                <h2 class="patient-heading">Prior Treatment Failure</h2>
-                <hr class="patient-line">
-                <h3 class="patient-subheading"></h3>
-                <p class="patient-body">Inadequate response to initial antibiotics can prolong infection and increase disease burden.
-Miqnaf delivers potent, targeted action, ensuring rapid bacterial clearance and clinical resolution.<sup>1</sup>,<sup>3</sup>
-
-Because second chances should not fail.</p>
-            </div>
+      <!-- Circle 3 -->
+      <div class="stats-circle-card stats-circle-card--orange fade-in-on-scroll" data-prefix="" data-target="3" data-max="5" data-suffix=" DAYS" data-delay="360">
+        <div class="stats-circle-wrap">
+          <svg viewBox="0 0 100 100" class="stats-circle-svg" aria-hidden="true">
+            <defs>
+              <linearGradient id="grad3" x1="100%" y1="0%" x2="0%" y2="0%">
+                <stop offset="0%" stop-color="#ef6a2b"/>
+                <stop offset="50%" stop-color="#f3903f"/>
+                <stop offset="100%" stop-color="#ef6a2b"/>
+              </linearGradient>
+            </defs>
+            <circle class="stats-ring-base" cx="50" cy="50" r="44" fill="none" stroke="url(#grad3)" stroke-width="0.5"/>
+            <circle class="stats-ring-progress" cx="50" cy="50" r="44" fill="none" stroke="url(#grad3)" stroke-width="7" transform="rotate(90 50 50)"/>
+          </svg>
+          <div class="stats-circle-content">
+            <span class="stats-counter">3 DAYS</span>
+            <span class="stats-value">Monotherapy*</span>
+            <div class="stats-icon-badge stats-icon-badge--orange"></div>
+            <img src="assests/Icons for MIQNAF-03.svg" alt="" class="stats-icon stats-icon-scale-065">
+          </div>
         </div>
-    </div>
+      </div>
 
+    </div>
+  </div>
 </section>
