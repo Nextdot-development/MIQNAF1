@@ -1,93 +1,156 @@
-<!-- CLINICAL — the outcome figures that used to sit in the stats block -->
-<section id="clinical-experience" class="clin-section fade-in-on-scroll">
+<!-- CLINICAL — patient profiles, as tabs instead of the old slide stack -->
+<section id="clinical-experience" class="pp-section fade-in-on-scroll">
   <style>
-    .clin-section{width:100%;padding:2.5rem 1rem 4rem;overflow:hidden;background:transparent}
-    .clin-container{width:100%;max-width:1300px;margin:0 auto}
-    .clin-head{margin-bottom:2.4rem}
-    .clin-eyebrow{font-family:'Acumin Variable',sans-serif;font-size:.8rem;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--orange-section);margin-bottom:.6rem}
-    .clin-title{font-family:'Acumin Variable',sans-serif;font-size:clamp(2rem,3.4vw,3.3rem);font-weight:800;line-height:1.12;color:var(--brand-navy);margin:0}
-    .clin-title em{font-style:italic;color:var(--brand-red)}
-    .clin-sub{font-family:'Acumin Variable',sans-serif;font-size:clamp(1rem,1.4vw,1.2rem);font-weight:600;color:var(--text-muted);margin-top:.7rem;max-width:64ch}
+    .pp-section{width:100%;padding:2.5rem 1rem 5rem;overflow:hidden;background:transparent}
+    .pp-container{width:100%;max-width:1300px;margin:0 auto}
+    .pp-head{margin-bottom:2rem}
+    .pp-eyebrow{font-family:'Acumin Variable',sans-serif;font-size:.8rem;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--orange-section);margin-bottom:.6rem}
+    .pp-title{font-family:'Acumin Variable',sans-serif;font-size:clamp(2rem,3.4vw,3.3rem);font-weight:800;line-height:1.12;color:var(--brand-navy);margin:0}
+    .pp-title em{font-style:italic;color:var(--brand-red)}
+    .pp-sub{font-family:'Acumin Variable',sans-serif;font-size:clamp(1rem,1.4vw,1.2rem);font-weight:600;color:var(--text-muted);margin-top:.7rem;max-width:64ch}
+
+    /* ---- tab strip ---- */
+    .pp-tabs{display:flex;gap:10px;margin-bottom:26px;overflow-x:auto;padding-bottom:4px;-webkit-overflow-scrolling:touch}
+    .pp-tab{flex:1 1 0;min-width:max-content;white-space:nowrap;cursor:pointer;
+      font-family:'Acumin Variable',sans-serif;font-size:.82rem;font-weight:800;letter-spacing:.09em;text-transform:uppercase;
+      color:var(--text-grey);background:#fff;border:1px solid rgba(41,57,127,.14);border-radius:999px;padding:13px 22px;
+      transition:color .25s ease,background .25s ease,border-color .25s ease,box-shadow .25s ease,transform .25s ease}
+    .pp-tab:hover{color:var(--brand-navy);border-color:rgba(41,57,127,.34);transform:translateY(-2px)}
+    .pp-tab[aria-selected="true"]{color:#fff;border-color:transparent;transform:none}
+    .pp-tab[aria-selected="true"][data-tone="maroon"]{background:var(--red-section);box-shadow:0 8px 22px -8px rgba(153,31,37,.7)}
+    .pp-tab[aria-selected="true"][data-tone="navy"]{background:var(--blue-section);box-shadow:0 8px 22px -8px rgba(41,57,127,.7)}
+    .pp-tab[aria-selected="true"][data-tone="orange"]{background:var(--orange-section);box-shadow:0 8px 22px -8px rgba(239,106,43,.7)}
+
+    /* ---- panel ---- */
+    .pp-panels{position:relative;border-radius:24px;background:transparent;overflow:hidden;
+      box-shadow:0 1px 4px rgba(0,0,0,.05),0 18px 46px rgba(41,57,127,.12)}
+    /* each panel keeps the background colour its old slide had */
+    .pp-panel[data-tone="maroon"]{background:var(--red-section)}
+    .pp-panel[data-tone="navy"]{background:var(--blue-section)}
+    .pp-panel[data-tone="orange"]{background:var(--orange-section)}
+    .pp-panel{display:none;grid-template-columns:minmax(0,440px) 1fr;gap:0;align-items:stretch}
+    .pp-panel.is-active{display:grid;animation:ppIn .5s cubic-bezier(.22,.61,.36,1) both}
+    @keyframes ppIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+    @media(prefers-reduced-motion:reduce){.pp-panel.is-active{animation:none}}
+
+    .pp-figure{position:relative;display:flex;align-items:center;justify-content:center;padding:38px 34px;min-height:380px}
+    .pp-figure img{position:relative;z-index:2;width:100%;max-width:320px;height:auto;border-radius:22px;display:block;filter:grayscale(1) contrast(1.04)}
+    /* the yellow block + dashed outline the site already uses around portraits */
+    .pp-figure::before{content:'';position:absolute;z-index:1;width:min(320px,78%);aspect-ratio:320/348;transform:translate(-14px,16px);background:#f4b400;border-radius:22px}
+    .pp-figure::after{content:'';position:absolute;z-index:3;width:min(320px,78%);aspect-ratio:320/348;transform:translate(12px,-12px);border:3px dashed rgba(255,255,255,.85);border-radius:22px;pointer-events:none}
+
+    .pp-body{padding:44px 44px 44px 8px;display:flex;flex-direction:column;justify-content:center}
+    .pp-kicker{font-family:'Acumin Variable',sans-serif;font-size:.66rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.7);margin-bottom:8px}
+    .pp-name{font-family:'Acumin Variable',sans-serif;font-size:clamp(1.9rem,3vw,2.8rem);font-weight:800;line-height:1.1;color:#fff;margin:0}
+    .pp-rule{height:2px;width:100%;max-width:420px;background:linear-gradient(90deg,rgba(255,255,255,.85),rgba(255,255,255,.15));border:0;border-radius:2px;margin:18px 0 20px}
+    .pp-text{font-family:'Acumin Variable',sans-serif;font-size:clamp(1rem,1.25vw,1.14rem);font-weight:500;line-height:1.75;color:rgba(255,255,255,.9);margin:0}
+    .pp-text + .pp-text{margin-top:14px}
+    .pp-text sup{font-size:.62em;opacity:.65}
+    .pp-text .pp-lead{color:#fff;font-weight:700}
+
+    @media(max-width:980px){
+      .pp-panel.is-active{grid-template-columns:1fr}
+      .pp-figure{padding:30px 28px 28px;min-height:0}
+      .pp-figure img{max-width:270px}
+      /* keep the yellow block + dashed frame tied to the smaller image */
+      .pp-figure::before,.pp-figure::after{width:min(270px,70%)}
+      .pp-body{padding:26px 28px 36px}
+      .pp-tabs{gap:8px}
+      .pp-tab{flex:0 0 auto;font-size:.74rem;padding:11px 17px}
+    }
   </style>
 
-  <div class="clin-container">
-    <div class="clin-head">
-      <div class="clin-eyebrow">Clinical Experience</div>
-      <h2 class="clin-title">What the numbers <em>show</em></h2>
-      <p class="clin-sub">Tissue penetration, cure rate and course length &mdash; the three measures that decide how a CABP course actually goes.</p>
+  <div class="pp-container">
+    <div class="pp-head">
+      <div class="pp-eyebrow">Where MIQNAF&reg; Fits</div>
+      <h2 class="pp-title">Built for the patients who <em>cannot wait</em></h2>
+      <p class="pp-sub">Four CABP presentations where delay costs the most &mdash; and what nafithromycin changes in each.</p>
     </div>
 
-    <div class="stats-circles-grid">
+    <div class="pp-tabs" role="tablist" aria-label="Patient profiles">
+      <button type="button" class="pp-tab" role="tab" id="pp-tab-elderly" data-tone="maroon" aria-controls="pp-panel-elderly" aria-selected="true">Elderly</button>
+      <button type="button" class="pp-tab" role="tab" id="pp-tab-comorbid" data-tone="navy" aria-controls="pp-panel-comorbid" aria-selected="false">Comorbid</button>
+      <button type="button" class="pp-tab" role="tab" id="pp-tab-hosp" data-tone="orange" aria-controls="pp-panel-hosp" aria-selected="false">Hospitalized</button>
+      <button type="button" class="pp-tab" role="tab" id="pp-tab-failure" data-tone="maroon" aria-controls="pp-panel-failure" aria-selected="false">Prior Treatment Failure</button>
+    </div>
 
-      <!-- Circle 1 -->
-      <div class="stats-circle-card stats-circle-card--navy fade-in-on-scroll" data-prefix="~" data-target="8" data-max="10" data-suffix="x" data-delay="0">
-        <div class="stats-circle-wrap">
-          <svg viewBox="0 0 100 100" class="stats-circle-svg" aria-hidden="true">
-            <defs>
-              <linearGradient id="grad1" x1="100%" y1="0%" x2="0%" y2="0%">
-                <stop offset="0%" stop-color="#29397f"/>
-                <stop offset="50%" stop-color="#3d4f9a"/>
-                <stop offset="100%" stop-color="#29397f"/>
-              </linearGradient>
-            </defs>
-            <circle class="stats-ring-base" cx="50" cy="50" r="44" fill="none" stroke="url(#grad1)" stroke-width="0.5"/>
-            <circle class="stats-ring-progress" cx="50" cy="50" r="44" fill="none" stroke="url(#grad1)" stroke-width="7" transform="rotate(90 50 50)"/>
-          </svg>
-          <div class="stats-circle-content">
-            <span class="stats-counter">~8x</span>
-            <span class="stats-value">Higher lung concentration vs azithromycin<sup>¹²</sup></span>
-            <div class="stats-icon-badge stats-icon-badge--navy"></div>
-            <img src="assests/Icons for MIQNAF-01.svg" alt="" class="stats-icon stats-icon-scale-1">
-          </div>
+    <div class="pp-panels">
+      <div class="pp-panel is-active" role="tabpanel" id="pp-panel-elderly" data-tone="maroon" aria-labelledby="pp-tab-elderly">
+        <div class="pp-figure"><img src="assests/clinical-elderly.png" alt="Elderly patient" loading="lazy"></div>
+        <div class="pp-body">
+          <div class="pp-kicker">Patient profile 01</div>
+          <h3 class="pp-name">Elderly</h3>
+          <hr class="pp-rule">
+          <p class="pp-text"><span class="pp-lead">Elderly patients are at higher risk of rapid disease progression and complications.</span></p>
+          <p class="pp-text">Miqnaf supports early clinical improvement and timely recovery.<sup>3</sup></p>
         </div>
       </div>
 
-      <!-- Circle 2 -->
-      <div class="stats-circle-card stats-circle-card--red fade-in-on-scroll" data-prefix="~" data-target="97" data-max="110" data-suffix="%" data-delay="180">
-        <div class="stats-circle-wrap">
-          <svg viewBox="0 0 100 100" class="stats-circle-svg" aria-hidden="true">
-            <defs>
-              <linearGradient id="grad2" x1="100%" y1="0%" x2="0%" y2="0%">
-                <stop offset="0%" stop-color="#991f25"/>
-                <stop offset="50%" stop-color="#b52a30"/>
-                <stop offset="100%" stop-color="#991f25"/>
-              </linearGradient>
-            </defs>
-            <circle class="stats-ring-base" cx="50" cy="50" r="44" fill="none" stroke="url(#grad2)" stroke-width="0.5"/>
-            <circle class="stats-ring-progress" cx="50" cy="50" r="44" fill="none" stroke="url(#grad2)" stroke-width="7" transform="rotate(90 50 50)"/>
-          </svg>
-          <div class="stats-circle-content">
-            <span class="stats-counter">~97%</span>
-            <span class="stats-value">cure rate<sup>⁴</sup></span>
-            <div class="stats-icon-badge stats-icon-badge--red"></div>
-            <img src="assests/Icons for MIQNAF-02.svg" alt="" class="stats-icon stats-icon-scale-065">
-          </div>
+      <div class="pp-panel" role="tabpanel" id="pp-panel-comorbid" data-tone="navy" aria-labelledby="pp-tab-comorbid" hidden>
+        <div class="pp-figure"><img src="assests/clinical-professional.png" alt="Patient with comorbidities" loading="lazy"></div>
+        <div class="pp-body">
+          <div class="pp-kicker">Patient profile 02</div>
+          <h3 class="pp-name">Comorbid</h3>
+          <hr class="pp-rule">
+          <p class="pp-text"><span class="pp-lead">CABP can exacerbate respiratory (asthma/COPD) and cardio metabolic comorbidities, leading to hospitalization.</span></p>
+          <p class="pp-text">Miqnaf provides comprehensive coverage, early clinical response and reassured safety<sup>1</sup>,<sup>3</sup></p>
         </div>
       </div>
 
-      <!-- Circle 3 -->
-      <div class="stats-circle-card stats-circle-card--orange fade-in-on-scroll" data-prefix="" data-target="3" data-max="5" data-suffix=" DAYS" data-delay="360">
-        <div class="stats-circle-wrap">
-          <svg viewBox="0 0 100 100" class="stats-circle-svg" aria-hidden="true">
-            <defs>
-              <linearGradient id="grad3" x1="100%" y1="0%" x2="0%" y2="0%">
-                <stop offset="0%" stop-color="#ef6a2b"/>
-                <stop offset="50%" stop-color="#f3903f"/>
-                <stop offset="100%" stop-color="#ef6a2b"/>
-              </linearGradient>
-            </defs>
-            <circle class="stats-ring-base" cx="50" cy="50" r="44" fill="none" stroke="url(#grad3)" stroke-width="0.5"/>
-            <circle class="stats-ring-progress" cx="50" cy="50" r="44" fill="none" stroke="url(#grad3)" stroke-width="7" transform="rotate(90 50 50)"/>
-          </svg>
-          <div class="stats-circle-content">
-            <span class="stats-counter">3 DAYS</span>
-            <span class="stats-value">Monotherapy*</span>
-            <div class="stats-icon-badge stats-icon-badge--orange"></div>
-            <img src="assests/Icons for MIQNAF-03.svg" alt="" class="stats-icon stats-icon-scale-065">
-          </div>
+      <div class="pp-panel" role="tabpanel" id="pp-panel-hosp" data-tone="orange" aria-labelledby="pp-tab-hosp" hidden>
+        <div class="pp-figure"><img src="assests/clinical-hospitalized.png" alt="Hospitalized patient" loading="lazy"></div>
+        <div class="pp-body">
+          <div class="pp-kicker">Patient profile 03</div>
+          <h3 class="pp-name">Hospitalized</h3>
+          <hr class="pp-rule">
+          <p class="pp-text"><span class="pp-lead">In moderate to severe hospitalized CABP, early clinical stabilization, shorter hospital stay, atypical coverage and safety are critical.</span></p>
+          <p class="pp-text">Miqnaf provides potent activity against atypical pathogens, enabling early clinical improvement with better safety over traditional macrolides.<sup>1</sup>,<sup>3</sup></p>
         </div>
       </div>
 
+      <div class="pp-panel" role="tabpanel" id="pp-panel-failure" data-tone="maroon" aria-labelledby="pp-tab-failure" hidden>
+        <div class="pp-figure"><img src="assests/clinical_professional.png" alt="Patient after prior treatment failure" loading="lazy"></div>
+        <div class="pp-body">
+          <div class="pp-kicker">Patient profile 04</div>
+          <h3 class="pp-name">Prior Treatment Failure</h3>
+          <hr class="pp-rule">
+          <p class="pp-text"><span class="pp-lead">Inadequate response to initial antibiotics can prolong infection and increase disease burden.</span></p>
+          <p class="pp-text">Miqnaf delivers potent, targeted action, ensuring rapid bacterial clearance and clinical resolution.<sup>1</sup>,<sup>3</sup></p>
+          <p class="pp-text">Because second chances should not fail.</p>
+        </div>
+      </div>
     </div>
   </div>
+
+  <script>
+  (function () {
+    var root = document.getElementById('clinical-experience');
+    if (!root) return;
+    var tabs = Array.prototype.slice.call(root.querySelectorAll('.pp-tab'));
+
+    function select(tab) {
+      tabs.forEach(function (t) {
+        var panel = document.getElementById(t.getAttribute('aria-controls'));
+        var on = t === tab;
+        t.setAttribute('aria-selected', on ? 'true' : 'false');
+        if (!panel) return;
+        panel.hidden = !on;
+        panel.classList.toggle('is-active', on);
+      });
+    }
+
+    tabs.forEach(function (tab, i) {
+      tab.addEventListener('click', function () { select(tab); });
+      // left/right arrows move between tabs, as a tablist should
+      tab.addEventListener('keydown', function (e) {
+        var step = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+        if (!step) return;
+        e.preventDefault();
+        var next = tabs[(i + step + tabs.length) % tabs.length];
+        next.focus();
+        select(next);
+      });
+    });
+  })();
+  </script>
 </section>
