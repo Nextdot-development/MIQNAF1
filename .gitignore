@@ -5,5 +5,8 @@ node_modules/
 .env
 index.html
 
-# reference clips used while building; not part of the site
+# working files that are not part of the site
 *.mp4
+*.zip
+*.7z
+*.rar
