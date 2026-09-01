@@ -22,7 +22,7 @@
       background:transparent;border:0;border-radius:999px;padding:8px 16px;cursor:pointer;transition:all .22s ease;white-space:nowrap}
     .rib-toggle button[aria-pressed="true"]{background:var(--brand-navy);color:#fff;box-shadow:0 6px 16px -6px rgba(41,57,127,.7)}
     .rib-canvas{position:relative;flex:1;min-height:430px;margin:14px;border-radius:14px;overflow:hidden;cursor:grab;
-      background:#f6f3fa}
+      background:radial-gradient(circle at 50% 35%,#fdfcfe,#ece6f3)}
     .rib-canvas:active{cursor:grabbing}
     .rib-canvas canvas{display:block;width:100%;height:100%}
     .rib-hint{position:absolute;left:14px;bottom:12px;z-index:3;pointer-events:none;font-family:'Acumin Variable',sans-serif;
@@ -142,12 +142,14 @@
 </section>
 <script>window.__NAF_SDF_B64__ = "CiAgICAgUkRLaXQgICAgICAgICAgM0QKCjEyMjEyNiAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMDk5OSBWMjAwMAogICAgMS4xMDQ3ICAgLTIuMTcwMiAgIC01LjU1ODAgQyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDEuODUzMyAgIC0xLjExMzQgICAtNC43NTY2IEMgICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgICAxLjM2MTggICAtMC44NjgwICAgLTMuMzEyOCBDICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAgMS40NzQ2ICAgLTIuMDgzMiAgIC0yLjMwNjYgQyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDEuODk4NiAgIC0xLjYwNDMgICAtMC44NjkzIEMgICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgICAwLjg4NTcgICAtMS44MjMyICAgIDAuMjk3MyBDICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAgMS4yMjMzICAgLTAuODgxNiAgICAxLjQ2NjcgQyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDIuMDgwMCAgIC0xLjIyNTEgICAgMi4yODcwIE8gICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgICAwLjYxNTggICAgMC41MzA1ICAgIDEuNTgzNyBDICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtMC42NjQzICAgIDAuODQ3NCAgICAwLjc4MDYgQyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTIuMDQ5MiAgICAwLjY2MjIgICAgMS40NjQ5IEMgICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC0zLjE5MzUgICAgMC40MzQ5ICAgIDAuMzc4NiBDICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtMy40OTA4ICAgIDEuNDk3MyAgIC0wLjcwOTIgQyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTIuMzM2NCAgICAxLjkxMTMgICAtMS42NDU1IEMgICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC0xLjgxOTAgICAgMy4wMjY3ICAgLTEuNTA2MCBPICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtMS44NTUwICAgIDEuMDAyNSAgIC0yLjc4NDcgQyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTAuMzc1OSAgICAwLjY2OTAgICAtMi42NTE2IEMgICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgICAwLjQyNDQgICAgMS4yODAwICAgLTEuOTYxOCBPICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtMC4wMTg0ICAgLTAuNDAzNSAgIC0zLjM5OTUgTyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTIuNzE0NCAgIC0wLjIzMTMgICAtMy4wNTE2IEMgICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC00LjIwMTQgICAgMi43NTE2ICAgLTAuMTc5MSBDICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtNC40MjkzICAgIDAuMjE3NCAgICAxLjA5NDYgTyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTUuMjMzNyAgIC0wLjg4NzIgICAgMC42ODk2IEMgICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC02LjQ3OTkgICAtMC40MDk3ICAgLTAuMDkxNiBDICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtNy43NDM4ICAgLTAuNDQzMSAgICAwLjgwOTUgQyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTcuMzY0MCAgICAwLjA5NDEgICAgMi4xOTc5IEMgICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC02LjI5ODMgICAtMC44MTIzICAgIDIuODMzMSBDICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtNS42MTc5ICAgLTEuNjE5NiAgICAxLjg2MDUgTyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTYuOTMwMCAgIC0xLjc2NDQgICAgMy44NDc5IEMgICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC04LjkxNDAgICAgMC4xODE5ICAgIDAuMTM1NyBOICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtOC44MTE2ICAgIDEuNjM3MiAgIC0wLjAwOTQgQyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAtMTAuMTczOSAgIC0wLjE2NTEgICAgMC43OTk3IEMgICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC02LjY5NDQgICAtMS4yMjY5ICAgLTEuMjU1NyBPICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtMi4wMzM2ICAgLTAuNjA2MyAgICAyLjM1NTcgQyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTIuNDM4NSAgICAxLjcwMjMgICAgMi4zNzg3IE8gICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC0xLjY5NDkgICAgMi45MDg5ICAgIDIuNDQzNiBDICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAgMS43MjEyICAgIDEuNTQxOSAgICAxLjI0NjMgQyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDAuNzkzNSAgIC0zLjI3MDYgICAgMC44MTM0IEMgICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgICAzLjI2OTYgICAtMi4yNjgzICAgLTAuNjIxMyBDICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAgMy40MDgwICAgLTMuMjMyMyAgIC0xLjc1NjMgQyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDQuMjA3NiAgIC00LjE1MzggICAtMS44MDg0IE8gICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgICAyLjU0MDEgICAtMi45NDY1ICAgLTIuNzUzOSBPICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAgNC40OTU4ICAgLTEuMzU3MCAgIC0wLjU1MDggQyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDQuMzQwOCAgIC0wLjA2MTUgICAtMC41Mjc1IE4gICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgICA1LjYwNzkgICAgMC41NjkxICAgLTAuNTA0MiBPICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAgNS42NTYzICAgIDEuNTUxNSAgICAwLjU0MzQgQyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDUuMjI2MSAgICAyLjkwNTMgICAgMC4wMDMxIEMgICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgICA3LjA2NzYgICAgMS41NDU4ICAgIDEuMDY1MiBDICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAgNy4zOTIwICAgIDEuMzIxMiAgICAyLjMyMzEgTiAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDguNzU4MSAgICAxLjI4MjMgICAgMi41MTg4IE4gICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgICA5LjQzNzcgICAgMS40ODkxICAgIDEuNDAzNCBDICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAgOC40MjU5ICAgIDEuNzczMSAgICAwLjAzOTIgUyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgMTAuOTA0MyAgICAxLjQ1NjMgICAgMS4yOTA3IEMgICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIDExLjY5ODIgICAgMS4xNDE0ICAgIDIuMzkzOSBDICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAxMy4wODQ4ICAgIDEuMTAwMiAgICAyLjI0MjUgQyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgMTMuNjQxMCAgICAxLjM3NzIgICAgMS4wMDIxIEMgICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIDEyLjc4NjcgICAgMS42Nzg5ICAgLTAuMDQ1NCBDICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAxMS40Mzk2ICAgIDEuNzIzOSAgICAwLjA2OTggTiAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDUuNzIzNyAgIC0xLjk2NDkgICAtMC40ODQ0IE4gICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgICAwLjIwNzAgICAtMi45NTc2ICAgLTIuMzYxMiBDICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAgMS40MTk3ICAgLTIuMTI2NCAgIC02LjYwNDggSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDEuMzMwNyAgIC0zLjE3NDggICAtNS4xOTIwIEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgICAwLjAyMTIgICAtMi4wMTY0ICAgLTUuNTIzNiBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAgMi45MTQ4ICAgLTEuMzY1OCAgIC00Ljc0ODggSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDEuNzU5MCAgIC0wLjE2ODEgICAtNS4zMDYzIEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgICAyLjAwNzQgICAtMC4wNTg1ICAgLTIuOTU5NSBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAgMi4wMjk2ICAgLTAuNTIxMyAgIC0wLjkxNzQgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTAuMTEzNyAgIC0xLjU4NjYgICAtMC4wNTQxIEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgICAwLjQwMjEgICAgMC42NjYwICAgIDIuNjUwNCBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtMC41OTQ1ICAgIDEuODc0OSAgICAwLjQyMTIgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTAuNjc3NyAgICAwLjIyNzYgICAtMC4xMDQ0IEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC0yLjkxMjEgICAtMC40ODgwICAgLTAuMTM4MyBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtNC4yNDg3ICAgIDEuMDYzNiAgIC0xLjM3MzMgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTEuOTMwNCAgICAxLjYyNzQgICAtMy42ODU2IEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC0yLjYyNzggICAtMC45NzA1ICAgLTIuMjUzMSBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtMy43NzIwICAgIDAuMDMwMyAgIC0zLjE2ODEgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTIuNDEyMSAgIC0wLjcyMzUgICAtMy45ODcyIEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC0zLjU3MTEgICAgMy4zMzcwICAgIDAuNDkyOSBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtNC40NzgyICAgIDMuNDE4NyAgIC0xLjAxMDAgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTUuMTIyOSAgICAyLjUwNjggICAgMC4zNTk5IEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC00LjY1MTMgICAtMS41ODIwICAgIDAuMDc4OSBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtNi4zMDIzICAgIDAuNTk1MSAgIC0wLjQ3NDggSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTguMDEwOCAgIC0xLjUwNDggICAgMC45MjM0IEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC04LjIzMTEgICAgMC4yMDA2ICAgIDIuODYxNyBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtNi45Mzk4ICAgIDEuMTAzMCAgICAyLjA5OTcgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTUuNTU1NSAgIC0wLjIwMzMgICAgMy4zNjI1IEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC03Ljc2OTYgICAtMi4zMDk0ICAgIDMuMzkzNiBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtNi4yMDYzICAgLTIuNTE4OSAgICA0LjE4NjAgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTcuMzA1NiAgIC0xLjIyMDIgICAgNC43MjI4IEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC04LjA0MjIgICAgMS44OTY4ICAgLTAuNzUyMyBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtOC41ODE1ICAgIDIuMTQ5NCAgICAwLjkzNDIgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTkuNzQ3NCAgICAyLjA2MTcgICAtMC4zODYyIEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgLTEwLjI2NDUgICAgMC4yNjYxICAgIDEuODAxOCBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogIC0xMS4wMTk2ICAgIDAuMTg0MSAgICAwLjE5OTIgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAtMTAuMjg0NiAgIC0xLjI1MjcgICAgMC44Nzc5IEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC03LjY3MDYgICAtMS4zMDg5ICAgLTEuMzQ1MiBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtMS4zMTMyICAgLTAuNTI3NCAgICAzLjE3NjMgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTIuOTk0OCAgIC0wLjc2NjYgICAgMi44NTQ0IEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC0xLjc5ODcgICAtMS41MDMyICAgIDEuNzczNiBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtMi4xNTUwICAgIDMuNTQ4OCAgICAzLjIwNDEgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTAuNjU4NiAgICAyLjczMDkgICAgMi43MzEyIEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC0xLjc0MjUgICAgMy40NDcxICAgIDEuNDk0NyBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAgMS40NDA1ICAgIDIuNTUyNiAgICAxLjU4MzQgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDIuNjYwOCAgICAxLjI4NDYgICAgMS43NDk4IEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgICAxLjkyMDMgICAgMS41ODUyICAgIDAuMTY3MyBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtMC4yNTcwICAgLTMuNTIzOSAgICAxLjAxNjggSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDEuMTYyNSAgIC00LjAwNjkgICAgMC4wOTk1IEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgICAxLjMzMjkgICAtMy40MzY0ICAgIDEuNzU1MCBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAgMy4yNjgyICAgLTIuODQ5OSAgICAwLjMwNzEgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDQuOTg5NCAgICAxLjI1NDYgICAgMS4zNjU3IEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgICA1Ljg2NjkgICAgMy4yMzQwICAgLTAuODIxOCBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAgNS4yNDY1ICAgIDMuNjc1NiAgICAwLjc3ODMgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDQuMjA5MiAgICAyLjg1MDMgICAtMC40MDE2IEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIDExLjI0NjUgICAgMC45MjM2ICAgIDMuMzYxNCBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAxMy43MTkyICAgIDAuODU1OSAgICAzLjA5MDkgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgMTQuNzE0MCAgICAxLjM1MzcgICAgMC44NTE3IEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIDEzLjE3MjkgICAgMS44OTkxICAgLTEuMDM4NyBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAgNi41MTE0ICAgLTEuMzc2NyAgIC0wLjIzMTcgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDUuODAyNiAgIC0yLjk1NjggICAtMC4yNjczIEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC0wLjY3NDMgICAtMi40NzE3ICAgLTEuOTM1NiBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtMC4wNTAxICAgLTMuMjMwMiAgIC0zLjM4NjIgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDAuMzYwMSAgIC0zLjkxNjkgICAtMS44NTc1IEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgMSAgMiAgMSAgMAogIDIgIDMgIDEgIDAKICAzICA0ICAxICAwCiAgNCAgNSAgMSAgMAogIDUgIDYgIDEgIDAKICA2ICA3ICAxICAwCiAgNyAgOCAgMiAgMAogIDcgIDkgIDEgIDAKICA5IDEwICAxICAwCiAxMCAxMSAgMSAgMAogMTEgMTIgIDEgIDAKIDEyIDEzICAxICAwCiAxMyAxNCAgMSAgMAogMTQgMTUgIDIgIDAKIDE0IDE2ICAxICAwCiAxNiAxNyAgMSAgMAogMTcgMTggIDIgIDAKIDE3IDE5ICAxICAwCiAxNiAyMCAgMSAgMAogMTMgMjEgIDEgIDAKIDEyIDIyICAxICAwCiAyMiAyMyAgMSAgMAogMjMgMjQgIDEgIDAKIDI0IDI1ICAxICAwCiAyNSAyNiAgMSAgMAogMjYgMjcgIDEgIDAKIDI3IDI4ICAxICAwCiAyNyAyOSAgMSAgMAogMjUgMzAgIDEgIDAKIDMwIDMxICAxICAwCiAzMCAzMiAgMSAgMAogMjQgMzMgIDEgIDAKIDExIDM0ICAxICAwCiAxMSAzNSAgMSAgMAogMzUgMzYgIDEgIDAKICA5IDM3ICAxICAwCiAgNiAzOCAgMSAgMAogIDUgMzkgIDEgIDAKIDM5IDQwICAxICAwCiA0MCA0MSAgMiAgMAogNDAgNDIgIDEgIDAKIDM5IDQzICAxICAwCiA0MyA0NCAgMiAgMwogNDQgNDUgIDEgIDAKIDQ1IDQ2ICAxICAwCiA0NiA0NyAgMSAgMAogNDYgNDggIDEgIDAKIDQ4IDQ5ICAyICAwCiA0OSA1MCAgMSAgMAogNTAgNTEgIDIgIDAKIDUxIDUyICAxICAwCiA1MSA1MyAgMSAgMAogNTMgNTQgIDIgIDAKIDU0IDU1ICAxICAwCiA1NSA1NiAgMiAgMAogNTYgNTcgIDEgIDAKIDU3IDU4ICAyICAwCiA0MyA1OSAgMSAgMAogIDQgNjAgIDEgIDAKIDE5ICAzICAxICAwCiA0MiAgNCAgMSAgMAogMjggMjMgIDEgIDAKIDUyIDQ4ICAxICAwCiA1OCA1MyAgMSAgMAogIDEgNjEgIDEgIDAKICAxIDYyICAxICAwCiAgMSA2MyAgMSAgMAogIDIgNjQgIDEgIDAKICAyIDY1ICAxICAwCiAgMyA2NiAgMSAgMAogIDUgNjcgIDEgIDAKICA2IDY4ICAxICAwCiAgOSA2OSAgMSAgMAogMTAgNzAgIDEgIDAKIDEwIDcxICAxICAwCiAxMiA3MiAgMSAgMAogMTMgNzMgIDEgIDAKIDE2IDc0ICAxICAwCiAyMCA3NSAgMSAgMAogMjAgNzYgIDEgIDAKIDIwIDc3ICAxICAwCiAyMSA3OCAgMSAgMAogMjEgNzkgIDEgIDAKIDIxIDgwICAxICAwCiAyMyA4MSAgMSAgMAogMjQgODIgIDEgIDAKIDI1IDgzICAxICAwCiAyNiA4NCAgMSAgMAogMjYgODUgIDEgIDAKIDI3IDg2ICAxICAwCiAyOSA4NyAgMSAgMAogMjkgODggIDEgIDAKIDI5IDg5ICAxICAwCiAzMSA5MCAgMSAgMAogMzEgOTEgIDEgIDAKIDMxIDkyICAxICAwCiAzMiA5MyAgMSAgMAogMzIgOTQgIDEgIDAKIDMyIDk1ICAxICAwCiAzMyA5NiAgMSAgMAogMzQgOTcgIDEgIDAKIDM0IDk4ICAxICAwCiAzNCA5OSAgMSAgMAogMzYxMDAgIDEgIDAKIDM2MTAxICAxICAwCiAzNjEwMiAgMSAgMAogMzcxMDMgIDEgIDAKIDM3MTA0ICAxICAwCiAzNzEwNSAgMSAgMAogMzgxMDYgIDEgIDAKIDM4MTA3ICAxICAwCiAzODEwOCAgMSAgMAogMzkxMDkgIDEgIDAKIDQ2MTEwICAxICAwCiA0NzExMSAgMSAgMAogNDcxMTIgIDEgIDAKIDQ3MTEzICAxICAwCiA1NDExNCAgMSAgMAogNTUxMTUgIDEgIDAKIDU2MTE2ICAxICAwCiA1NzExNyAgMSAgMAogNTkxMTggIDEgIDAKIDU5MTE5ICAxICAwCiA2MDEyMCAgMSAgMAogNjAxMjEgIDEgIDAKIDYwMTIyICAxICAwCk0gIEVORAo=";</script>
 <script>
-/* Interactive 70S ribosome — stylised, not crystallographic.
-   Drag to rotate, scroll to zoom, toggle the drug in and out. Geometry and
-   palette follow the reference schematic: a wide lavender 50S over a flatter
-   30S, flat E/P/A planes on a long mRNA strip, tRNA capsules, the growing
-   peptide chain, and nafithromycin drawn as real ball-and-stick from the SDF
-   payload above. */
+/* Interactive 70S ribosome.
+
+   Geometry, palette and the translation state machine are ported directly from
+   the reference implementation (nafithromycin-moa.html) rather than eyeballed,
+   so proportions and timings match it exactly. Two deliberate differences:
+   the molecule is built from this page's real nafithromycin SDF instead of a
+   flattened coordinate list, and labels are sprites rather than CSS2D objects,
+   which avoids pulling in the three.js addons on top of the core build. */
 (function () {
   var HOST = document.getElementById('rib-canvas');
   if (!HOST) return;
@@ -157,35 +159,44 @@
     'https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js'
   ];
 
-  // Palette lifted pixel-by-pixel off the reference frames.
   var C = {
-    sub50:  0xc7bcdb,
-    sub30:  0xc3bcdd,
-    siteE:  0xb9a9d0,
-    siteP:  0xd6cabf,
-    siteA:  0xa565c4,
-    trna:   0xc2c2d6,
-    bar:    0xa3a4ae,
-    cross:  0xe03b33,
-    aa:     [0x7929a4, 0xd5af4c, 0x2b7ec2, 0x58b386, 0xbc7db6, 0x82b6c1, 0x9d78be, 0xc8ad90, 0x7a95c0],
-    codon:  [0xd5af4c, 0x4a86d8, 0x58b386, 0xd94a3d, 0x82b6c1, 0x9d78be]
+    subunit: '#c9b6e4',
+    siteP:   '#f2c98a',
+    siteA:   '#7b3fa0',
+    siteE:   '#b9a4d6',
+    mrna:    '#8d8d93',
+    trna:    '#7f8c99',
+    trnaA:   '#6f7f8f',
+    block:   '#c0392b',
+    pep:     ['#2f6fb5', '#e8a33d', '#7b3fa0', '#39a0a6', '#d0509a', '#4caf7d']
   };
-  var ATOM = { C: 0x4a4a52, N: 0x2f5fd0, O: 0xe03127, S: 0xe8c020 };
+  var ATOM = { C: 0x5c6b7a, N: 0x3f6fd0, O: 0xe2504a, S: 0xe0b83c };
 
-  var scene, camera, renderer, root, drugGroup, crossGroup;
-  var trnaA, trnaP, trnaE, trnaDrop, chain = [], strandGroup;
+  var SITE_X = { E: -1.05, P: 0, A: 1.05 };
+  var PH = [1.1, 0.8, 1.1, 0.7];   // arrival · bond formation · translocation · E-site release
+
+  var scene, camera, renderer, root;
+  var sub50, sub30, siteMesh = {}, mrnaGroup, peptideGroup;
+  var pT, aT, drugOuter, drugSpin, blockGroup;
   var started = false, drugOn = true, visible = true, raf = null;
+
   // drugT: 0 = clear of the ribosome, 1 = docked. Animated, never snapped.
   var drugT = 1, animFrom = 1, animTo = 1, animStart = 0, ANIM_MS = 1600;
-  var DOCK = null, AWAY = null, MAX_CHAIN = 12;
-  var yaw = 0.06, pitch = 0.10, dist = 74, dragging = false, lastX = 0, lastY = 0, userZoomed = false;
-  var clock = 0;
+  var blockScale = 1;
+  var chain = 3, grow = 0, dropped = 0, phase = 0, tPhase = 0, stall = 0, elapsed = 0;
+
+  var yaw = 0, pitch = 0.05, dist = 8.2, dragging = false, lastX = 0, lastY = 0, userZoomed = false;
+
+  function easeInOut(t) { return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; }
+  function lerp(a, b, t) { return a + (b - a) * t; }
+  function damp(cur, target, lambda, dt) { return lerp(target, cur, Math.exp(-lambda * dt)); }
+  function smooth(t) { t = Math.max(0, Math.min(1, t)); return t * t * (3 - 2 * t); }
 
   function label(text, color, size) {
     var c = document.createElement('canvas');
     c.width = 256; c.height = 128;
     var g = c.getContext('2d');
-    g.font = 'bold 70px Helvetica, Arial, sans-serif';
+    g.font = 'bold 72px Helvetica, Arial, sans-serif';
     g.textAlign = 'center'; g.textBaseline = 'middle';
     g.fillStyle = color; g.fillText(text, 128, 64);
     var t = new THREE.CanvasTexture(c); t.minFilter = THREE.LinearFilter;
@@ -194,38 +205,127 @@
     return sp;
   }
 
-  function blob(rx, ry, rz, color, opacity) {
-    var m = new THREE.Mesh(new THREE.SphereGeometry(1, 56, 40),
-      new THREE.MeshPhongMaterial({ color: color, transparent: true, opacity: opacity,
-        shininess: 14, specular: 0x4a5070, depthWrite: false }));
-    m.scale.set(rx, ry, rz);
-    return m;
+  // r128 has no CapsuleGeometry, so build one from a cylinder plus two caps
+  function capsule(radius, len, color) {
+    var g = new THREE.Group();
+    var mat = new THREE.MeshStandardMaterial({ color: color, roughness: 0.4 });
+    g.add(new THREE.Mesh(new THREE.CylinderGeometry(radius, radius, len, 20), mat));
+    var cap = new THREE.Mesh(new THREE.SphereGeometry(radius, 20, 14), mat);
+    cap.position.y = len / 2; g.add(cap);
+    var cap2 = cap.clone(); cap2.position.y = -len / 2; g.add(cap2);
+    return g;
   }
 
-  // flat upright plane, the way the reference draws the three tRNA positions.
-  // The A site is the saturated one with a white letter; E and P are muted with
-  // dark letters, exactly as the reference distinguishes them.
-  function sitePlane(x, color, name, w, h, opacity, ink) {
+  function makeTRNA(color) {
     var g = new THREE.Group();
-    g.add(new THREE.Mesh(new THREE.PlaneGeometry(w, h),
-      new THREE.MeshBasicMaterial({ color: color, transparent: true, opacity: opacity, side: THREE.DoubleSide })));
-    var l = label(name, ink, 4.4);
-    l.position.set(0, -h / 2 + 2.2, 0.4);
+    var stem = capsule(0.16, 0.72, color);
+    stem.rotation.z = 0.12;
+    g.add(stem);
+    var foot = capsule(0.13, 0.34, color);
+    foot.position.set(0.02, -0.52, 0);
+    foot.rotation.z = -0.5;
+    g.add(foot);
+    return g;
+  }
+
+  // the reference wobbles its subunits with a vertex-shader displacement
+  function subunitMaterial() {
+    var mat = new THREE.MeshStandardMaterial({
+      color: C.subunit, roughness: 0.3, transparent: true, opacity: 0.55, depthWrite: false
+    });
+    mat.onBeforeCompile = function (shader) {
+      shader.uniforms.uTime = { value: 0 };
+      mat.userData.shader = shader;
+      shader.vertexShader = shader.vertexShader
+        .replace('#include <common>', '#include <common>\nuniform float uTime;')
+        .replace('#include <begin_vertex>',
+          '#include <begin_vertex>\n' +
+          'float n = sin(position.x * 2.4 + uTime * 0.6) * cos(position.y * 2.1 + uTime * 0.5) * sin(position.z * 2.6 + uTime * 0.4);\n' +
+          'transformed += normal * n * 0.09;');
+    };
+    return mat;
+  }
+
+  function makeSubunit(pos, scaleV, text, colour) {
+    var g = new THREE.Group();
+    g.position.set(pos[0], pos[1], pos[2]);
+    var mesh = new THREE.Mesh(new THREE.SphereGeometry(1, 64, 64), subunitMaterial());
+    mesh.scale.set(scaleV[0], scaleV[1], scaleV[2]);
+    g.add(mesh);
+    var l = label(text, colour, 1.15);
+    l.position.set(-scaleV[0] - 0.62, 0, 0);
     g.add(l);
-    g.position.set(x, -1.0, 6.4);
-    return g;
+    return { group: g, mat: mesh.material };
   }
 
-  function capsule(len, radius, color) {
+  function makeSite(x, letter) {
+    var fill = letter === 'A' ? C.siteA : letter === 'P' ? C.siteP : C.siteE;
     var g = new THREE.Group();
-    var mat = new THREE.MeshPhongMaterial({ color: color, shininess: 40 });
-    g.add(new THREE.Mesh(new THREE.CylinderGeometry(radius, radius, len, 16), mat));
-    var top = new THREE.Mesh(new THREE.SphereGeometry(radius, 16, 12), mat);
-    top.position.y = len / 2; g.add(top);
-    var bot = top.clone(); bot.position.y = -len / 2; g.add(bot);
+    g.position.set(x, -0.55, 0.45);
+    var mesh = new THREE.Mesh(new THREE.BoxGeometry(0.8, 1.5, 0.5),
+      new THREE.MeshStandardMaterial({ color: fill, roughness: 0.45 }));
+    g.add(mesh);
+    var l = label(letter, letter === 'A' ? '#fbf9fd' : '#2e2a33', 0.62);
+    l.position.set(0, 0, 0.34);
+    g.add(l);
+    siteMesh[letter] = mesh;
     return g;
   }
 
+  function setSiteActivity(active) {
+    ['E', 'P'].forEach(function (k) {
+      var fill = k === 'P' ? C.siteP : C.siteE;
+      siteMesh[k].material.emissive = new THREE.Color(active ? fill : 0x000000);
+      siteMesh[k].material.emissiveIntensity = active ? 0.45 : 0;
+    });
+  }
+
+  function beadAt(anchor, i) {
+    var t = i * 0.55;
+    return new THREE.Vector3(
+      anchor[0] + Math.sin(t) * 0.28,
+      anchor[1] + 0.5 + i * 0.28,
+      anchor[2] + Math.cos(t) * 0.28
+    );
+  }
+
+  function rebuildPeptide(count, growV, anchor, drop) {
+    while (peptideGroup.children.length) peptideGroup.remove(peptideGroup.children[0]);
+    peptideGroup.position.set(0, -drop * 3.2, drop * 0.6);
+
+    var beads = [];
+    for (var i = 0; i < count; i++) beads.push(beadAt(anchor, i));
+
+    var tip = null;
+    if (growV > 0.01) {
+      tip = beadAt(anchor, count - 1).clone().lerp(beadAt(anchor, count), growV);
+    }
+    var points = tip ? beads.concat([tip]) : beads;
+
+    if (points.length > 1) {
+      peptideGroup.add(new THREE.Line(
+        new THREE.BufferGeometry().setFromPoints(points),
+        new THREE.LineBasicMaterial({ color: '#9c8fb5', transparent: true, opacity: 0.8 })
+      ));
+    }
+    beads.forEach(function (p, i) {
+      var m = new THREE.Mesh(new THREE.SphereGeometry(0.15, 24, 24),
+        new THREE.MeshStandardMaterial({ color: C.pep[i % C.pep.length], roughness: 0.25, metalness: 0.15 }));
+      m.position.copy(p);
+      peptideGroup.add(m);
+    });
+    if (tip) {
+      var col = C.pep[count % C.pep.length];
+      var m2 = new THREE.Mesh(new THREE.SphereGeometry(0.15, 24, 24),
+        new THREE.MeshStandardMaterial({ color: col, roughness: 0.25, metalness: 0.15,
+          emissive: new THREE.Color(col), emissiveIntensity: 0.5 * (1 - growV) }));
+      m2.position.copy(tip);
+      m2.scale.setScalar(0.4 + growV * 0.6);
+      peptideGroup.add(m2);
+    }
+  }
+
+  // the page's own nafithromycin SDF, normalised to the reference's on-screen size
   function buildMolecule() {
     var g = new THREE.Group();
     var raw = window.__NAF_SDF_B64__;
@@ -245,48 +345,38 @@
     var mid = new THREE.Vector3();
     pos.forEach(function (p) { mid.add(p); });
     mid.divideScalar(na);
+    var reach = 0;
+    pos.forEach(function (p) { reach = Math.max(reach, p.distanceTo(mid)); });
+    var k = 1;
+    g.userData.fit = reach > 0 ? 0.86 / reach : 1;   // same on-screen span as the reference
 
     var sph = new THREE.SphereGeometry(1, 14, 11);
-    pos.forEach(function (p, k) {
-      if (els[k] === 'H') return;
-      var m = new THREE.Mesh(sph, new THREE.MeshPhongMaterial({ color: ATOM[els[k]] || 0x9aa3b5, shininess: 80 }));
-      m.position.copy(p).sub(mid);
-      m.scale.setScalar(els[k] === 'C' ? 0.26 : 0.30);
+    pos.forEach(function (p, i) {
+      if (els[i] === 'H') return;
+      var m = new THREE.Mesh(sph, new THREE.MeshStandardMaterial({
+        color: ATOM[els[i]] || 0x8b97a5, roughness: 0.28, metalness: 0.2,
+        emissive: new THREE.Color(ATOM[els[i]] || 0x8b97a5), emissiveIntensity: 0.18
+      }));
+      m.position.copy(p).sub(mid).multiplyScalar(k);
+      m.scale.setScalar(els[i] === 'C' ? 0.23 : 0.26);
       g.add(m);
     });
 
-    var bondMat = new THREE.MeshPhongMaterial({ color: 0x6f7480, shininess: 30 });
-    var cyl = new THREE.CylinderGeometry(0.055, 0.055, 1, 6);
+    var bondMat = new THREE.MeshStandardMaterial({ color: '#8b97a5', roughness: 0.35, metalness: 0.25 });
+    var cyl = new THREE.CylinderGeometry(0.085, 0.085, 1, 8);
     for (var b = 0; b < nb; b++) {
       var BL = lines[4 + na + b];
       var a1 = parseInt(BL.substr(0, 3), 10) - 1, a2 = parseInt(BL.substr(3, 3), 10) - 1;
       if (els[a1] === 'H' || els[a2] === 'H') continue;
-      var p1 = pos[a1].clone().sub(mid), p2 = pos[a2].clone().sub(mid);
-      var mesh = new THREE.Mesh(cyl, bondMat);
+      var p1 = pos[a1].clone().sub(mid).multiplyScalar(k);
+      var p2 = pos[a2].clone().sub(mid).multiplyScalar(k);
       var dir = new THREE.Vector3().subVectors(p2, p1);
+      var mesh = new THREE.Mesh(cyl, bondMat);
       mesh.position.copy(p1).add(dir.clone().multiplyScalar(0.5));
       mesh.scale.set(1, dir.length(), 1);
       mesh.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), dir.clone().normalize());
       g.add(mesh);
     }
-    g.scale.setScalar(0.62);
-    return g;
-  }
-
-  // the chain climbs with a gentle sway, the way a peptide threads out
-  function chainPos(i) {
-    return new THREE.Vector3(0.4 + Math.sin(i * 0.55) * 0.7, 4.7 + i * 1.55, 7.6 + Math.cos(i * 0.6) * 0.4);
-  }
-  function smooth(t) { t = Math.max(0, Math.min(1, t)); return t * t * (3 - 2 * t); }
-
-  function buildCross() {
-    var g = new THREE.Group();
-    var mat = new THREE.MeshBasicMaterial({ color: C.cross, transparent: true, opacity: 1 });
-    [-1, 1].forEach(function (s) {
-      var bar = new THREE.Mesh(new THREE.BoxGeometry(5.6, 1.55, 0.9), mat);
-      bar.rotation.z = s * Math.PI / 4;
-      g.add(bar);
-    });
     return g;
   }
 
@@ -295,74 +385,75 @@
     root = new THREE.Group();
     scene.add(root);
 
-    scene.add(new THREE.AmbientLight(0xffffff, 0.46));
-    var key = new THREE.DirectionalLight(0xffffff, 0.34); key.position.set(-8, 20, 26); scene.add(key);
-    var fill = new THREE.DirectionalLight(0xd8dcf2, 0.26); fill.position.set(18, -8, -16); scene.add(fill);
+    // The reference runs on three r165, where light intensity is roughly PI
+    // times weaker than on the r128 build this page loads. Its rig is kept
+    // intact and simply divided through, or everything renders blown out.
+    var LX = 1 / Math.PI;
+    scene.add(new THREE.AmbientLight(0xffffff, 0.75 * LX));
+    var d1 = new THREE.DirectionalLight(0xffffff, 1.5 * LX); d1.position.set(4, 6, 5); scene.add(d1);
+    var d2 = new THREE.DirectionalLight(0xcbb8ea, 0.5 * LX); d2.position.set(-5, -2, 3); scene.add(d2);
+    scene.add(new THREE.HemisphereLight(0xbcd7ff, 0x1b1030, 0.9 * LX));
+    var d3 = new THREE.DirectionalLight(0xffffff, 1.1 * LX); d3.position.set(6, 8, 6); scene.add(d3);
+    var d4 = new THREE.DirectionalLight(0x7dd3fc, 0.5 * LX); d4.position.set(-6, -4, -6); scene.add(d4);
 
-    // wide 50S over a flatter, wider 30S
-    var big = blob(11.7, 7.2, 8.0, C.sub50, 0.66);
-    big.position.set(0, 6.0, -2.2);
-    root.add(big);
-    var small = blob(10.4, 3.1, 7.0, C.sub30, 0.62);
-    small.position.set(0, -3.9, -1.6);
-    root.add(small);
+    sub50 = makeSubunit([0, 0.45, 0], [2.05, 1.5, 1.5], '50S', '#4f9d84');
+    sub30 = makeSubunit([0, -1.25, 0], [1.85, 0.8, 1.3], '30S', '#4f8fc0');
+    root.add(sub50.group, sub30.group);
 
-    root.add(sitePlane(-6.3, C.siteE, 'E', 5.0, 8.7, 1.0, '#473f58'));
-    root.add(sitePlane(0.0, C.siteP, 'P', 5.0, 8.7, 1.0, '#4c4652'));
-    root.add(sitePlane(6.3, C.siteA, 'A', 5.0, 8.7, 1.0, '#ffffff'));
+    root.add(makeSite(SITE_X.E, 'E'), makeSite(SITE_X.P, 'P'), makeSite(SITE_X.A, 'A'));
+    siteMesh.A.material.emissive = new THREE.Color(C.siteA);
+    siteMesh.A.material.emissiveIntensity = 0.45;
 
-    var l50 = label('50S', '#3f9c78', 6.2); l50.position.set(-15.4, 6.4, 7); root.add(l50);
-    var l30 = label('30S', '#4f8fc8', 6.2); l30.position.set(-15.0, -3.4, 7); root.add(l30);
+    mrnaGroup = new THREE.Group();
+    var base = new THREE.Mesh(new THREE.BoxGeometry(7.4, 0.09, 0.22),
+      new THREE.MeshStandardMaterial({ color: C.mrna, roughness: 0.6, metalness: 0.1 }));
+    base.position.set(0, -1.95, 0);
+    mrnaGroup.add(base);
+    var CODONS = 'UGCAUGAACGAUGCUACGAUCGUCUAGAUGAU'.split('');
+    CODONS.forEach(function (letter, i) {
+      var col = letter === 'A' ? '#e05c5c' : letter === 'U' ? '#e8a33d' : letter === 'G' ? '#4c8fd6' : '#4bab84';
+      var nuc = new THREE.Mesh(new THREE.BoxGeometry(0.19, 0.28, 0.18),
+        new THREE.MeshStandardMaterial({ color: col, roughness: 0.35 }));
+      nuc.position.set(-3.55 + i * 0.23, -1.72, 0);
+      mrnaGroup.add(nuc);
+    });
+    root.add(mrnaGroup);
 
-    // mRNA: a long strip that runs well past the ribosome on both sides
-    strandGroup = new THREE.Group();
-    var bar = new THREE.Mesh(new THREE.BoxGeometry(40, 0.5, 1.9),
-      new THREE.MeshPhongMaterial({ color: C.bar, shininess: 20 }));
-    bar.position.y = -7.9;
-    strandGroup.add(bar);
-    for (var c = 0; c < 34; c++) {
-      var blk = new THREE.Mesh(new THREE.BoxGeometry(1.05, 2.0, 1.6),
-        new THREE.MeshPhongMaterial({ color: C.codon[c % C.codon.length], shininess: 40 }));
-      blk.position.set(-19.4 + c * 1.16, -6.6, 0.9);
-      strandGroup.add(blk);
-    }
-    root.add(strandGroup);
+    pT = makeTRNA(C.trna);
+    aT = makeTRNA(C.trnaA);
+    root.add(pT, aT);
 
-    // tRNAs standing in the three sites
-    trnaA = capsule(8.0, 0.8, C.trna); trnaA.rotation.z = -0.1; trnaA.position.set(5.6, -0.8, 7.4); root.add(trnaA);
-    trnaP = capsule(7.6, 0.78, C.trna); trnaP.position.set(0.2, -1.9, 7.4); root.add(trnaP);
-    trnaE = capsule(7.0, 0.76, C.trna); trnaE.position.set(-4.9, -2.4, 7.4); trnaE.visible = false; root.add(trnaE);
-    // the peptidyl-tRNA that dissociates once the drug has stalled the ribosome
-    trnaDrop = capsule(7.4, 0.78, C.trna); trnaDrop.visible = false; root.add(trnaDrop);
+    peptideGroup = new THREE.Group();
+    root.add(peptideGroup);
 
-    // the nascent peptide chain threading up out of the exit tunnel
-    for (var a = 0; a < MAX_CHAIN; a++) {
-      var sp = new THREE.Mesh(new THREE.SphereGeometry(0.84, 20, 16),
-        new THREE.MeshPhongMaterial({ color: C.aa[a % C.aa.length], shininess: 70 }));
-      sp.position.copy(chainPos(a));
-      sp.visible = false;
-      chain.push(sp);
-      root.add(sp);
-    }
+    drugOuter = new THREE.Group();
+    drugSpin = new THREE.Group();
+    var mol = buildMolecule();
+    drugSpin.add(mol);
+    drugSpin.scale.setScalar(mol.userData.fit || 0.1);
+    drugOuter.add(drugSpin);
+    root.add(drugOuter);
 
-    // docked at the tunnel mouth; AWAY is clear of the subunit, up and to the right
-    DOCK = new THREE.Vector3(11.0, 10.6, 4.5);
-    AWAY = new THREE.Vector3(34.0, 22.0, 14.0);
-
-    drugGroup = new THREE.Group();
-    drugGroup.add(buildMolecule());
-    drugGroup.position.copy(DOCK);
-    root.add(drugGroup);
-
-    crossGroup = buildCross();
-    crossGroup.position.set(10.6, 5.4, 8.5);
-    root.add(crossGroup);
+    blockGroup = new THREE.Group();
+    blockGroup.position.set(1.75, 0.45, 1.7);
+    blockGroup.rotation.z = Math.PI / 4;
+    [0, Math.PI / 2].forEach(function (rz) {
+      var bar = new THREE.Mesh(new THREE.BoxGeometry(0.72, 0.16, 0.16),
+        new THREE.MeshStandardMaterial({ color: C.block, emissive: new THREE.Color(C.block), emissiveIntensity: 0.5 }));
+      bar.rotation.z = rz;
+      blockGroup.add(bar);
+    });
+    root.add(blockGroup);
 
     renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     renderer.setClearColor(0x000000, 0);
+    if (THREE.sRGBEncoding !== undefined) renderer.outputEncoding = THREE.sRGBEncoding;
     HOST.appendChild(renderer.domElement);
-    camera = new THREE.PerspectiveCamera(40, 1, 0.1, 400);
+    camera = new THREE.PerspectiveCamera(42, 1, 0.1, 100);
+
+    rebuildPeptide(chain, grow, [SITE_X.P, 0, 0.6], dropped);
+    setSiteActivity(!drugOn);
     resize();
     applyState(false);
   }
@@ -373,13 +464,9 @@
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
     camera.updateProjectionMatrix();
-    // a narrow frame needs the camera further back, or the mRNA strip and the
-    // 50S/30S labels run off the sides
     if (!userZoomed) {
-      var a = Math.max(0.8, Math.min(1.9, camera.aspect));
-      // fit to width, but do not keep backing off on tall/narrow frames or the
-      // scene ends up marooned in empty space
-      dist = Math.max(62, Math.min(94, 115 / a));
+      var a = Math.max(0.75, Math.min(1.9, camera.aspect));
+      dist = Math.max(7.0, Math.min(11.5, 11.4 / a));
     }
   }
 
@@ -401,114 +488,120 @@
       hide.hidden = true; hide.classList.remove('is-on');
       show.hidden = false;
       show.classList.remove('is-on');
-      void show.offsetWidth;              // restart the entrance
+      void show.offsetWidth;
       show.classList.add('is-on');
     }
+    if (siteMesh.E) setSiteActivity(!drugOn);
 
     animFrom = drugT;
     animTo = drugOn ? 1 : 0;
     animStart = (typeof performance !== 'undefined' ? performance.now() : Date.now());
-    if (!animate) { drugT = animTo; animFrom = animTo; }
+    if (!animate) { drugT = animTo; animFrom = animTo; blockScale = animTo; }
   }
 
-  var SITE_X = { A: 6.3, P: 0.0, E: -6.3 };
-
-  function frame() {
+  var lastT = 0;
+  function frame(now) {
     raf = requestAnimationFrame(frame);
-    if (!visible) return;
-    clock += 0.016;
+    if (!visible) { lastT = now; return; }
+    var dt = Math.min((now - lastT) / 1000 || 0.016, 0.05);
+    lastT = now;
+    elapsed += dt;
 
-    // ---- the drug's journey in or out of the binding site ----
-    var now = (typeof performance !== 'undefined' ? performance.now() : Date.now());
-    var k = smooth((now - animStart) / ANIM_MS);
-    drugT = animFrom + (animTo - animFrom) * k;
-
-    drugGroup.visible = drugT > 0.015;                 // gone only once it is clear
-    if (drugGroup.visible) {
-      var arc = Math.sin(Math.PI * drugT) * 3.4;       // a slight curve rather than a straight line
-      drugGroup.position.set(
-        AWAY.x + (DOCK.x - AWAY.x) * drugT,
-        AWAY.y + (DOCK.y - AWAY.y) * drugT + arc,
-        AWAY.z + (DOCK.z - AWAY.z) * drugT
-      );
-      var travelling = drugT > 0.02 && drugT < 0.98;
-      drugGroup.rotation.y += travelling ? 0.045 : 0.005;   // tumbles on the way, settles once docked
-      drugGroup.rotation.x = (1 - drugT) * 0.9;
-      drugGroup.scale.setScalar(0.86 + drugT * 0.14);
-    }
-
-    // In the reference the cross appears the instant the state flips, while the
-    // molecule is still on its way in — so it fades fast, and a separate value
-    // tracks how seated the drug actually is.
-    var crossIn = smooth(drugT / 0.12);
-    crossGroup.visible = crossIn > 0.01;
-    crossGroup.traverse(function (o) { if (o.material) o.material.opacity = crossIn; });
-    var bound = smooth((drugT - 0.45) / 0.45);
+    var Y = -0.2, Z = 0.95;
+    var rebuild = false;
 
     if (drugOn) {
-      // Stalled. The A-site tRNA is held and tilted aside, and the short,
-      // incomplete peptidyl-tRNA periodically dissociates and drops away below
-      // the ribosome before another abortive attempt begins.
-      var ABORT = 4.2;
-      var a = (clock % ABORT) / ABORT;
-      var fall = smooth((a - 0.55) / 0.35);        // 0 while it sits, 1 once it has fallen clear
-      var drop = fall * 15.0;
+      stall += dt;
+      var s = stall;
+      aT.visible = true;
+      aT.position.set(SITE_X.A + 0.25 + Math.sin(s * 16) * 0.05, Y + 0.15, Z + 0.35);
+      aT.rotation.z = Math.sin(s * 13) * 0.09;
+      aT.scale.setScalar(1);
 
-      trnaA.visible = true; trnaE.visible = false;
-      trnaA.position.set(SITE_X.A + 0.5, -0.6 + Math.sin(clock * 3) * 0.12, 7.9);
-      trnaA.rotation.z = -0.42 + Math.sin(clock * 3) * 0.02;   // shoved aside by the drug
+      // every fourth second the incomplete peptidyl-tRNA lets go and drops away
+      var cyc = s % 4;
+      var drop = cyc > 3 ? easeInOut(cyc - 3) : 0;
+      pT.visible = true;
+      pT.position.set(SITE_X.P, Y - drop * 3.2, Z + drop * 0.6);
+      pT.rotation.z = drop * 1.2 + Math.sin(s * 9) * 0.04;
+      pT.scale.setScalar(1);
 
-      trnaP.visible = fall < 0.02;
-      trnaP.position.set(SITE_X.P, -1.9, 7.4);
-      trnaP.rotation.z = 0;
-
-      trnaDrop.visible = fall > 0.02 && fall < 0.995;
-      trnaDrop.position.set(SITE_X.P + fall * 0.8, -1.9 - drop, 7.4);
-      trnaDrop.rotation.z = -0.5 - fall * 1.1;                 // tumbles as it falls
-
-      strandGroup.position.x = 0;
-
-      // never more than a few residues, and only once the drug has seated
-      var held = 3 + Math.round((1 - bound) * 3);
-      chain.forEach(function (sp, i) {
-        sp.visible = i < held && fall < 0.995;
-        sp.scale.setScalar(1);
-        var q = chainPos(i);
-        sp.position.set(q.x + fall * 0.6, q.y - drop + Math.sin(clock * 2 + i) * 0.06, q.z);
-      });
-
-      crossGroup.rotation.z = Math.sin(clock * 2.2) * 0.04;
-      crossGroup.scale.setScalar((0.85 + bound * 0.15) * (1 + Math.sin(clock * 2.6) * 0.05));
+      if (Math.abs(drop - dropped) > 0.02) { dropped = drop; rebuild = true; }
+      if (chain !== 3) { chain = 3; rebuild = true; }
+      if (grow !== 0) { grow = 0; rebuild = true; }
+      phase = 0; tPhase = 0;
     } else {
-      // one elongation cycle: A -> P -> E, the strip advances a codon,
-      // and the peptide picks up another residue
-      var CYCLE = 2.6;
-      var t = (clock % CYCLE) / CYCLE;
-      var ease = t < 0.55 ? (1 - Math.cos(Math.PI * (t / 0.55))) / 2 : 1;
+      stall = 0;
+      if (dropped !== 0) { dropped = 0; rebuild = true; }
 
-      trnaA.visible = true; trnaP.visible = true; trnaE.visible = true;
-      trnaDrop.visible = false;
-      trnaA.rotation.z = -0.1;
-      trnaP.rotation.z = 0;
-      trnaA.position.set(SITE_X.A + (SITE_X.P - SITE_X.A) * ease, -0.8 + ease * -0.7, 7.4);
-      trnaP.position.set(SITE_X.P + (SITE_X.E - SITE_X.P) * ease, -1.9 + ease * -0.5, 7.4);
-      trnaE.position.set(SITE_X.E - ease * 5.2, -2.4, 7.4);
-      trnaE.scale.setScalar(1 - ease * 0.55);
-      strandGroup.position.x = -ease * 1.16;
+      tPhase += dt;
+      var dur = PH[phase] || 1;
+      var k = Math.min(tPhase / dur, 1);
+      var e = easeInOut(k);
 
-      var grown = Math.floor(clock / CYCLE) % (chain.length + 1);
-      chain.forEach(function (sp, i) {
-        sp.visible = i <= grown;
-        var pop = (i === grown) ? smooth((clock % CYCLE) / 0.6) : 1;
-        sp.scale.setScalar(pop);
-        var q = chainPos(i);
-        sp.position.set(q.x, q.y, q.z);
-      });
+      var aPos = [SITE_X.A, Y, Z], pPos = [SITE_X.P, Y, Z], pScale = 1;
+
+      if (phase === 0) {
+        // a fresh aminoacyl-tRNA arrives at the A site
+        aPos = [lerp(3.6, SITE_X.A, e), lerp(1.1, Y, e), lerp(2.6, Z, e)];
+        if (grow !== 0) { grow = 0; rebuild = true; }
+      } else if (phase === 1) {
+        // peptide bond forms — the chain grows by one residue
+        var q = Math.round(k * 12) / 12;
+        if (q !== grow) { grow = q; rebuild = true; }
+      } else if (phase === 2) {
+        // translocation: A -> P and P -> E together
+        aPos = [lerp(SITE_X.A, SITE_X.P, e), Y + Math.sin(e * Math.PI) * 0.16, Z];
+        pPos = [lerp(SITE_X.P, SITE_X.E, e), Y + Math.sin(e * Math.PI) * 0.16, Z];
+        if (grow !== 0) { grow = 0; rebuild = true; }
+      } else {
+        // the deacylated tRNA slides out of the E site to the left and fades
+        aPos = [SITE_X.P, Y, Z];
+        pPos = [lerp(SITE_X.E, -2.9, e), Y - e * 0.5, Z + e * 0.8];
+        pScale = 1 - e * 0.9;
+      }
+
+      aT.visible = true;
+      aT.position.set(aPos[0], aPos[1], aPos[2]);
+      aT.rotation.z = Math.sin(elapsed * 2) * 0.05;
+      aT.scale.setScalar(1);
+
+      pT.position.set(pPos[0], pPos[1], pPos[2]);
+      pT.scale.setScalar(Math.max(pScale, 0.001));
+      pT.visible = pScale > 0.02;
+      pT.rotation.z = Math.sin(elapsed * 1.6) * 0.04;
+
+      if (k >= 1) {
+        tPhase = 0;
+        if (phase === 1) { chain = chain >= 9 ? 3 : chain + 1; grow = 0; rebuild = true; }
+        phase = (phase + 1) % PH.length;
+      }
     }
 
+    if (rebuild) rebuildPeptide(chain, grow, [SITE_X.P, 0, Z - 0.35], dropped);
+
+    // the drug travels in and out rather than appearing on the spot
+    var nowMs = (typeof performance !== 'undefined' ? performance.now() : Date.now());
+    drugT = animFrom + (animTo - animFrom) * smooth((nowMs - animStart) / ANIM_MS);
+    var a = drugT;
+    drugOuter.position.set(3.1 - 1.15 * a, 1.35 - 0.2 * a, 1.9 - 0.15 * a);
+    drugOuter.scale.setScalar(0.001 + a);
+    drugOuter.rotation.y = (1 - a) * 1.6;
+    drugOuter.visible = a > 0.01;
+    drugSpin.rotation.y = elapsed * 0.35;
+    drugSpin.rotation.x = Math.sin(elapsed * 0.4) * 0.12;
+
+    blockScale = damp(blockScale, drugOn ? 1 : 0, 6, dt);
+    blockGroup.scale.setScalar(blockScale * (1 + Math.sin(elapsed * 4) * 0.06));
+    blockGroup.visible = blockScale > 0.02;
+
+    [sub50.mat, sub30.mat].forEach(function (m) {
+      if (m.userData.shader) m.userData.shader.uniforms.uTime.value = elapsed;
+    });
+
     var cy = Math.cos(pitch);
-    camera.position.set(Math.sin(yaw) * cy * dist, Math.sin(pitch) * dist + 1.0, Math.cos(yaw) * cy * dist);
-    camera.lookAt(0, -1.2, 0);
+    camera.position.set(Math.sin(yaw) * cy * dist, Math.sin(pitch) * dist + 0.4, Math.cos(yaw) * cy * dist);
+    camera.lookAt(0, -0.35, 0);
     renderer.render(scene, camera);
   }
 
@@ -519,7 +612,7 @@
   HOST.addEventListener('pointermove', function (e) {
     if (!dragging) return;
     yaw -= (e.clientX - lastX) * 0.008;
-    pitch = Math.max(-1.1, Math.min(1.1, pitch + (e.clientY - lastY) * 0.006));
+    pitch = Math.max(-0.55, Math.min(0.75, pitch + (e.clientY - lastY) * 0.005));
     lastX = e.clientX; lastY = e.clientY;
   });
   ['pointerup', 'pointercancel', 'pointerleave'].forEach(function (ev) {
@@ -528,16 +621,16 @@
   HOST.addEventListener('wheel', function (e) {
     e.preventDefault();
     userZoomed = true;
-    dist = Math.max(40, Math.min(150, dist + (e.deltaY > 0 ? 4 : -4)));
+    dist = Math.max(5.5, Math.min(14, dist + (e.deltaY > 0 ? 0.6 : -0.6)));
   }, { passive: false });
 
   document.getElementById('rib-on').addEventListener('click', function () {
     if (drugOn) return;
-    drugOn = true; applyState(true);
+    drugOn = true; stall = 0; applyState(true);
   });
   document.getElementById('rib-off').addEventListener('click', function () {
     if (!drugOn) return;
-    drugOn = false; clock = 0; applyState(true);
+    drugOn = false; phase = 0; tPhase = 0; applyState(true);
   });
   window.addEventListener('resize', resize);
 
@@ -547,7 +640,8 @@
     build();
     var l = document.getElementById('rib-loader');
     if (l) l.style.display = 'none';
-    frame();
+    lastT = (typeof performance !== 'undefined' ? performance.now() : Date.now());
+    raf = requestAnimationFrame(frame);
   }
   function fail(m) {
     var l = document.getElementById('rib-loader');
@@ -563,6 +657,7 @@
     document.head.appendChild(sc);
   }
 
+  // built only when the section nears the viewport, idle while it is away
   if ('IntersectionObserver' in window) {
     new IntersectionObserver(function (entries) {
       entries.forEach(function (en) {
