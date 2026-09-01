@@ -21,10 +21,16 @@
     .rib-toggle button{font-family:'Acumin Variable',sans-serif;font-size:.76rem;font-weight:800;letter-spacing:.02em;color:var(--text-grey);
       background:transparent;border:0;border-radius:999px;padding:8px 16px;cursor:pointer;transition:all .22s ease;white-space:nowrap}
     .rib-toggle button[aria-pressed="true"]{background:var(--brand-navy);color:#fff;box-shadow:0 6px 16px -6px rgba(41,57,127,.7)}
-    .rib-canvas{position:relative;flex:1;min-height:430px;margin:14px;border-radius:14px;overflow:hidden;cursor:grab;
+    /* the reference's own canvas metrics */
+    .rib-canvas{position:relative;height:26rem;margin:14px;border-radius:14px;overflow:hidden;cursor:grab;
       background:radial-gradient(circle at 50% 35%,#fdfcfe,#ece6f3)}
+    @media(min-width:768px){.rib-canvas{height:34rem}}
     .rib-canvas:active{cursor:grabbing}
-    .rib-canvas canvas{display:block;width:100%;height:100%}
+    .rib-canvas canvas{display:block}
+    /* labels are drawn by CSS2DRenderer, so they are real DOM nodes */
+    #moa .scene-subunit-label{font-family:'Acumin Variable',sans-serif;font-weight:800;font-size:1.15rem;letter-spacing:.06em;white-space:nowrap;user-select:none}
+    #moa .scene-site-label{font-family:'Acumin Variable',sans-serif;font-weight:800;font-size:1.1rem;color:#2e2a33;user-select:none}
+    #moa .scene-site-label.is-inverted{color:#fbf9fd}
     .rib-hint{position:absolute;left:14px;bottom:12px;z-index:3;pointer-events:none;font-family:'Acumin Variable',sans-serif;
       font-size:.66rem;font-weight:700;letter-spacing:.04em;color:rgba(41,57,127,.5)}
     .rib-loader{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:4;
@@ -59,7 +65,6 @@
 
     @media(max-width:980px){
       .rib-board{grid-template-columns:1fr}
-      .rib-canvas{min-height:360px}
       .rib-legend{grid-template-columns:1fr}
     }
   </style>
@@ -140,533 +145,567 @@
 
   </div>
 </section>
-<script>window.__NAF_SDF_B64__ = "CiAgICAgUkRLaXQgICAgICAgICAgM0QKCjEyMjEyNiAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMDk5OSBWMjAwMAogICAgMS4xMDQ3ICAgLTIuMTcwMiAgIC01LjU1ODAgQyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDEuODUzMyAgIC0xLjExMzQgICAtNC43NTY2IEMgICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgICAxLjM2MTggICAtMC44NjgwICAgLTMuMzEyOCBDICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAgMS40NzQ2ICAgLTIuMDgzMiAgIC0yLjMwNjYgQyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDEuODk4NiAgIC0xLjYwNDMgICAtMC44NjkzIEMgICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgICAwLjg4NTcgICAtMS44MjMyICAgIDAuMjk3MyBDICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAgMS4yMjMzICAgLTAuODgxNiAgICAxLjQ2NjcgQyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDIuMDgwMCAgIC0xLjIyNTEgICAgMi4yODcwIE8gICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgICAwLjYxNTggICAgMC41MzA1ICAgIDEuNTgzNyBDICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtMC42NjQzICAgIDAuODQ3NCAgICAwLjc4MDYgQyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTIuMDQ5MiAgICAwLjY2MjIgICAgMS40NjQ5IEMgICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC0zLjE5MzUgICAgMC40MzQ5ICAgIDAuMzc4NiBDICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtMy40OTA4ICAgIDEuNDk3MyAgIC0wLjcwOTIgQyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTIuMzM2NCAgICAxLjkxMTMgICAtMS42NDU1IEMgICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC0xLjgxOTAgICAgMy4wMjY3ICAgLTEuNTA2MCBPICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtMS44NTUwICAgIDEuMDAyNSAgIC0yLjc4NDcgQyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTAuMzc1OSAgICAwLjY2OTAgICAtMi42NTE2IEMgICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgICAwLjQyNDQgICAgMS4yODAwICAgLTEuOTYxOCBPICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtMC4wMTg0ICAgLTAuNDAzNSAgIC0zLjM5OTUgTyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTIuNzE0NCAgIC0wLjIzMTMgICAtMy4wNTE2IEMgICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC00LjIwMTQgICAgMi43NTE2ICAgLTAuMTc5MSBDICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtNC40MjkzICAgIDAuMjE3NCAgICAxLjA5NDYgTyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTUuMjMzNyAgIC0wLjg4NzIgICAgMC42ODk2IEMgICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC02LjQ3OTkgICAtMC40MDk3ICAgLTAuMDkxNiBDICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtNy43NDM4ICAgLTAuNDQzMSAgICAwLjgwOTUgQyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTcuMzY0MCAgICAwLjA5NDEgICAgMi4xOTc5IEMgICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC02LjI5ODMgICAtMC44MTIzICAgIDIuODMzMSBDICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtNS42MTc5ICAgLTEuNjE5NiAgICAxLjg2MDUgTyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTYuOTMwMCAgIC0xLjc2NDQgICAgMy44NDc5IEMgICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC04LjkxNDAgICAgMC4xODE5ICAgIDAuMTM1NyBOICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtOC44MTE2ICAgIDEuNjM3MiAgIC0wLjAwOTQgQyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAtMTAuMTczOSAgIC0wLjE2NTEgICAgMC43OTk3IEMgICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC02LjY5NDQgICAtMS4yMjY5ICAgLTEuMjU1NyBPICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtMi4wMzM2ICAgLTAuNjA2MyAgICAyLjM1NTcgQyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTIuNDM4NSAgICAxLjcwMjMgICAgMi4zNzg3IE8gICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC0xLjY5NDkgICAgMi45MDg5ICAgIDIuNDQzNiBDICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAgMS43MjEyICAgIDEuNTQxOSAgICAxLjI0NjMgQyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDAuNzkzNSAgIC0zLjI3MDYgICAgMC44MTM0IEMgICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgICAzLjI2OTYgICAtMi4yNjgzICAgLTAuNjIxMyBDICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAgMy40MDgwICAgLTMuMjMyMyAgIC0xLjc1NjMgQyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDQuMjA3NiAgIC00LjE1MzggICAtMS44MDg0IE8gICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgICAyLjU0MDEgICAtMi45NDY1ICAgLTIuNzUzOSBPICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAgNC40OTU4ICAgLTEuMzU3MCAgIC0wLjU1MDggQyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDQuMzQwOCAgIC0wLjA2MTUgICAtMC41Mjc1IE4gICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgICA1LjYwNzkgICAgMC41NjkxICAgLTAuNTA0MiBPICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAgNS42NTYzICAgIDEuNTUxNSAgICAwLjU0MzQgQyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDUuMjI2MSAgICAyLjkwNTMgICAgMC4wMDMxIEMgICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgICA3LjA2NzYgICAgMS41NDU4ICAgIDEuMDY1MiBDICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAgNy4zOTIwICAgIDEuMzIxMiAgICAyLjMyMzEgTiAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDguNzU4MSAgICAxLjI4MjMgICAgMi41MTg4IE4gICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgICA5LjQzNzcgICAgMS40ODkxICAgIDEuNDAzNCBDICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAgOC40MjU5ICAgIDEuNzczMSAgICAwLjAzOTIgUyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgMTAuOTA0MyAgICAxLjQ1NjMgICAgMS4yOTA3IEMgICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIDExLjY5ODIgICAgMS4xNDE0ICAgIDIuMzkzOSBDICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAxMy4wODQ4ICAgIDEuMTAwMiAgICAyLjI0MjUgQyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgMTMuNjQxMCAgICAxLjM3NzIgICAgMS4wMDIxIEMgICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIDEyLjc4NjcgICAgMS42Nzg5ICAgLTAuMDQ1NCBDICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAxMS40Mzk2ICAgIDEuNzIzOSAgICAwLjA2OTggTiAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDUuNzIzNyAgIC0xLjk2NDkgICAtMC40ODQ0IE4gICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgICAwLjIwNzAgICAtMi45NTc2ICAgLTIuMzYxMiBDICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAgMS40MTk3ICAgLTIuMTI2NCAgIC02LjYwNDggSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDEuMzMwNyAgIC0zLjE3NDggICAtNS4xOTIwIEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgICAwLjAyMTIgICAtMi4wMTY0ICAgLTUuNTIzNiBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAgMi45MTQ4ICAgLTEuMzY1OCAgIC00Ljc0ODggSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDEuNzU5MCAgIC0wLjE2ODEgICAtNS4zMDYzIEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgICAyLjAwNzQgICAtMC4wNTg1ICAgLTIuOTU5NSBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAgMi4wMjk2ICAgLTAuNTIxMyAgIC0wLjkxNzQgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTAuMTEzNyAgIC0xLjU4NjYgICAtMC4wNTQxIEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgICAwLjQwMjEgICAgMC42NjYwICAgIDIuNjUwNCBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtMC41OTQ1ICAgIDEuODc0OSAgICAwLjQyMTIgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTAuNjc3NyAgICAwLjIyNzYgICAtMC4xMDQ0IEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC0yLjkxMjEgICAtMC40ODgwICAgLTAuMTM4MyBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtNC4yNDg3ICAgIDEuMDYzNiAgIC0xLjM3MzMgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTEuOTMwNCAgICAxLjYyNzQgICAtMy42ODU2IEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC0yLjYyNzggICAtMC45NzA1ICAgLTIuMjUzMSBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtMy43NzIwICAgIDAuMDMwMyAgIC0zLjE2ODEgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTIuNDEyMSAgIC0wLjcyMzUgICAtMy45ODcyIEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC0zLjU3MTEgICAgMy4zMzcwICAgIDAuNDkyOSBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtNC40NzgyICAgIDMuNDE4NyAgIC0xLjAxMDAgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTUuMTIyOSAgICAyLjUwNjggICAgMC4zNTk5IEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC00LjY1MTMgICAtMS41ODIwICAgIDAuMDc4OSBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtNi4zMDIzICAgIDAuNTk1MSAgIC0wLjQ3NDggSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTguMDEwOCAgIC0xLjUwNDggICAgMC45MjM0IEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC04LjIzMTEgICAgMC4yMDA2ICAgIDIuODYxNyBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtNi45Mzk4ICAgIDEuMTAzMCAgICAyLjA5OTcgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTUuNTU1NSAgIC0wLjIwMzMgICAgMy4zNjI1IEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC03Ljc2OTYgICAtMi4zMDk0ICAgIDMuMzkzNiBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtNi4yMDYzICAgLTIuNTE4OSAgICA0LjE4NjAgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTcuMzA1NiAgIC0xLjIyMDIgICAgNC43MjI4IEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC04LjA0MjIgICAgMS44OTY4ICAgLTAuNzUyMyBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtOC41ODE1ICAgIDIuMTQ5NCAgICAwLjkzNDIgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTkuNzQ3NCAgICAyLjA2MTcgICAtMC4zODYyIEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgLTEwLjI2NDUgICAgMC4yNjYxICAgIDEuODAxOCBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogIC0xMS4wMTk2ICAgIDAuMTg0MSAgICAwLjE5OTIgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAtMTAuMjg0NiAgIC0xLjI1MjcgICAgMC44Nzc5IEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC03LjY3MDYgICAtMS4zMDg5ICAgLTEuMzQ1MiBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtMS4zMTMyICAgLTAuNTI3NCAgICAzLjE3NjMgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTIuOTk0OCAgIC0wLjc2NjYgICAgMi44NTQ0IEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC0xLjc5ODcgICAtMS41MDMyICAgIDEuNzczNiBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtMi4xNTUwICAgIDMuNTQ4OCAgICAzLjIwNDEgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTAuNjU4NiAgICAyLjczMDkgICAgMi43MzEyIEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC0xLjc0MjUgICAgMy40NDcxICAgIDEuNDk0NyBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAgMS40NDA1ICAgIDIuNTUyNiAgICAxLjU4MzQgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDIuNjYwOCAgICAxLjI4NDYgICAgMS43NDk4IEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgICAxLjkyMDMgICAgMS41ODUyICAgIDAuMTY3MyBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtMC4yNTcwICAgLTMuNTIzOSAgICAxLjAxNjggSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDEuMTYyNSAgIC00LjAwNjkgICAgMC4wOTk1IEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgICAxLjMzMjkgICAtMy40MzY0ICAgIDEuNzU1MCBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAgMy4yNjgyICAgLTIuODQ5OSAgICAwLjMwNzEgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDQuOTg5NCAgICAxLjI1NDYgICAgMS4zNjU3IEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgICA1Ljg2NjkgICAgMy4yMzQwICAgLTAuODIxOCBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAgNS4yNDY1ICAgIDMuNjc1NiAgICAwLjc3ODMgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDQuMjA5MiAgICAyLjg1MDMgICAtMC40MDE2IEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIDExLjI0NjUgICAgMC45MjM2ICAgIDMuMzYxNCBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAxMy43MTkyICAgIDAuODU1OSAgICAzLjA5MDkgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgMTQuNzE0MCAgICAxLjM1MzcgICAgMC44NTE3IEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIDEzLjE3MjkgICAgMS44OTkxICAgLTEuMDM4NyBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAgNi41MTE0ICAgLTEuMzc2NyAgIC0wLjIzMTcgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDUuODAyNiAgIC0yLjk1NjggICAtMC4yNjczIEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC0wLjY3NDMgICAtMi40NzE3ICAgLTEuOTM1NiBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtMC4wNTAxICAgLTMuMjMwMiAgIC0zLjM4NjIgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDAuMzYwMSAgIC0zLjkxNjkgICAtMS44NTc1IEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgMSAgMiAgMSAgMAogIDIgIDMgIDEgIDAKICAzICA0ICAxICAwCiAgNCAgNSAgMSAgMAogIDUgIDYgIDEgIDAKICA2ICA3ICAxICAwCiAgNyAgOCAgMiAgMAogIDcgIDkgIDEgIDAKICA5IDEwICAxICAwCiAxMCAxMSAgMSAgMAogMTEgMTIgIDEgIDAKIDEyIDEzICAxICAwCiAxMyAxNCAgMSAgMAogMTQgMTUgIDIgIDAKIDE0IDE2ICAxICAwCiAxNiAxNyAgMSAgMAogMTcgMTggIDIgIDAKIDE3IDE5ICAxICAwCiAxNiAyMCAgMSAgMAogMTMgMjEgIDEgIDAKIDEyIDIyICAxICAwCiAyMiAyMyAgMSAgMAogMjMgMjQgIDEgIDAKIDI0IDI1ICAxICAwCiAyNSAyNiAgMSAgMAogMjYgMjcgIDEgIDAKIDI3IDI4ICAxICAwCiAyNyAyOSAgMSAgMAogMjUgMzAgIDEgIDAKIDMwIDMxICAxICAwCiAzMCAzMiAgMSAgMAogMjQgMzMgIDEgIDAKIDExIDM0ICAxICAwCiAxMSAzNSAgMSAgMAogMzUgMzYgIDEgIDAKICA5IDM3ICAxICAwCiAgNiAzOCAgMSAgMAogIDUgMzkgIDEgIDAKIDM5IDQwICAxICAwCiA0MCA0MSAgMiAgMAogNDAgNDIgIDEgIDAKIDM5IDQzICAxICAwCiA0MyA0NCAgMiAgMwogNDQgNDUgIDEgIDAKIDQ1IDQ2ICAxICAwCiA0NiA0NyAgMSAgMAogNDYgNDggIDEgIDAKIDQ4IDQ5ICAyICAwCiA0OSA1MCAgMSAgMAogNTAgNTEgIDIgIDAKIDUxIDUyICAxICAwCiA1MSA1MyAgMSAgMAogNTMgNTQgIDIgIDAKIDU0IDU1ICAxICAwCiA1NSA1NiAgMiAgMAogNTYgNTcgIDEgIDAKIDU3IDU4ICAyICAwCiA0MyA1OSAgMSAgMAogIDQgNjAgIDEgIDAKIDE5ICAzICAxICAwCiA0MiAgNCAgMSAgMAogMjggMjMgIDEgIDAKIDUyIDQ4ICAxICAwCiA1OCA1MyAgMSAgMAogIDEgNjEgIDEgIDAKICAxIDYyICAxICAwCiAgMSA2MyAgMSAgMAogIDIgNjQgIDEgIDAKICAyIDY1ICAxICAwCiAgMyA2NiAgMSAgMAogIDUgNjcgIDEgIDAKICA2IDY4ICAxICAwCiAgOSA2OSAgMSAgMAogMTAgNzAgIDEgIDAKIDEwIDcxICAxICAwCiAxMiA3MiAgMSAgMAogMTMgNzMgIDEgIDAKIDE2IDc0ICAxICAwCiAyMCA3NSAgMSAgMAogMjAgNzYgIDEgIDAKIDIwIDc3ICAxICAwCiAyMSA3OCAgMSAgMAogMjEgNzkgIDEgIDAKIDIxIDgwICAxICAwCiAyMyA4MSAgMSAgMAogMjQgODIgIDEgIDAKIDI1IDgzICAxICAwCiAyNiA4NCAgMSAgMAogMjYgODUgIDEgIDAKIDI3IDg2ICAxICAwCiAyOSA4NyAgMSAgMAogMjkgODggIDEgIDAKIDI5IDg5ICAxICAwCiAzMSA5MCAgMSAgMAogMzEgOTEgIDEgIDAKIDMxIDkyICAxICAwCiAzMiA5MyAgMSAgMAogMzIgOTQgIDEgIDAKIDMyIDk1ICAxICAwCiAzMyA5NiAgMSAgMAogMzQgOTcgIDEgIDAKIDM0IDk4ICAxICAwCiAzNCA5OSAgMSAgMAogMzYxMDAgIDEgIDAKIDM2MTAxICAxICAwCiAzNjEwMiAgMSAgMAogMzcxMDMgIDEgIDAKIDM3MTA0ICAxICAwCiAzNzEwNSAgMSAgMAogMzgxMDYgIDEgIDAKIDM4MTA3ICAxICAwCiAzODEwOCAgMSAgMAogMzkxMDkgIDEgIDAKIDQ2MTEwICAxICAwCiA0NzExMSAgMSAgMAogNDcxMTIgIDEgIDAKIDQ3MTEzICAxICAwCiA1NDExNCAgMSAgMAogNTUxMTUgIDEgIDAKIDU2MTE2ICAxICAwCiA1NzExNyAgMSAgMAogNTkxMTggIDEgIDAKIDU5MTE5ICAxICAwCiA2MDEyMCAgMSAgMAogNjAxMjEgIDEgIDAKIDYwMTIyICAxICAwCk0gIEVORAo=";</script>
-<script>
-/* Interactive 70S ribosome.
+<script type="module">
+/* Nafithromycin ribosome scene.
 
-   Geometry, palette and the translation state machine are ported directly from
-   the reference implementation (nafithromycin-moa.html) rather than eyeballed,
-   so proportions and timings match it exactly. Two deliberate differences:
-   the molecule is built from this page's real nafithromycin SDF instead of a
-   flattened coordinate list, and labels are sprites rather than CSS2D objects,
-   which avoids pulling in the three.js addons on top of the core build. */
+   This is the reference implementation (nafithromycin-moa.html) running on its
+   own stack — three r165 as ES modules, OrbitControls and CSS2DRenderer — so
+   the geometry, palette, lighting and translation cycle behave identically
+   rather than being approximated on an older build. The only departures are
+   the element ids (this page's markup), lazy start when the section nears the
+   viewport, and OrbitControls bound to the WebGL canvas.  */
 (function () {
-  var HOST = document.getElementById('rib-canvas');
-  if (!HOST) return;
+  const container = document.getElementById("rib-canvas");
+  if (!container) return;
 
-  var CDNS = [
-    'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js',
-    'https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js'
-  ];
+  const loadingEl = document.getElementById("rib-loader");
+  let blocked = true;
+  let started = false;
+  let setSceneBlocked = null;
 
-  var C = {
-    subunit: '#c9b6e4',
-    siteP:   '#f2c98a',
-    siteA:   '#7b3fa0',
-    siteE:   '#b9a4d6',
-    mrna:    '#8d8d93',
-    trna:    '#7f8c99',
-    trnaA:   '#6f7f8f',
-    block:   '#c0392b',
-    pep:     ['#2f6fb5', '#e8a33d', '#7b3fa0', '#39a0a6', '#d0509a', '#4caf7d']
-  };
-  var ATOM = { C: 0x5c6b7a, N: 0x3f6fd0, O: 0xe2504a, S: 0xe0b83c };
-
-  var SITE_X = { E: -1.05, P: 0, A: 1.05 };
-  var PH = [1.1, 0.8, 1.1, 0.7];   // arrival · bond formation · translocation · E-site release
-
-  var scene, camera, renderer, root;
-  var sub50, sub30, siteMesh = {}, mrnaGroup, peptideGroup;
-  var pT, aT, drugOuter, drugSpin, blockGroup;
-  var started = false, drugOn = true, visible = true, raf = null;
-
-  // drugT: 0 = clear of the ribosome, 1 = docked. Animated, never snapped.
-  var drugT = 1, animFrom = 1, animTo = 1, animStart = 0, ANIM_MS = 1600;
-  var blockScale = 1;
-  var chain = 3, grow = 0, dropped = 0, phase = 0, tPhase = 0, stall = 0, elapsed = 0;
-
-  var yaw = 0, pitch = 0.05, dist = 8.2, dragging = false, lastX = 0, lastY = 0, userZoomed = false;
-
-  function easeInOut(t) { return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; }
-  function lerp(a, b, t) { return a + (b - a) * t; }
-  function damp(cur, target, lambda, dt) { return lerp(target, cur, Math.exp(-lambda * dt)); }
-  function smooth(t) { t = Math.max(0, Math.min(1, t)); return t * t * (3 - 2 * t); }
-
-  function label(text, color, size) {
-    var c = document.createElement('canvas');
-    c.width = 256; c.height = 128;
-    var g = c.getContext('2d');
-    g.font = 'bold 72px Helvetica, Arial, sans-serif';
-    g.textAlign = 'center'; g.textBaseline = 'middle';
-    g.fillStyle = color; g.fillText(text, 128, 64);
-    var t = new THREE.CanvasTexture(c); t.minFilter = THREE.LinearFilter;
-    var sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: t, transparent: true, depthTest: false }));
-    sp.scale.set(size, size / 2, 1);
-    return sp;
+  function renderStatus() {
+    const el = document.getElementById("rib-status");
+    el.classList.toggle("stalled", blocked);
+    el.classList.toggle("running", !blocked);
+    el.innerHTML = blocked
+      ? "Translation stalled &mdash; the tRNA is held at the A site and the peptide chain stops growing."
+      : "Translation running &mdash; the tRNA translocates from the A site to the P site and the peptide chain elongates.";
   }
 
-  // r128 has no CapsuleGeometry, so build one from a cylinder plus two caps
-  function capsule(radius, len, color) {
-    var g = new THREE.Group();
-    var mat = new THREE.MeshStandardMaterial({ color: color, roughness: 0.4 });
-    g.add(new THREE.Mesh(new THREE.CylinderGeometry(radius, radius, len, 20), mat));
-    var cap = new THREE.Mesh(new THREE.SphereGeometry(radius, 20, 14), mat);
-    cap.position.y = len / 2; g.add(cap);
-    var cap2 = cap.clone(); cap2.position.y = -len / 2; g.add(cap2);
-    return g;
+  function renderFacts() {
+    const on = document.getElementById("rib-steps-on");
+    const off = document.getElementById("rib-steps-off");
+    if (!on || !off) return;
+    const show = blocked ? on : off, hide = blocked ? off : on;
+    hide.hidden = true; hide.classList.remove("is-on");
+    show.hidden = false;
+    show.classList.remove("is-on");
+    void show.offsetWidth;
+    show.classList.add("is-on");
   }
 
-  function makeTRNA(color) {
-    var g = new THREE.Group();
-    var stem = capsule(0.16, 0.72, color);
-    stem.rotation.z = 0.12;
-    g.add(stem);
-    var foot = capsule(0.13, 0.34, color);
-    foot.position.set(0.02, -0.52, 0);
-    foot.rotation.z = -0.5;
-    g.add(foot);
-    return g;
+  function setBlocked(v) {
+    blocked = v;
+    document.getElementById("rib-off").setAttribute("aria-pressed", blocked ? "false" : "true");
+    document.getElementById("rib-on").setAttribute("aria-pressed", blocked ? "true" : "false");
+    renderFacts();
+    renderStatus();
+    if (setSceneBlocked) setSceneBlocked(v);
   }
 
-  // the reference wobbles its subunits with a vertex-shader displacement
-  function subunitMaterial() {
-    var mat = new THREE.MeshStandardMaterial({
-      color: C.subunit, roughness: 0.3, transparent: true, opacity: 0.55, depthWrite: false
-    });
-    mat.onBeforeCompile = function (shader) {
-      shader.uniforms.uTime = { value: 0 };
-      mat.userData.shader = shader;
-      shader.vertexShader = shader.vertexShader
-        .replace('#include <common>', '#include <common>\nuniform float uTime;')
-        .replace('#include <begin_vertex>',
-          '#include <begin_vertex>\n' +
-          'float n = sin(position.x * 2.4 + uTime * 0.6) * cos(position.y * 2.1 + uTime * 0.5) * sin(position.z * 2.6 + uTime * 0.4);\n' +
-          'transformed += normal * n * 0.09;');
+  document.getElementById("rib-off").addEventListener("click", () => setBlocked(false));
+  document.getElementById("rib-on").addEventListener("click", () => setBlocked(true));
+  renderFacts();
+  renderStatus();
+
+  async function boot() {
+    if (started) return;
+    started = true;
+
+    let THREE, OrbitControls, CSS2DRenderer, CSS2DObject;
+    try {
+      THREE = await import("three");
+      ({ OrbitControls } = await import("three/addons/controls/OrbitControls.js"));
+      ({ CSS2DRenderer, CSS2DObject } = await import("three/addons/renderers/CSS2DRenderer.js"));
+    } catch (e) {
+      if (loadingEl) loadingEl.textContent = "3D scene unavailable — check your connection";
+      return;
+    }
+
+    /* ---------------------------------------------------------------- */
+    /* Palette                                                          */
+    /* ---------------------------------------------------------------- */
+    const C = {
+      subunit: "#c9b6e4",
+      site: "#efe7fb",
+      siteP: "#f2c98a",
+      siteA: "#7b3fa0",
+      siteE: "#b9a4d6",
+      mrna: "#8d8d93",
+      drug: "#e2707b",
+      trna: "#7f8c99",
+      block: "#c0392b",
+      pep: ["#2f6fb5", "#e8a33d", "#7b3fa0", "#39a0a6", "#d0509a", "#4caf7d"],
     };
-    return mat;
-  }
 
-  function makeSubunit(pos, scaleV, text, colour) {
-    var g = new THREE.Group();
-    g.position.set(pos[0], pos[1], pos[2]);
-    var mesh = new THREE.Mesh(new THREE.SphereGeometry(1, 64, 64), subunitMaterial());
-    mesh.scale.set(scaleV[0], scaleV[1], scaleV[2]);
-    g.add(mesh);
-    var l = label(text, colour, 1.15);
-    l.position.set(-scaleV[0] - 0.62, 0, 0);
-    g.add(l);
-    return { group: g, mat: mesh.material };
-  }
+    /* ---------------------------------------------------------------- */
+    /* Nafithromycin structure (PubChem CID 117587595, C42H62N6O11S)    */
+    /* ---------------------------------------------------------------- */
+    const NAFITHROMYCIN_ATOMS = [["S",1.549,1.225],["O",-1.053,1.684],["O",-1.886,1.268],["O",-1.514,-0.663],["O",-1.254,0.395],["O",0.023,0.484],["O",-0.414,2.1],["O",-2.257,-0.663],["O",-1.514,-1.52],["O",-1.514,0.624],["O",-2.629,1.268],["O",0.659,1.123],["N",0.13,1.798],["N",0.234,1.062],["N",-2.257,-1.949],["N",1.647,0.537],["N",2.032,0.726],["N",2.692,1.332],["C",-0.771,1.053],["C",-1.143,1.268],["C",-0.771,0.624],["C",-0.455,1.339],["C",-1.514,1.053],["C",-1.514,1.482],["C",-0.4,0.41],["C",-0.629,1.729],["C",-0.4,-0.019],["C",-1.143,-0.019],["C",-0.771,-0.234],["C",-0.771,0.195],["C",-1.514,-0.234],["C",-1.79,0.725],["C",-0.03,1.4],["C",-1.886,-0.019],["C",-0.028,-0.234],["C",-0.961,0.37],["C",-1.886,-0.877],["C",-1.643,0.321],["C",-2.257,0.624],["C",-1.886,0.41],["C",-1.886,-1.306],["C",-2.257,1.053],["C",-2.257,-1.52],["C",-2.257,-0.234],["C",-2.629,-1.306],["C",-2.629,-0.877],["C",-2.629,0.41],["C",-1.143,0.809],["C",-3.0,-0.663],["C",-2.629,-2.164],["C",-1.886,-2.164],["C",0.924,0.785],["C",0.764,0.387],["C",1.348,0.846],["C",1.971,1.151],["C",2.279,1.449],["C",2.175,1.865],["C",2.483,2.164],["C",3.0,1.63],["C",2.896,2.046]];
+    const NAFITHROMYCIN_BONDS = [[0,53,1],[0,54,1],[1,19,1],[1,25,1],[2,22,1],[2,41,1],[30,3,1],[36,3,1],[27,4,1],[4,47,1],[5,24,2],[6,25,2],[7,36,1],[7,45,1],[40,8,1],[9,39,2],[10,41,2],[11,13,1],[51,11,1],[12,32,1],[13,32,2],[42,14,1],[14,49,1],[14,50,1],[15,16,1],[15,53,2],[16,54,2],[17,55,1],[17,58,2],[18,19,1],[18,20,1],[18,21,1],[19,22,1],[19,23,1],[20,24,1],[20,29,1],[21,25,1],[21,32,1],[22,31,1],[24,26,1],[26,28,1],[26,34,1],[27,28,1],[27,30,1],[27,35,1],[30,33,1],[31,37,1],[33,39,1],[33,43,1],[36,40,1],[38,39,1],[38,41,1],[38,46,1],[40,42,1],[42,44,1],[44,45,1],[45,48,1],[51,52,1],[51,53,1],[54,55,1],[55,56,2],[56,57,1],[57,59,2],[58,59,1]];
 
-  function makeSite(x, letter) {
-    var fill = letter === 'A' ? C.siteA : letter === 'P' ? C.siteP : C.siteE;
-    var g = new THREE.Group();
-    g.position.set(x, -0.55, 0.45);
-    var mesh = new THREE.Mesh(new THREE.BoxGeometry(0.8, 1.5, 0.5),
-      new THREE.MeshStandardMaterial({ color: fill, roughness: 0.45 }));
-    g.add(mesh);
-    var l = label(letter, letter === 'A' ? '#fbf9fd' : '#2e2a33', 0.62);
-    l.position.set(0, 0, 0.34);
-    g.add(l);
-    siteMesh[letter] = mesh;
-    return g;
-  }
+    const CPK = { C: "#5c6b7a", O: "#e2504a", N: "#3f6fd0", S: "#e0b83c" };
+    const RADIUS = { C: 0.085, O: 0.095, N: 0.095, S: 0.11 };
 
-  function setSiteActivity(active) {
-    ['E', 'P'].forEach(function (k) {
-      var fill = k === 'P' ? C.siteP : C.siteE;
-      siteMesh[k].material.emissive = new THREE.Color(active ? fill : 0x000000);
-      siteMesh[k].material.emissiveIntensity = active ? 0.45 : 0;
-    });
-  }
+    function buildNafithromycinMolecule() {
+      const group = new THREE.Group();
+      const atoms = NAFITHROMYCIN_ATOMS.map(([el, x, y], i) => {
+        const element = CPK[el] ? el : "C";
+        const p = new THREE.Vector3(x, y, Math.sin(x * 1.6 + y * 1.1 + i * 0.21) * 0.14);
+        const mesh = new THREE.Mesh(
+          new THREE.SphereGeometry(RADIUS[element], 18, 18),
+          new THREE.MeshStandardMaterial({
+            color: CPK[element], roughness: 0.28, metalness: 0.2,
+            emissive: CPK[element], emissiveIntensity: 0.18,
+          })
+        );
+        mesh.position.copy(p);
+        group.add(mesh);
+        return p;
+      });
 
-  function beadAt(anchor, i) {
-    var t = i * 0.55;
-    return new THREE.Vector3(
-      anchor[0] + Math.sin(t) * 0.28,
-      anchor[1] + 0.5 + i * 0.28,
-      anchor[2] + Math.cos(t) * 0.28
+      NAFITHROMYCIN_BONDS.forEach(([i, j, order]) => {
+        const a = atoms[i], b = atoms[j];
+        const dirV = new THREE.Vector3().subVectors(b, a);
+        const len = dirV.length();
+        const dir = dirV.clone().normalize();
+        const quat = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), dir);
+        const perp = new THREE.Vector3(0, 0, 1).cross(dir).normalize().multiplyScalar(0.055);
+        const offsets = order >= 3
+          ? [perp.clone().multiplyScalar(1.6), new THREE.Vector3(), perp.clone().multiplyScalar(-1.6)]
+          : order === 2
+          ? [perp.clone(), perp.clone().negate()]
+          : [new THREE.Vector3()];
+        const mid = new THREE.Vector3().addVectors(a, b).multiplyScalar(0.5);
+        offsets.forEach((o) => {
+          const cyl = new THREE.Mesh(
+            new THREE.CylinderGeometry(order > 1 ? 0.022 : 0.032, order > 1 ? 0.022 : 0.032, len, 8),
+            new THREE.MeshStandardMaterial({ color: "#8b97a5", roughness: 0.35, metalness: 0.25 })
+          );
+          cyl.position.copy(mid.clone().add(o));
+          cyl.quaternion.copy(quat);
+          group.add(cyl);
+        });
+      });
+
+      return group;
+    }
+
+    /* Distort-ish material: subtle animated wobble on a transparent sphere */
+    function makeSubunitMaterial(color) {
+      const mat = new THREE.MeshStandardMaterial({
+        color, roughness: 0.3, transparent: true, opacity: 0.55, depthWrite: false,
+      });
+      mat.onBeforeCompile = (shader) => {
+        shader.uniforms.uTime = { value: 0 };
+        mat.userData.shader = shader;
+        shader.vertexShader = shader.vertexShader
+          .replace("#include <common>", `#include <common>
+             uniform float uTime;`)
+          .replace("#include <begin_vertex>", `#include <begin_vertex>
+             float n = sin(position.x * 2.4 + uTime * 0.6) * cos(position.y * 2.1 + uTime * 0.5) * sin(position.z * 2.6 + uTime * 0.4);
+             transformed += normal * n * 0.09;`);
+      };
+      return mat;
+    }
+
+    /* ---------------------------------------------------------------- */
+    /* Scene setup                                                      */
+    /* ---------------------------------------------------------------- */
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color("#f7f4fb");
+
+    const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 100);
+    camera.position.set(0, 0.4, 8.2);
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.shadowMap.enabled = true;
+    container.appendChild(renderer.domElement);
+
+    const labelRenderer = new CSS2DRenderer();
+    labelRenderer.domElement.style.position = "absolute";
+    labelRenderer.domElement.style.top = "0";
+    labelRenderer.domElement.style.left = "0";
+    labelRenderer.domElement.style.pointerEvents = "none";
+    container.appendChild(labelRenderer.domElement);
+
+    function resize() {
+      const w = container.clientWidth;
+      const h = container.clientHeight;
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+      renderer.setSize(w, h);
+      labelRenderer.setSize(w, h);
+    }
+    window.addEventListener("resize", resize);
+
+    // bound to the WebGL canvas: the label layer is pointer-events:none, so it
+    // never receives the drag itself
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enablePan = false;
+    controls.minDistance = 5.5;
+    controls.maxDistance = 12;
+    controls.minPolarAngle = Math.PI / 3.2;
+    controls.maxPolarAngle = Math.PI / 1.7;
+    controls.enableDamping = true;
+
+    /* Lights */
+    scene.add(new THREE.AmbientLight(0xffffff, 0.75));
+    const dl1 = new THREE.DirectionalLight(0xffffff, 1.5);
+    dl1.position.set(4, 6, 5);
+    dl1.castShadow = true;
+    scene.add(dl1);
+    const dl2 = new THREE.DirectionalLight(0xcbb8ea, 0.5);
+    dl2.position.set(-5, -2, 3);
+    scene.add(dl2);
+    scene.add(new THREE.HemisphereLight(0xbcd7ff, 0x1b1030, 0.9));
+    const dl3 = new THREE.DirectionalLight(0xffffff, 1.1);
+    dl3.position.set(6, 8, 6);
+    scene.add(dl3);
+    const dl4 = new THREE.DirectionalLight(0x7dd3fc, 0.5);
+    dl4.position.set(-6, -4, -6);
+    scene.add(dl4);
+
+    /* ---- Subunits ---- */
+    function makeSubunit(position, scaleV, label, labelColor) {
+      const group = new THREE.Group();
+      group.position.set(...position);
+      const mesh = new THREE.Mesh(new THREE.SphereGeometry(1, 64, 64), makeSubunitMaterial(C.subunit));
+      mesh.scale.set(...scaleV);
+      mesh.castShadow = true;
+      mesh.receiveShadow = true;
+      group.add(mesh);
+
+      const div = document.createElement("div");
+      div.className = "scene-subunit-label";
+      div.style.color = labelColor;
+      div.textContent = label;
+      const labelObj = new CSS2DObject(div);
+      labelObj.position.set(-scaleV[0] - 0.55, 0, 0);
+      group.add(labelObj);
+
+      return { group, mat: mesh.material };
+    }
+
+    const subunit50 = makeSubunit([0, 0.45, 0], [2.05, 1.5, 1.5], "50S", "#4f9d84");
+    const subunit30 = makeSubunit([0, -1.25, 0], [1.85, 0.8, 1.3], "30S", "#4f8fc0");
+    scene.add(subunit50.group, subunit30.group);
+
+    /* ---- Sites ---- */
+    const SITE_X = { E: -1.05, P: 0, A: 1.05 };
+    const siteMeshes = {};
+    function makeSite(x, letter) {
+      const fill = letter === "A" ? C.siteA : letter === "P" ? C.siteP : C.siteE;
+      const group = new THREE.Group();
+      group.position.set(x, -0.55, 0.45);
+      const mesh = new THREE.Mesh(
+        new THREE.BoxGeometry(0.8, 1.5, 0.5),
+        new THREE.MeshStandardMaterial({ color: fill, roughness: 0.45, emissive: 0x000000, emissiveIntensity: 0 })
+      );
+      group.add(mesh);
+      const div = document.createElement("div");
+      div.className = "scene-site-label" + (letter === "A" ? " is-inverted" : "");
+      div.textContent = letter;
+      const labelObj = new CSS2DObject(div);
+      labelObj.position.set(0, 0, 0.32);
+      group.add(labelObj);
+      siteMeshes[letter] = mesh;
+      return group;
+    }
+    scene.add(makeSite(SITE_X.E, "E"), makeSite(SITE_X.P, "P"), makeSite(SITE_X.A, "A"));
+    siteMeshes.A.material.emissive = new THREE.Color(C.siteA);
+    siteMeshes.A.material.emissiveIntensity = 0.45;
+
+    function updateSiteActivity(active) {
+      ["E", "P"].forEach((k) => {
+        const fill = k === "P" ? C.siteP : C.siteE;
+        siteMeshes[k].material.emissive = active ? new THREE.Color(fill) : new THREE.Color(0x000000);
+        siteMeshes[k].material.emissiveIntensity = active ? 0.45 : 0;
+      });
+    }
+
+    /* ---- mRNA ---- */
+    const CODONS = "UGCAUGAACGAUGCUACGAUCGUCUAGAUGAU".split("");
+    const mrnaGroup = new THREE.Group();
+    const mrnaBase = new THREE.Mesh(
+      new THREE.BoxGeometry(7.4, 0.09, 0.22),
+      new THREE.MeshStandardMaterial({ color: C.mrna, roughness: 0.6, metalness: 0.1 })
     );
-  }
-
-  function rebuildPeptide(count, growV, anchor, drop) {
-    while (peptideGroup.children.length) peptideGroup.remove(peptideGroup.children[0]);
-    peptideGroup.position.set(0, -drop * 3.2, drop * 0.6);
-
-    var beads = [];
-    for (var i = 0; i < count; i++) beads.push(beadAt(anchor, i));
-
-    var tip = null;
-    if (growV > 0.01) {
-      tip = beadAt(anchor, count - 1).clone().lerp(beadAt(anchor, count), growV);
-    }
-    var points = tip ? beads.concat([tip]) : beads;
-
-    if (points.length > 1) {
-      peptideGroup.add(new THREE.Line(
-        new THREE.BufferGeometry().setFromPoints(points),
-        new THREE.LineBasicMaterial({ color: '#9c8fb5', transparent: true, opacity: 0.8 })
-      ));
-    }
-    beads.forEach(function (p, i) {
-      var m = new THREE.Mesh(new THREE.SphereGeometry(0.15, 24, 24),
-        new THREE.MeshStandardMaterial({ color: C.pep[i % C.pep.length], roughness: 0.25, metalness: 0.15 }));
-      m.position.copy(p);
-      peptideGroup.add(m);
-    });
-    if (tip) {
-      var col = C.pep[count % C.pep.length];
-      var m2 = new THREE.Mesh(new THREE.SphereGeometry(0.15, 24, 24),
-        new THREE.MeshStandardMaterial({ color: col, roughness: 0.25, metalness: 0.15,
-          emissive: new THREE.Color(col), emissiveIntensity: 0.5 * (1 - growV) }));
-      m2.position.copy(tip);
-      m2.scale.setScalar(0.4 + growV * 0.6);
-      peptideGroup.add(m2);
-    }
-  }
-
-  // the page's own nafithromycin SDF, normalised to the reference's on-screen size
-  function buildMolecule() {
-    var g = new THREE.Group();
-    var raw = window.__NAF_SDF_B64__;
-    if (!raw) return g;
-    var lines;
-    try { lines = atob(raw).split('\n'); } catch (e) { return g; }
-    var counts = lines[3] || '';
-    var na = parseInt(counts.substr(0, 3), 10), nb = parseInt(counts.substr(3, 3), 10);
-    if (!na || !nb) return g;
-
-    var pos = [], els = [];
-    for (var i = 0; i < na; i++) {
-      var L = lines[4 + i];
-      pos.push(new THREE.Vector3(parseFloat(L.substr(0, 10)), parseFloat(L.substr(10, 10)), parseFloat(L.substr(20, 10))));
-      els.push(L.substr(31, 3).trim());
-    }
-    var mid = new THREE.Vector3();
-    pos.forEach(function (p) { mid.add(p); });
-    mid.divideScalar(na);
-    var reach = 0;
-    pos.forEach(function (p) { reach = Math.max(reach, p.distanceTo(mid)); });
-    var k = 1;
-    g.userData.fit = reach > 0 ? 0.86 / reach : 1;   // same on-screen span as the reference
-
-    var sph = new THREE.SphereGeometry(1, 14, 11);
-    pos.forEach(function (p, i) {
-      if (els[i] === 'H') return;
-      var m = new THREE.Mesh(sph, new THREE.MeshStandardMaterial({
-        color: ATOM[els[i]] || 0x8b97a5, roughness: 0.28, metalness: 0.2,
-        emissive: new THREE.Color(ATOM[els[i]] || 0x8b97a5), emissiveIntensity: 0.18
-      }));
-      m.position.copy(p).sub(mid).multiplyScalar(k);
-      m.scale.setScalar(els[i] === 'C' ? 0.23 : 0.26);
-      g.add(m);
-    });
-
-    var bondMat = new THREE.MeshStandardMaterial({ color: '#8b97a5', roughness: 0.35, metalness: 0.25 });
-    var cyl = new THREE.CylinderGeometry(0.085, 0.085, 1, 8);
-    for (var b = 0; b < nb; b++) {
-      var BL = lines[4 + na + b];
-      var a1 = parseInt(BL.substr(0, 3), 10) - 1, a2 = parseInt(BL.substr(3, 3), 10) - 1;
-      if (els[a1] === 'H' || els[a2] === 'H') continue;
-      var p1 = pos[a1].clone().sub(mid).multiplyScalar(k);
-      var p2 = pos[a2].clone().sub(mid).multiplyScalar(k);
-      var dir = new THREE.Vector3().subVectors(p2, p1);
-      var mesh = new THREE.Mesh(cyl, bondMat);
-      mesh.position.copy(p1).add(dir.clone().multiplyScalar(0.5));
-      mesh.scale.set(1, dir.length(), 1);
-      mesh.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), dir.clone().normalize());
-      g.add(mesh);
-    }
-    return g;
-  }
-
-  function build() {
-    scene = new THREE.Scene();
-    root = new THREE.Group();
-    scene.add(root);
-
-    // The reference runs on three r165, where light intensity is roughly PI
-    // times weaker than on the r128 build this page loads. Its rig is kept
-    // intact and simply divided through, or everything renders blown out.
-    var LX = 1 / Math.PI;
-    scene.add(new THREE.AmbientLight(0xffffff, 0.75 * LX));
-    var d1 = new THREE.DirectionalLight(0xffffff, 1.5 * LX); d1.position.set(4, 6, 5); scene.add(d1);
-    var d2 = new THREE.DirectionalLight(0xcbb8ea, 0.5 * LX); d2.position.set(-5, -2, 3); scene.add(d2);
-    scene.add(new THREE.HemisphereLight(0xbcd7ff, 0x1b1030, 0.9 * LX));
-    var d3 = new THREE.DirectionalLight(0xffffff, 1.1 * LX); d3.position.set(6, 8, 6); scene.add(d3);
-    var d4 = new THREE.DirectionalLight(0x7dd3fc, 0.5 * LX); d4.position.set(-6, -4, -6); scene.add(d4);
-
-    sub50 = makeSubunit([0, 0.45, 0], [2.05, 1.5, 1.5], '50S', '#4f9d84');
-    sub30 = makeSubunit([0, -1.25, 0], [1.85, 0.8, 1.3], '30S', '#4f8fc0');
-    root.add(sub50.group, sub30.group);
-
-    root.add(makeSite(SITE_X.E, 'E'), makeSite(SITE_X.P, 'P'), makeSite(SITE_X.A, 'A'));
-    siteMesh.A.material.emissive = new THREE.Color(C.siteA);
-    siteMesh.A.material.emissiveIntensity = 0.45;
-
-    mrnaGroup = new THREE.Group();
-    var base = new THREE.Mesh(new THREE.BoxGeometry(7.4, 0.09, 0.22),
-      new THREE.MeshStandardMaterial({ color: C.mrna, roughness: 0.6, metalness: 0.1 }));
-    base.position.set(0, -1.95, 0);
-    mrnaGroup.add(base);
-    var CODONS = 'UGCAUGAACGAUGCUACGAUCGUCUAGAUGAU'.split('');
-    CODONS.forEach(function (letter, i) {
-      var col = letter === 'A' ? '#e05c5c' : letter === 'U' ? '#e8a33d' : letter === 'G' ? '#4c8fd6' : '#4bab84';
-      var nuc = new THREE.Mesh(new THREE.BoxGeometry(0.19, 0.28, 0.18),
-        new THREE.MeshStandardMaterial({ color: col, roughness: 0.35 }));
+    mrnaBase.position.set(0, -1.95, 0);
+    mrnaGroup.add(mrnaBase);
+    CODONS.forEach((letter, i) => {
+      const color = letter === "A" ? "#e05c5c" : letter === "U" ? "#e8a33d" : letter === "G" ? "#4c8fd6" : "#4bab84";
+      const nuc = new THREE.Mesh(
+        new THREE.BoxGeometry(0.19, 0.28, 0.18),
+        new THREE.MeshStandardMaterial({ color, roughness: 0.35 })
+      );
       nuc.position.set(-3.55 + i * 0.23, -1.72, 0);
       mrnaGroup.add(nuc);
     });
-    root.add(mrnaGroup);
+    scene.add(mrnaGroup);
 
-    pT = makeTRNA(C.trna);
-    aT = makeTRNA(C.trnaA);
-    root.add(pT, aT);
+    /* ---- tRNA ---- */
+    function makeTRNA(color = C.trna) {
+      const group = new THREE.Group();
+      const stem = new THREE.Mesh(
+        new THREE.CapsuleGeometry(0.16, 0.72, 8, 20),
+        new THREE.MeshStandardMaterial({ color, roughness: 0.4 })
+      );
+      stem.rotation.z = 0.12;
+      group.add(stem);
+      const foot = new THREE.Mesh(
+        new THREE.CapsuleGeometry(0.13, 0.34, 8, 16),
+        new THREE.MeshStandardMaterial({ color, roughness: 0.4 })
+      );
+      foot.position.set(0.02, -0.52, 0);
+      foot.rotation.z = -0.5;
+      group.add(foot);
+      return group;
+    }
 
-    peptideGroup = new THREE.Group();
-    root.add(peptideGroup);
+    const pT = makeTRNA(C.trna);
+    const aT = makeTRNA("#6f7f8f");
+    scene.add(pT, aT);
 
-    drugOuter = new THREE.Group();
-    drugSpin = new THREE.Group();
-    var mol = buildMolecule();
-    drugSpin.add(mol);
-    drugSpin.scale.setScalar(mol.userData.fit || 0.1);
-    drugOuter.add(drugSpin);
-    root.add(drugOuter);
+    /* ---- Peptide chain ---- */
+    const peptideGroup = new THREE.Group();
+    scene.add(peptideGroup);
 
-    blockGroup = new THREE.Group();
+    function beadAt(anchor, i) {
+      const t = i * 0.55;
+      return new THREE.Vector3(
+        anchor[0] + Math.sin(t) * 0.28,
+        anchor[1] + 0.5 + i * 0.28,
+        anchor[2] + Math.cos(t) * 0.28
+      );
+    }
+
+    function rebuildPeptide(count, grow, anchor, dropped) {
+      peptideGroup.clear();
+      peptideGroup.position.set(0, -dropped * 3.2, dropped * 0.6);
+
+      const beads = Array.from({ length: count }, (_, i) => beadAt(anchor, i));
+      let tip = null;
+      if (grow > 0.01) {
+        const target = beadAt(anchor, count);
+        const from = beadAt(anchor, count - 1);
+        tip = from.clone().lerp(target, grow);
+      }
+      const points = tip ? [...beads, tip] : beads;
+
+      if (points.length > 1) {
+        const lineMat = new THREE.LineBasicMaterial({ color: "#9c8fb5", transparent: true, opacity: 0.8 });
+        const lineGeo = new THREE.BufferGeometry().setFromPoints(points);
+        peptideGroup.add(new THREE.Line(lineGeo, lineMat));
+      }
+
+      beads.forEach((p, i) => {
+        const color = C.pep[i % C.pep.length] ?? "#2f6fb5";
+        const mesh = new THREE.Mesh(
+          new THREE.SphereGeometry(0.15, 24, 24),
+          new THREE.MeshStandardMaterial({ color, roughness: 0.25, metalness: 0.15 })
+        );
+        mesh.position.copy(p);
+        peptideGroup.add(mesh);
+      });
+
+      if (tip) {
+        const color = C.pep[count % C.pep.length] ?? "#2f6fb5";
+        const mesh = new THREE.Mesh(
+          new THREE.SphereGeometry(0.15, 24, 24),
+          new THREE.MeshStandardMaterial({
+            color, roughness: 0.25, metalness: 0.15,
+            emissive: color, emissiveIntensity: 0.5 * (1 - grow),
+          })
+        );
+        mesh.position.copy(tip);
+        mesh.scale.setScalar(0.4 + grow * 0.6);
+        peptideGroup.add(mesh);
+      }
+    }
+
+    /* ---- Nafithromycin drug ---- */
+    const drugOuter = new THREE.Group();
+    const drugSpinGroup = new THREE.Group();
+    drugSpinGroup.scale.setScalar(0.28);
+    drugSpinGroup.add(buildNafithromycinMolecule());
+    drugOuter.add(drugSpinGroup);
+    const drugLight = new THREE.PointLight(C.drug, 1.6, 2.6);
+    drugOuter.add(drugLight);
+    scene.add(drugOuter);
+    let drugApproach = 0;
+
+    /* ---- Block sign ---- */
+    const blockGroup = new THREE.Group();
     blockGroup.position.set(1.75, 0.45, 1.7);
     blockGroup.rotation.z = Math.PI / 4;
-    [0, Math.PI / 2].forEach(function (rz) {
-      var bar = new THREE.Mesh(new THREE.BoxGeometry(0.72, 0.16, 0.16),
-        new THREE.MeshStandardMaterial({ color: C.block, emissive: new THREE.Color(C.block), emissiveIntensity: 0.5 }));
+    [0, Math.PI / 2].forEach((rz) => {
+      const bar = new THREE.Mesh(
+        new THREE.BoxGeometry(0.72, 0.16, 0.16),
+        new THREE.MeshStandardMaterial({ color: C.block, emissive: C.block, emissiveIntensity: 0.5 })
+      );
       bar.rotation.z = rz;
       blockGroup.add(bar);
     });
-    root.add(blockGroup);
+    scene.add(blockGroup);
+    let blockScale = 0;
 
-    renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-    renderer.setClearColor(0x000000, 0);
-    if (THREE.sRGBEncoding !== undefined) renderer.outputEncoding = THREE.sRGBEncoding;
-    HOST.appendChild(renderer.domElement);
-    camera = new THREE.PerspectiveCamera(42, 1, 0.1, 100);
+    /* ---------------------------------------------------------------- */
+    /* Animation state                                                  */
+    /* ---------------------------------------------------------------- */
+    const PH = [1.1, 0.8, 1.1, 0.7]; // arrival · peptide-bond formation · translocation · E-site release
+    const easeInOut = (t) => (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2);
+    const damp = (cur, target, lambda, dt) => THREE.MathUtils.damp(cur, target, lambda, dt);
 
-    rebuildPeptide(chain, grow, [SITE_X.P, 0, 0.6], dropped);
-    setSiteActivity(!drugOn);
-    resize();
-    applyState(false);
-  }
+    let chain = 3;
+    let grow = 0;
+    let dropped = 0;
+    let phase = 0;
+    let tPhase = 0;
+    let stall = 0;
 
-  function resize() {
-    if (!renderer) return;
-    var w = HOST.clientWidth || 600, h = HOST.clientHeight || 430;
-    renderer.setSize(w, h, false);
-    camera.aspect = w / h;
-    camera.updateProjectionMatrix();
-    if (!userZoomed) {
-      var a = Math.max(0.75, Math.min(1.9, camera.aspect));
-      dist = Math.max(7.0, Math.min(11.5, 11.4 / a));
-    }
-  }
+    let lastSiteActive = null;
+    rebuildPeptide(chain, grow, [SITE_X.P, 0, 0.95], dropped);
+    updateSiteActivity(!blocked);
+    lastSiteActive = !blocked;
 
-  function applyState(animate) {
-    document.getElementById('rib-on').setAttribute('aria-pressed', drugOn ? 'true' : 'false');
-    document.getElementById('rib-off').setAttribute('aria-pressed', drugOn ? 'false' : 'true');
+    setSceneBlocked = () => { stall = 0; phase = 0; tPhase = 0; };
 
-    var st = document.getElementById('rib-status');
-    st.classList.toggle('stalled', drugOn);
-    st.classList.toggle('running', !drugOn);
-    st.innerHTML = drugOn
-      ? 'Translation stalled &mdash; the tRNA is held at the A site and the peptide chain stops growing.'
-      : 'Translation running &mdash; the tRNA translocates from the A site to the P site and the peptide chain elongates.';
+    const clock = new THREE.Clock();
+    let onScreen = true;
 
-    var on = document.getElementById('rib-steps-on');
-    var off = document.getElementById('rib-steps-off');
-    if (on && off) {
-      var show = drugOn ? on : off, hide = drugOn ? off : on;
-      hide.hidden = true; hide.classList.remove('is-on');
-      show.hidden = false;
-      show.classList.remove('is-on');
-      void show.offsetWidth;
-      show.classList.add('is-on');
-    }
-    if (siteMesh.E) setSiteActivity(!drugOn);
+    function animate() {
+      requestAnimationFrame(animate);
+      const dt = Math.min(clock.getDelta(), 0.05);
+      if (!onScreen) return;
+      const elapsed = clock.elapsedTime;
+      const Y = -0.2, Z = 0.95;
 
-    animFrom = drugT;
-    animTo = drugOn ? 1 : 0;
-    animStart = (typeof performance !== 'undefined' ? performance.now() : Date.now());
-    if (!animate) { drugT = animTo; animFrom = animTo; blockScale = animTo; }
-  }
-
-  var lastT = 0;
-  function frame(now) {
-    raf = requestAnimationFrame(frame);
-    if (!visible) { lastT = now; return; }
-    var dt = Math.min((now - lastT) / 1000 || 0.016, 0.05);
-    lastT = now;
-    elapsed += dt;
-
-    var Y = -0.2, Z = 0.95;
-    var rebuild = false;
-
-    if (drugOn) {
-      stall += dt;
-      var s = stall;
-      aT.visible = true;
-      aT.position.set(SITE_X.A + 0.25 + Math.sin(s * 16) * 0.05, Y + 0.15, Z + 0.35);
-      aT.rotation.z = Math.sin(s * 13) * 0.09;
-      aT.scale.setScalar(1);
-
-      // every fourth second the incomplete peptidyl-tRNA lets go and drops away
-      var cyc = s % 4;
-      var drop = cyc > 3 ? easeInOut(cyc - 3) : 0;
-      pT.visible = true;
-      pT.position.set(SITE_X.P, Y - drop * 3.2, Z + drop * 0.6);
-      pT.rotation.z = drop * 1.2 + Math.sin(s * 9) * 0.04;
-      pT.scale.setScalar(1);
-
-      if (Math.abs(drop - dropped) > 0.02) { dropped = drop; rebuild = true; }
-      if (chain !== 3) { chain = 3; rebuild = true; }
-      if (grow !== 0) { grow = 0; rebuild = true; }
-      phase = 0; tPhase = 0;
-    } else {
-      stall = 0;
-      if (dropped !== 0) { dropped = 0; rebuild = true; }
-
-      tPhase += dt;
-      var dur = PH[phase] || 1;
-      var k = Math.min(tPhase / dur, 1);
-      var e = easeInOut(k);
-
-      var aPos = [SITE_X.A, Y, Z], pPos = [SITE_X.P, Y, Z], pScale = 1;
-
-      if (phase === 0) {
-        // a fresh aminoacyl-tRNA arrives at the A site
-        aPos = [lerp(3.6, SITE_X.A, e), lerp(1.1, Y, e), lerp(2.6, Z, e)];
-        if (grow !== 0) { grow = 0; rebuild = true; }
-      } else if (phase === 1) {
-        // peptide bond forms — the chain grows by one residue
-        var q = Math.round(k * 12) / 12;
-        if (q !== grow) { grow = q; rebuild = true; }
-      } else if (phase === 2) {
-        // translocation: A -> P and P -> E together
-        aPos = [lerp(SITE_X.A, SITE_X.P, e), Y + Math.sin(e * Math.PI) * 0.16, Z];
-        pPos = [lerp(SITE_X.P, SITE_X.E, e), Y + Math.sin(e * Math.PI) * 0.16, Z];
-        if (grow !== 0) { grow = 0; rebuild = true; }
-      } else {
-        // the deacylated tRNA slides out of the E site to the left and fades
-        aPos = [SITE_X.P, Y, Z];
-        pPos = [lerp(SITE_X.E, -2.9, e), Y - e * 0.5, Z + e * 0.8];
-        pScale = 1 - e * 0.9;
+      if (lastSiteActive !== !blocked) {
+        updateSiteActivity(!blocked);
+        lastSiteActive = !blocked;
       }
 
-      aT.visible = true;
-      aT.position.set(aPos[0], aPos[1], aPos[2]);
-      aT.rotation.z = Math.sin(elapsed * 2) * 0.05;
-      aT.scale.setScalar(1);
+      let peptideNeedsRebuild = false;
 
-      pT.position.set(pPos[0], pPos[1], pPos[2]);
-      pT.scale.setScalar(Math.max(pScale, 0.001));
-      pT.visible = pScale > 0.02;
-      pT.rotation.z = Math.sin(elapsed * 1.6) * 0.04;
+      if (blocked) {
+        stall += dt;
+        const s = stall;
+        aT.visible = true;
+        aT.position.set(SITE_X.A + 0.25 + Math.sin(s * 16) * 0.05, Y + 0.15, Z + 0.35);
+        aT.rotation.z = Math.sin(s * 13) * 0.09;
+        aT.scale.setScalar(1);
 
-      if (k >= 1) {
+        const cyc = s % 4;
+        const drop = cyc > 3 ? easeInOut((cyc - 3) / 1) : 0;
+        pT.visible = true;
+        pT.position.set(SITE_X.P, Y - drop * 3.2, Z + drop * 0.6);
+        pT.rotation.z = drop * 1.2 + Math.sin(s * 9) * 0.04;
+        pT.scale.setScalar(1);
+
+        if (Math.abs(drop - dropped) > 0.02) { dropped = drop; peptideNeedsRebuild = true; }
+        if (chain !== 3) { chain = 3; peptideNeedsRebuild = true; }
+        if (grow !== 0) { grow = 0; peptideNeedsRebuild = true; }
+        phase = 0;
         tPhase = 0;
-        if (phase === 1) { chain = chain >= 9 ? 3 : chain + 1; grow = 0; rebuild = true; }
-        phase = (phase + 1) % PH.length;
+      } else {
+        stall = 0;
+        if (dropped !== 0) { dropped = 0; peptideNeedsRebuild = true; }
+
+        tPhase += dt;
+        const dur = PH[phase] ?? 1;
+        const k = Math.min(tPhase / dur, 1);
+        const e = easeInOut(k);
+
+        let aPos = [SITE_X.A, Y, Z];
+        let pPos = [SITE_X.P, Y, Z];
+        let pScale = 1;
+
+        if (phase === 0) {
+          aPos = [
+            THREE.MathUtils.lerp(3.6, SITE_X.A, e),
+            THREE.MathUtils.lerp(1.1, Y, e),
+            THREE.MathUtils.lerp(2.6, Z, e),
+          ];
+          if (grow !== 0) { grow = 0; peptideNeedsRebuild = true; }
+        } else if (phase === 1) {
+          const q = Math.round(k * 12) / 12;
+          if (q !== grow) { grow = q; peptideNeedsRebuild = true; }
+        } else if (phase === 2) {
+          aPos = [THREE.MathUtils.lerp(SITE_X.A, SITE_X.P, e), Y + Math.sin(e * Math.PI) * 0.16, Z];
+          pPos = [THREE.MathUtils.lerp(SITE_X.P, SITE_X.E, e), Y + Math.sin(e * Math.PI) * 0.16, Z];
+          if (grow !== 0) { grow = 0; peptideNeedsRebuild = true; }
+        } else {
+          aPos = [SITE_X.P, Y, Z];
+          pPos = [THREE.MathUtils.lerp(SITE_X.E, -2.9, e), Y - e * 0.5, Z + e * 0.8];
+          pScale = 1 - e * 0.9;
+        }
+
+        aT.visible = true;
+        aT.position.set(...aPos);
+        aT.rotation.z = Math.sin(elapsed * 2) * 0.05;
+        aT.scale.setScalar(1);
+
+        pT.position.set(...pPos);
+        pT.scale.setScalar(Math.max(pScale, 0.001));
+        pT.visible = pScale > 0.02;
+        pT.rotation.z = Math.sin(elapsed * 1.6) * 0.04;
+
+        if (k >= 1) {
+          tPhase = 0;
+          if (phase === 1) {
+            chain = chain >= 9 ? 3 : chain + 1;
+            grow = 0;
+            peptideNeedsRebuild = true;
+          }
+          phase = (phase + 1) % PH.length;
+        }
       }
+
+      if (peptideNeedsRebuild) {
+        rebuildPeptide(chain, grow, [SITE_X.P, 0, Z - 0.35], dropped);
+      }
+
+      /* Drug approach / spin */
+      drugApproach = damp(drugApproach, blocked ? 1 : 0, 2.4, dt);
+      const a = drugApproach;
+      drugOuter.position.set(3.1 - 1.15 * a, 1.35 - 0.2 * a, 1.9 - 0.15 * a);
+      drugOuter.scale.setScalar(0.001 + a);
+      drugOuter.rotation.y = (1 - a) * 1.6;
+      drugOuter.visible = a > 0.01;
+      drugSpinGroup.rotation.y = elapsed * 0.35;
+      drugSpinGroup.rotation.x = Math.sin(elapsed * 0.4) * 0.12;
+
+      /* Block sign */
+      blockScale = damp(blockScale, blocked ? 1 : 0, 6, dt);
+      const pulse = 1 + Math.sin(elapsed * 4) * 0.06;
+      blockGroup.scale.setScalar(blockScale * pulse);
+      blockGroup.visible = blockScale > 0.02;
+
+      /* Subunit wobble uniform */
+      [subunit50.mat, subunit30.mat].forEach((mat) => {
+        if (mat.userData.shader) mat.userData.shader.uniforms.uTime.value = elapsed;
+      });
+
+      controls.update();
+      renderer.render(scene, camera);
+      labelRenderer.render(scene, camera);
     }
 
-    if (rebuild) rebuildPeptide(chain, grow, [SITE_X.P, 0, Z - 0.35], dropped);
+    // idle the render loop whenever the section is off-screen
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver((entries) => {
+        entries.forEach((en) => { onScreen = en.isIntersecting; });
+      }, { threshold: 0.01 }).observe(container);
+    }
 
-    // the drug travels in and out rather than appearing on the spot
-    var nowMs = (typeof performance !== 'undefined' ? performance.now() : Date.now());
-    drugT = animFrom + (animTo - animFrom) * smooth((nowMs - animStart) / ANIM_MS);
-    var a = drugT;
-    drugOuter.position.set(3.1 - 1.15 * a, 1.35 - 0.2 * a, 1.9 - 0.15 * a);
-    drugOuter.scale.setScalar(0.001 + a);
-    drugOuter.rotation.y = (1 - a) * 1.6;
-    drugOuter.visible = a > 0.01;
-    drugSpin.rotation.y = elapsed * 0.35;
-    drugSpin.rotation.x = Math.sin(elapsed * 0.4) * 0.12;
-
-    blockScale = damp(blockScale, drugOn ? 1 : 0, 6, dt);
-    blockGroup.scale.setScalar(blockScale * (1 + Math.sin(elapsed * 4) * 0.06));
-    blockGroup.visible = blockScale > 0.02;
-
-    [sub50.mat, sub30.mat].forEach(function (m) {
-      if (m.userData.shader) m.userData.shader.uniforms.uTime.value = elapsed;
-    });
-
-    var cy = Math.cos(pitch);
-    camera.position.set(Math.sin(yaw) * cy * dist, Math.sin(pitch) * dist + 0.4, Math.cos(yaw) * cy * dist);
-    camera.lookAt(0, -0.35, 0);
-    renderer.render(scene, camera);
+    resize();
+    animate();
+    if (loadingEl) {
+      loadingEl.style.opacity = "0";
+      setTimeout(() => { loadingEl.style.display = "none"; }, 300);
+    }
   }
 
-  HOST.addEventListener('pointerdown', function (e) {
-    dragging = true; lastX = e.clientX; lastY = e.clientY;
-    if (HOST.setPointerCapture) HOST.setPointerCapture(e.pointerId);
-  });
-  HOST.addEventListener('pointermove', function (e) {
-    if (!dragging) return;
-    yaw -= (e.clientX - lastX) * 0.008;
-    pitch = Math.max(-0.55, Math.min(0.75, pitch + (e.clientY - lastY) * 0.005));
-    lastX = e.clientX; lastY = e.clientY;
-  });
-  ['pointerup', 'pointercancel', 'pointerleave'].forEach(function (ev) {
-    HOST.addEventListener(ev, function () { dragging = false; });
-  });
-  HOST.addEventListener('wheel', function (e) {
-    e.preventDefault();
-    userZoomed = true;
-    dist = Math.max(5.5, Math.min(14, dist + (e.deltaY > 0 ? 0.6 : -0.6)));
-  }, { passive: false });
-
-  document.getElementById('rib-on').addEventListener('click', function () {
-    if (drugOn) return;
-    drugOn = true; stall = 0; applyState(true);
-  });
-  document.getElementById('rib-off').addEventListener('click', function () {
-    if (!drugOn) return;
-    drugOn = false; phase = 0; tPhase = 0; applyState(true);
-  });
-  window.addEventListener('resize', resize);
-
-  function boot() {
-    if (started) return;
-    started = true;
-    build();
-    var l = document.getElementById('rib-loader');
-    if (l) l.style.display = 'none';
-    lastT = (typeof performance !== 'undefined' ? performance.now() : Date.now());
-    raf = requestAnimationFrame(frame);
-  }
-  function fail(m) {
-    var l = document.getElementById('rib-loader');
-    if (l) l.textContent = m;
-  }
-  function loadLib(i) {
-    if (typeof window.THREE !== 'undefined') { boot(); return; }
-    if (i >= CDNS.length) { fail('3D scene unavailable — check your connection'); return; }
-    var sc = document.createElement('script');
-    sc.src = CDNS[i]; sc.async = true;
-    sc.onload = function () { if (typeof window.THREE !== 'undefined') boot(); else loadLib(i + 1); };
-    sc.onerror = function () { loadLib(i + 1); };
-    document.head.appendChild(sc);
-  }
-
-  // built only when the section nears the viewport, idle while it is away
-  if ('IntersectionObserver' in window) {
-    new IntersectionObserver(function (entries) {
-      entries.forEach(function (en) {
-        visible = en.isIntersecting;
-        if (visible && !started) loadLib(0);
-      });
-    }, { rootMargin: '400px 0px', threshold: 0.01 }).observe(HOST);
+  // don't fetch three.js until the section is near the viewport
+  if ("IntersectionObserver" in window) {
+    const obs = new IntersectionObserver((entries) => {
+      if (entries.some((en) => en.isIntersecting)) { obs.disconnect(); boot(); }
+    }, { rootMargin: "400px 0px", threshold: 0.01 });
+    obs.observe(container);
   } else {
-    loadLib(0);
+    boot();
   }
 })();
 </script>
