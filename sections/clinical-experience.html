@@ -34,10 +34,9 @@
     @media(prefers-reduced-motion:reduce){.pp-panel.is-active{animation:none}}
 
     .pp-figure{position:relative;display:flex;align-items:center;justify-content:center;padding:38px 34px;min-height:380px}
-    .pp-figure img{position:relative;z-index:2;width:100%;max-width:320px;height:auto;border-radius:22px;display:block;filter:grayscale(1) contrast(1.04)}
-    /* the yellow block + dashed outline the site already uses around portraits */
-    .pp-figure::before{content:'';position:absolute;z-index:1;width:min(320px,78%);aspect-ratio:320/348;transform:translate(-14px,16px);background:#f4b400;border-radius:22px}
-    .pp-figure::after{content:'';position:absolute;z-index:3;width:min(320px,78%);aspect-ratio:320/348;transform:translate(12px,-12px);border:3px dashed rgba(255,255,255,.85);border-radius:22px;pointer-events:none}
+    /* the gold block and striped border are part of the artwork — nothing is
+       drawn around it, exactly as the old slides had it */
+    .pp-figure img{position:relative;width:100%;max-width:340px;height:auto;display:block}
 
     .pp-body{padding:44px 44px 44px 8px;display:flex;flex-direction:column;justify-content:center}
     .pp-kicker{font-family:'Acumin Variable',sans-serif;font-size:.66rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.7);margin-bottom:8px}
@@ -50,10 +49,8 @@
 
     @media(max-width:980px){
       .pp-panel.is-active{grid-template-columns:1fr}
-      .pp-figure{padding:30px 28px 28px;min-height:0}
-      .pp-figure img{max-width:270px}
-      /* keep the yellow block + dashed frame tied to the smaller image */
-      .pp-figure::before,.pp-figure::after{width:min(270px,70%)}
+      .pp-figure{padding:30px 28px 18px;min-height:0}
+      .pp-figure img{max-width:280px}
       .pp-body{padding:26px 28px 36px}
       .pp-tabs{gap:8px}
       .pp-tab{flex:0 0 auto;font-size:.74rem;padding:11px 17px}

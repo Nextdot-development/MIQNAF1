@@ -3,7 +3,6 @@
   <style>
     .moa-section{width:100%;padding:2.5rem 1rem 5rem;overflow:hidden;background:transparent}
     /* staggered fade-in (opacity only — keeps hover transforms intact) */
-    .moa-board{opacity:0}
     .moa-section.in-view .moa-board{animation:moaFade .7s ease forwards}
     @keyframes moaFade{from{opacity:0}to{opacity:1}}
     @media(prefers-reduced-motion:reduce){.moa-board{opacity:1;animation:none}}
@@ -14,53 +13,6 @@
     .moa-title em{font-style:italic;color:var(--brand-red)}
     .moa-sub{font-family:'Acumin Variable',sans-serif;font-size:clamp(1rem,1.4vw,1.2rem);font-weight:600;color:var(--text-muted);margin-top:.7rem;max-width:64ch}
 
-    .m3d-viewer{position:relative;min-height:520px;overflow:hidden;cursor:grab;
-      background:radial-gradient(105% 80% at 50% 32%,#22436f 0%,#152c4c 46%,#0a1830 100%)}
-    .m3d-viewer:active{cursor:grabbing}
-    /* soft glow behind the molecule — premium bloom-like halo */
-    .m3d-glow{position:absolute;top:45%;left:50%;width:64%;height:68%;transform:translate(-50%,-50%);z-index:0;pointer-events:none;
-      background:radial-gradient(circle,rgba(70,138,236,.36) 0%,rgba(70,138,236,.12) 46%,rgba(70,138,236,0) 72%);filter:blur(38px)}
-    .m3d-loader{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;color:rgba(255,255,255,.7);
-      font-family:'Acumin Variable',sans-serif;font-size:.76rem;letter-spacing:.08em;text-transform:uppercase;font-weight:700;z-index:6}
-    .m3d-spin{width:34px;height:34px;border:3px solid rgba(255,255,255,.15);border-top-color:var(--orange-section);border-radius:50%;margin-bottom:14px;animation:m3dspin 1s linear infinite}
-    @keyframes m3dspin{to{transform:rotate(360deg)}}
-    /* compact molecule name */
-    .m3d-name{position:absolute;top:15px;left:17px;z-index:4;display:flex;flex-direction:column;gap:1px;pointer-events:none}
-    .m3d-name-main{font-family:'Acumin Variable',sans-serif;font-size:.92rem;font-weight:800;color:#fff;line-height:1.05;text-shadow:0 1px 10px rgba(0,0,0,.4)}
-    .m3d-name-sub{display:inline-flex;align-items:center;gap:6px;font-family:'Acumin Variable',sans-serif;font-size:.55rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--orange-section)}
-    .m3d-name-sub::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--orange-section)}
-    .m3d-hint{position:absolute;top:55px;left:17px;z-index:4;font-family:'Acumin Variable',sans-serif;font-size:.6rem;font-weight:600;letter-spacing:.03em;color:rgba(255,255,255,.5);pointer-events:none}
-    /* collapsible element key (glassmorphism) */
-    .m3d-legend{position:absolute;top:14px;right:14px;z-index:5}
-    .m3d-legend summary{list-style:none;display:inline-flex;align-items:center;gap:7px;cursor:pointer;
-      font-family:'Acumin Variable',sans-serif;font-size:.62rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#fff;
-      background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.2);border-radius:999px;padding:6px 12px;
-      -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);transition:background .2s}
-    .m3d-legend summary::-webkit-details-marker{display:none}
-    .m3d-legend summary:hover{background:rgba(255,255,255,.17)}
-    .m3d-legend summary .dot{width:10px;height:10px;border-radius:50%;background:conic-gradient(#909090,#3050F8,#FF0D0D,#FFFF30,#fff,#909090)}
-    .m3d-legend summary svg{width:11px;height:11px;stroke:#fff;fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;opacity:.8;transition:transform .2s}
-    .m3d-legend[open] summary svg{transform:rotate(180deg)}
-    .m3d-legend-panel{margin-top:8px;margin-left:auto;width:max-content;display:flex;flex-direction:column;gap:7px;padding:13px 15px;border-radius:14px;
-      background:rgba(11,22,40,.74);border:1px solid rgba(255,255,255,.14);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);box-shadow:0 16px 40px rgba(0,0,0,.4)}
-    .m3d-el{display:inline-flex;align-items:center;gap:8px;font-family:'Acumin Variable',sans-serif;font-size:.72rem;font-weight:700;color:#fff}
-    .m3d-el i{width:10px;height:10px;border-radius:50%;box-shadow:0 0 0 1px rgba(0,0,0,.3),0 0 8px rgba(255,255,255,.14)}
-    .m3d-el small{font-weight:600;font-size:.64rem;opacity:.66;text-transform:none;letter-spacing:.01em}
-    /* style controls (glass, compact) — bottom-left */
-    .m3d-controls{position:absolute;bottom:15px;left:15px;display:flex;gap:6px;flex-wrap:wrap;max-width:64%;z-index:4}
-    .m3d-btn{font-family:'Acumin Variable',sans-serif;background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.18);padding:6px 12px;border-radius:999px;
-      font-size:.68rem;font-weight:700;letter-spacing:.02em;cursor:pointer;-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);transition:all .2s}
-    .m3d-btn:hover{background:rgba(255,255,255,.18)}
-    .m3d-btn.active{background:var(--orange-section);border-color:var(--orange-section);box-shadow:0 4px 16px -4px rgba(239,106,43,.6)}
-    /* corner icon controls (glass) — bottom-right */
-    .m3d-icon{position:absolute;bottom:15px;width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.18);
-      display:flex;align-items:center;justify-content:center;cursor:pointer;-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);transition:all .2s;z-index:4}
-    .m3d-icon:hover{background:rgba(255,255,255,.18)}
-    .m3d-icon svg{width:15px;height:15px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-    .m3d-icon.spin{right:15px}.m3d-icon.reset{right:57px}.m3d-icon.fs{right:99px}
-    .m3d-icon.active{background:var(--orange-section);border-color:var(--orange-section)}
-    @media(max-width:980px){.m3d-viewer{min-height:440px}
-      .m3d-viewer{min-height:440px}}
     /* ===== interactive ribosome scene ===== */
     .rib-board{display:grid;grid-template-columns:minmax(0,1fr) minmax(300px,392px);gap:16px;align-items:stretch;margin-bottom:18px}
     .rib-stage{position:relative;border:1px solid rgba(41,57,127,.1);border-radius:20px;overflow:hidden;background:#fff;
@@ -96,9 +48,6 @@
     .rib-chip i{width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-top:5px}
     .rib-foot{font-family:'Acumin Variable',sans-serif;font-size:.74rem;font-weight:500;color:var(--text-grey);margin:0 0 34px}
 
-    .moa-molecule-head{font-family:'Acumin Variable',sans-serif;font-size:.72rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--text-grey);margin:0 0 14px 2px}
-    .moa-board{border:1px solid rgba(41,57,127,.1);border-radius:22px;overflow:hidden;background:#fff;
-      box-shadow:0 1px 4px rgba(0,0,0,.05),0 16px 40px rgba(0,0,0,.06)}
 
     @media(max-width:980px){
       .rib-board{grid-template-columns:1fr}
@@ -109,9 +58,9 @@
 
   <div class="moa-container">
     <div class="moa-head">
-      <div class="moa-eyebrow">Mechanism of Action</div>
-      <h2 class="moa-title">Nafithromycin binds the 50S subunit and stops the peptide chain moving from the <em>A site to the P site</em></h2>
-      <p class="moa-sub">Rotate the ribosome, then toggle the drug to compare an actively translating ribosome with one stalled by nafithromycin.</p>
+      <div class="moa-eyebrow">Dual Ribosomal Binding</div>
+      <h2 class="moa-title">Mechanism of <em>Action</em></h2>
+      <p class="moa-sub">Nafithromycin anchors at two ribosomal sites at once &mdash; so neither erm(B) methylation nor mef(A) efflux can switch it off.</p>
     </div>
 
     <div class="rib-board">
@@ -158,189 +107,9 @@
     </div>
     <p class="rib-foot">Schematic representation for educational use; geometry is stylized, not a crystallographic structure.</p>
 
-    <div class="moa-molecule-head">The molecule itself &middot; drag to rotate, scroll to zoom</div>
-    <div class="moa-board">
-      <div class="m3d-viewer" id="m3d-viewer">
-        <div class="m3d-glow"></div>
-        <div class="m3d-loader" id="m3d-loader"><div class="m3d-spin"></div>Loading nafithromycin&hellip;</div>
-        <div class="m3d-name"><span class="m3d-name-main">Nafithromycin</span><span class="m3d-name-sub">MIQNAF&reg; &middot; Lactone-Ketolide</span></div>
-        <div class="m3d-hint">Hover an atom to identify it</div>
-
-        <details class="m3d-legend">
-          <summary><span class="dot"></span>Elements <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
-          <div class="m3d-legend-panel">
-            <span class="m3d-el"><i style="background:#909090"></i>C <small>Carbon</small></span>
-            <span class="m3d-el"><i style="background:#3050F8"></i>N <small>Nitrogen</small></span>
-            <span class="m3d-el"><i style="background:#FF0D0D"></i>O <small>Oxygen</small></span>
-            <span class="m3d-el"><i style="background:#FFFF30"></i>S <small>Sulfur</small></span>
-            <span class="m3d-el"><i style="background:#FFFFFF"></i>H <small>Hydrogen</small></span>
-          </div>
-        </details>
-
-        <button type="button" class="m3d-icon fs" id="m3d-fs" title="Fullscreen" aria-label="Fullscreen"><svg viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3m13-5v3a2 2 0 0 1-2 2h-3"/></svg></button>
-        <button type="button" class="m3d-icon reset" id="m3d-reset" title="Reset view" aria-label="Reset view"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9 9 0 0 0-6.4 2.6L3 8"/><path d="M3 3v5h5"/></svg></button>
-        <button type="button" class="m3d-icon spin active" id="m3d-spin" title="Toggle rotation" aria-label="Toggle rotation"><svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg></button>
-        <div class="m3d-controls">
-          <button type="button" class="m3d-btn" data-style="line">Line</button>
-          <button type="button" class="m3d-btn" data-style="stick">Stick</button>
-          <button type="button" class="m3d-btn active" data-style="bs">Ball &amp; Stick</button>
-          <button type="button" class="m3d-btn" data-style="sphere">Sphere</button>
-          <button type="button" class="m3d-btn" data-style="cartoon">Surface</button>
-        </div>
-      </div>
-    </div>
   </div>
 </section>
 <script>window.__NAF_SDF_B64__ = "CiAgICAgUkRLaXQgICAgICAgICAgM0QKCjEyMjEyNiAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMDk5OSBWMjAwMAogICAgMS4xMDQ3ICAgLTIuMTcwMiAgIC01LjU1ODAgQyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDEuODUzMyAgIC0xLjExMzQgICAtNC43NTY2IEMgICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgICAxLjM2MTggICAtMC44NjgwICAgLTMuMzEyOCBDICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAgMS40NzQ2ICAgLTIuMDgzMiAgIC0yLjMwNjYgQyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDEuODk4NiAgIC0xLjYwNDMgICAtMC44NjkzIEMgICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgICAwLjg4NTcgICAtMS44MjMyICAgIDAuMjk3MyBDICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAgMS4yMjMzICAgLTAuODgxNiAgICAxLjQ2NjcgQyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDIuMDgwMCAgIC0xLjIyNTEgICAgMi4yODcwIE8gICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgICAwLjYxNTggICAgMC41MzA1ICAgIDEuNTgzNyBDICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtMC42NjQzICAgIDAuODQ3NCAgICAwLjc4MDYgQyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTIuMDQ5MiAgICAwLjY2MjIgICAgMS40NjQ5IEMgICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC0zLjE5MzUgICAgMC40MzQ5ICAgIDAuMzc4NiBDICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtMy40OTA4ICAgIDEuNDk3MyAgIC0wLjcwOTIgQyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTIuMzM2NCAgICAxLjkxMTMgICAtMS42NDU1IEMgICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC0xLjgxOTAgICAgMy4wMjY3ICAgLTEuNTA2MCBPICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtMS44NTUwICAgIDEuMDAyNSAgIC0yLjc4NDcgQyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTAuMzc1OSAgICAwLjY2OTAgICAtMi42NTE2IEMgICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgICAwLjQyNDQgICAgMS4yODAwICAgLTEuOTYxOCBPICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtMC4wMTg0ICAgLTAuNDAzNSAgIC0zLjM5OTUgTyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTIuNzE0NCAgIC0wLjIzMTMgICAtMy4wNTE2IEMgICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC00LjIwMTQgICAgMi43NTE2ICAgLTAuMTc5MSBDICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtNC40MjkzICAgIDAuMjE3NCAgICAxLjA5NDYgTyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTUuMjMzNyAgIC0wLjg4NzIgICAgMC42ODk2IEMgICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC02LjQ3OTkgICAtMC40MDk3ICAgLTAuMDkxNiBDICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtNy43NDM4ICAgLTAuNDQzMSAgICAwLjgwOTUgQyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTcuMzY0MCAgICAwLjA5NDEgICAgMi4xOTc5IEMgICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC02LjI5ODMgICAtMC44MTIzICAgIDIuODMzMSBDICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtNS42MTc5ICAgLTEuNjE5NiAgICAxLjg2MDUgTyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTYuOTMwMCAgIC0xLjc2NDQgICAgMy44NDc5IEMgICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC04LjkxNDAgICAgMC4xODE5ICAgIDAuMTM1NyBOICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtOC44MTE2ICAgIDEuNjM3MiAgIC0wLjAwOTQgQyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAtMTAuMTczOSAgIC0wLjE2NTEgICAgMC43OTk3IEMgICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC02LjY5NDQgICAtMS4yMjY5ICAgLTEuMjU1NyBPICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtMi4wMzM2ICAgLTAuNjA2MyAgICAyLjM1NTcgQyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTIuNDM4NSAgICAxLjcwMjMgICAgMi4zNzg3IE8gICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC0xLjY5NDkgICAgMi45MDg5ICAgIDIuNDQzNiBDICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAgMS43MjEyICAgIDEuNTQxOSAgICAxLjI0NjMgQyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDAuNzkzNSAgIC0zLjI3MDYgICAgMC44MTM0IEMgICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgICAzLjI2OTYgICAtMi4yNjgzICAgLTAuNjIxMyBDICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAgMy40MDgwICAgLTMuMjMyMyAgIC0xLjc1NjMgQyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDQuMjA3NiAgIC00LjE1MzggICAtMS44MDg0IE8gICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgICAyLjU0MDEgICAtMi45NDY1ICAgLTIuNzUzOSBPICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAgNC40OTU4ICAgLTEuMzU3MCAgIC0wLjU1MDggQyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDQuMzQwOCAgIC0wLjA2MTUgICAtMC41Mjc1IE4gICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgICA1LjYwNzkgICAgMC41NjkxICAgLTAuNTA0MiBPICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAgNS42NTYzICAgIDEuNTUxNSAgICAwLjU0MzQgQyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDUuMjI2MSAgICAyLjkwNTMgICAgMC4wMDMxIEMgICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgICA3LjA2NzYgICAgMS41NDU4ICAgIDEuMDY1MiBDICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAgNy4zOTIwICAgIDEuMzIxMiAgICAyLjMyMzEgTiAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDguNzU4MSAgICAxLjI4MjMgICAgMi41MTg4IE4gICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgICA5LjQzNzcgICAgMS40ODkxICAgIDEuNDAzNCBDICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAgOC40MjU5ICAgIDEuNzczMSAgICAwLjAzOTIgUyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgMTAuOTA0MyAgICAxLjQ1NjMgICAgMS4yOTA3IEMgICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIDExLjY5ODIgICAgMS4xNDE0ICAgIDIuMzkzOSBDICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAxMy4wODQ4ICAgIDEuMTAwMiAgICAyLjI0MjUgQyAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgMTMuNjQxMCAgICAxLjM3NzIgICAgMS4wMDIxIEMgICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIDEyLjc4NjcgICAgMS42Nzg5ICAgLTAuMDQ1NCBDICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAxMS40Mzk2ICAgIDEuNzIzOSAgICAwLjA2OTggTiAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDUuNzIzNyAgIC0xLjk2NDkgICAtMC40ODQ0IE4gICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgICAwLjIwNzAgICAtMi45NTc2ICAgLTIuMzYxMiBDICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAgMS40MTk3ICAgLTIuMTI2NCAgIC02LjYwNDggSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDEuMzMwNyAgIC0zLjE3NDggICAtNS4xOTIwIEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgICAwLjAyMTIgICAtMi4wMTY0ICAgLTUuNTIzNiBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAgMi45MTQ4ICAgLTEuMzY1OCAgIC00Ljc0ODggSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDEuNzU5MCAgIC0wLjE2ODEgICAtNS4zMDYzIEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgICAyLjAwNzQgICAtMC4wNTg1ICAgLTIuOTU5NSBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAgMi4wMjk2ICAgLTAuNTIxMyAgIC0wLjkxNzQgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTAuMTEzNyAgIC0xLjU4NjYgICAtMC4wNTQxIEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgICAwLjQwMjEgICAgMC42NjYwICAgIDIuNjUwNCBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtMC41OTQ1ICAgIDEuODc0OSAgICAwLjQyMTIgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTAuNjc3NyAgICAwLjIyNzYgICAtMC4xMDQ0IEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC0yLjkxMjEgICAtMC40ODgwICAgLTAuMTM4MyBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtNC4yNDg3ICAgIDEuMDYzNiAgIC0xLjM3MzMgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTEuOTMwNCAgICAxLjYyNzQgICAtMy42ODU2IEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC0yLjYyNzggICAtMC45NzA1ICAgLTIuMjUzMSBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtMy43NzIwICAgIDAuMDMwMyAgIC0zLjE2ODEgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTIuNDEyMSAgIC0wLjcyMzUgICAtMy45ODcyIEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC0zLjU3MTEgICAgMy4zMzcwICAgIDAuNDkyOSBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtNC40NzgyICAgIDMuNDE4NyAgIC0xLjAxMDAgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTUuMTIyOSAgICAyLjUwNjggICAgMC4zNTk5IEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC00LjY1MTMgICAtMS41ODIwICAgIDAuMDc4OSBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtNi4zMDIzICAgIDAuNTk1MSAgIC0wLjQ3NDggSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTguMDEwOCAgIC0xLjUwNDggICAgMC45MjM0IEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC04LjIzMTEgICAgMC4yMDA2ICAgIDIuODYxNyBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtNi45Mzk4ICAgIDEuMTAzMCAgICAyLjA5OTcgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTUuNTU1NSAgIC0wLjIwMzMgICAgMy4zNjI1IEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC03Ljc2OTYgICAtMi4zMDk0ICAgIDMuMzkzNiBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtNi4yMDYzICAgLTIuNTE4OSAgICA0LjE4NjAgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTcuMzA1NiAgIC0xLjIyMDIgICAgNC43MjI4IEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC04LjA0MjIgICAgMS44OTY4ICAgLTAuNzUyMyBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtOC41ODE1ICAgIDIuMTQ5NCAgICAwLjkzNDIgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTkuNzQ3NCAgICAyLjA2MTcgICAtMC4zODYyIEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgLTEwLjI2NDUgICAgMC4yNjYxICAgIDEuODAxOCBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogIC0xMS4wMTk2ICAgIDAuMTg0MSAgICAwLjE5OTIgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAtMTAuMjg0NiAgIC0xLjI1MjcgICAgMC44Nzc5IEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC03LjY3MDYgICAtMS4zMDg5ICAgLTEuMzQ1MiBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtMS4zMTMyICAgLTAuNTI3NCAgICAzLjE3NjMgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTIuOTk0OCAgIC0wLjc2NjYgICAgMi44NTQ0IEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC0xLjc5ODcgICAtMS41MDMyICAgIDEuNzczNiBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtMi4xNTUwICAgIDMuNTQ4OCAgICAzLjIwNDEgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgLTAuNjU4NiAgICAyLjczMDkgICAgMi43MzEyIEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC0xLjc0MjUgICAgMy40NDcxICAgIDEuNDk0NyBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAgMS40NDA1ICAgIDIuNTUyNiAgICAxLjU4MzQgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDIuNjYwOCAgICAxLjI4NDYgICAgMS43NDk4IEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgICAxLjkyMDMgICAgMS41ODUyICAgIDAuMTY3MyBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtMC4yNTcwICAgLTMuNTIzOSAgICAxLjAxNjggSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDEuMTYyNSAgIC00LjAwNjkgICAgMC4wOTk1IEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgICAxLjMzMjkgICAtMy40MzY0ICAgIDEuNzU1MCBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAgMy4yNjgyICAgLTIuODQ5OSAgICAwLjMwNzEgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDQuOTg5NCAgICAxLjI1NDYgICAgMS4zNjU3IEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgICA1Ljg2NjkgICAgMy4yMzQwICAgLTAuODIxOCBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAgNS4yNDY1ICAgIDMuNjc1NiAgICAwLjc3ODMgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDQuMjA5MiAgICAyLjg1MDMgICAtMC40MDE2IEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIDExLjI0NjUgICAgMC45MjM2ICAgIDMuMzYxNCBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAxMy43MTkyICAgIDAuODU1OSAgICAzLjA5MDkgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgMTQuNzE0MCAgICAxLjM1MzcgICAgMC44NTE3IEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIDEzLjE3MjkgICAgMS44OTkxICAgLTEuMDM4NyBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAgNi41MTE0ICAgLTEuMzc2NyAgIC0wLjIzMTcgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDUuODAyNiAgIC0yLjk1NjggICAtMC4yNjczIEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgIC0wLjY3NDMgICAtMi40NzE3ICAgLTEuOTM1NiBIICAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMCAgMAogICAtMC4wNTAxICAgLTMuMjMwMiAgIC0zLjM4NjIgSCAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAgIDAKICAgIDAuMzYwMSAgIC0zLjkxNjkgICAtMS44NTc1IEggICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwICAwCiAgMSAgMiAgMSAgMAogIDIgIDMgIDEgIDAKICAzICA0ICAxICAwCiAgNCAgNSAgMSAgMAogIDUgIDYgIDEgIDAKICA2ICA3ICAxICAwCiAgNyAgOCAgMiAgMAogIDcgIDkgIDEgIDAKICA5IDEwICAxICAwCiAxMCAxMSAgMSAgMAogMTEgMTIgIDEgIDAKIDEyIDEzICAxICAwCiAxMyAxNCAgMSAgMAogMTQgMTUgIDIgIDAKIDE0IDE2ICAxICAwCiAxNiAxNyAgMSAgMAogMTcgMTggIDIgIDAKIDE3IDE5ICAxICAwCiAxNiAyMCAgMSAgMAogMTMgMjEgIDEgIDAKIDEyIDIyICAxICAwCiAyMiAyMyAgMSAgMAogMjMgMjQgIDEgIDAKIDI0IDI1ICAxICAwCiAyNSAyNiAgMSAgMAogMjYgMjcgIDEgIDAKIDI3IDI4ICAxICAwCiAyNyAyOSAgMSAgMAogMjUgMzAgIDEgIDAKIDMwIDMxICAxICAwCiAzMCAzMiAgMSAgMAogMjQgMzMgIDEgIDAKIDExIDM0ICAxICAwCiAxMSAzNSAgMSAgMAogMzUgMzYgIDEgIDAKICA5IDM3ICAxICAwCiAgNiAzOCAgMSAgMAogIDUgMzkgIDEgIDAKIDM5IDQwICAxICAwCiA0MCA0MSAgMiAgMAogNDAgNDIgIDEgIDAKIDM5IDQzICAxICAwCiA0MyA0NCAgMiAgMwogNDQgNDUgIDEgIDAKIDQ1IDQ2ICAxICAwCiA0NiA0NyAgMSAgMAogNDYgNDggIDEgIDAKIDQ4IDQ5ICAyICAwCiA0OSA1MCAgMSAgMAogNTAgNTEgIDIgIDAKIDUxIDUyICAxICAwCiA1MSA1MyAgMSAgMAogNTMgNTQgIDIgIDAKIDU0IDU1ICAxICAwCiA1NSA1NiAgMiAgMAogNTYgNTcgIDEgIDAKIDU3IDU4ICAyICAwCiA0MyA1OSAgMSAgMAogIDQgNjAgIDEgIDAKIDE5ICAzICAxICAwCiA0MiAgNCAgMSAgMAogMjggMjMgIDEgIDAKIDUyIDQ4ICAxICAwCiA1OCA1MyAgMSAgMAogIDEgNjEgIDEgIDAKICAxIDYyICAxICAwCiAgMSA2MyAgMSAgMAogIDIgNjQgIDEgIDAKICAyIDY1ICAxICAwCiAgMyA2NiAgMSAgMAogIDUgNjcgIDEgIDAKICA2IDY4ICAxICAwCiAgOSA2OSAgMSAgMAogMTAgNzAgIDEgIDAKIDEwIDcxICAxICAwCiAxMiA3MiAgMSAgMAogMTMgNzMgIDEgIDAKIDE2IDc0ICAxICAwCiAyMCA3NSAgMSAgMAogMjAgNzYgIDEgIDAKIDIwIDc3ICAxICAwCiAyMSA3OCAgMSAgMAogMjEgNzkgIDEgIDAKIDIxIDgwICAxICAwCiAyMyA4MSAgMSAgMAogMjQgODIgIDEgIDAKIDI1IDgzICAxICAwCiAyNiA4NCAgMSAgMAogMjYgODUgIDEgIDAKIDI3IDg2ICAxICAwCiAyOSA4NyAgMSAgMAogMjkgODggIDEgIDAKIDI5IDg5ICAxICAwCiAzMSA5MCAgMSAgMAogMzEgOTEgIDEgIDAKIDMxIDkyICAxICAwCiAzMiA5MyAgMSAgMAogMzIgOTQgIDEgIDAKIDMyIDk1ICAxICAwCiAzMyA5NiAgMSAgMAogMzQgOTcgIDEgIDAKIDM0IDk4ICAxICAwCiAzNCA5OSAgMSAgMAogMzYxMDAgIDEgIDAKIDM2MTAxICAxICAwCiAzNjEwMiAgMSAgMAogMzcxMDMgIDEgIDAKIDM3MTA0ICAxICAwCiAzNzEwNSAgMSAgMAogMzgxMDYgIDEgIDAKIDM4MTA3ICAxICAwCiAzODEwOCAgMSAgMAogMzkxMDkgIDEgIDAKIDQ2MTEwICAxICAwCiA0NzExMSAgMSAgMAogNDcxMTIgIDEgIDAKIDQ3MTEzICAxICAwCiA1NDExNCAgMSAgMAogNTUxMTUgIDEgIDAKIDU2MTE2ICAxICAwCiA1NzExNyAgMSAgMAogNTkxMTggIDEgIDAKIDU5MTE5ICAxICAwCiA2MDEyMCAgMSAgMAogNjAxMjEgIDEgIDAKIDYwMTIyICAxICAwCk0gIEVORAo=";</script>
-<script>
-(function(){
-  var CDNS = [
-    'https://3Dmol.org/build/3Dmol-min.js',
-    'https://cdn.jsdelivr.net/npm/3dmol@2.4.2/build/3Dmol-min.js',
-    'https://unpkg.com/3dmol@2.4.2/build/3Dmol-min.js'
-  ];
-  function fail(msg){
-    var loader = document.getElementById('m3d-loader');
-    if(loader) loader.innerHTML = '<div style="color:#ff9b9b;font-size:.78rem;text-align:center;line-height:1.5">'+(msg||'3D viewer unavailable')+'</div>';
-  }
-  // Load the 3Dmol library, trying each CDN in turn.
-  function loadLib(i){
-    if(typeof window.$3Dmol !== 'undefined'){ render3D(); return; }
-    if(i >= CDNS.length){ fail('Could not load the 3D engine.<br>Check your internet connection.'); return; }
-    var s = document.createElement('script');
-    s.src = CDNS[i];
-    s.async = true;
-    s.onload = function(){ if(typeof window.$3Dmol !== 'undefined') render3D(); else loadLib(i+1); };
-    s.onerror = function(){ loadLib(i+1); };
-    document.head.appendChild(s);
-  }
-  function render3D(){
-    if(!window.__NAF_SDF_B64__){ fail('Structure data missing.'); return; }
-    var el = document.getElementById('m3d-viewer');
-    if(!el) return;
-    var loader = document.getElementById('m3d-loader');
-    var sdf = atob(window.__NAF_SDF_B64__);
-    var viewer = null, isSpinning = true, homeView = null;
-    function applyStyle(style){
-      if(!viewer) return;
-      try { viewer.removeAllSurfaces(); } catch(e){}
-      viewer.setStyle({}, {});
-      if(style==='line') viewer.setStyle({}, {line:{linewidth:2, colorscheme:'Jmol'}});
-      else if(style==='stick') viewer.setStyle({}, {stick:{radius:0.16, colorscheme:'Jmol'}});
-      else if(style==='bs') viewer.setStyle({}, {stick:{radius:0.14, colorscheme:'Jmol'}, sphere:{scale:0.30, colorscheme:'Jmol'}});
-      else if(style==='sphere') viewer.setStyle({}, {sphere:{scale:0.45, colorscheme:'Jmol'}});
-      else if(style==='cartoon'){
-        viewer.setStyle({}, {stick:{radius:0.08, colorscheme:'Jmol'}});
-        try { viewer.addSurface($3Dmol.SurfaceType.VDW, {opacity:0.55, color:'#2E6EC8'}); } catch(e){}
-      }
-      viewer.render();
-    }
-    try {
-      // NOTE: pass backgroundAlpha (not an rgba string) — 3Dmol's colour
-      // parser rejects 'rgba(...)' strings and throws inside the constructor.
-      // antialias = the FXAA-equivalent edge smoothing 3Dmol exposes.
-      viewer = $3Dmol.createViewer(el, {backgroundAlpha:0, antialias:true});
-      viewer.addModel(sdf, 'sdf');
-      // premium ball-&-stick default — more depth than bare sticks
-      viewer.setStyle({}, {stick:{radius:0.14, colorscheme:'Jmol'}, sphere:{scale:0.30, colorscheme:'Jmol'}});
-      try { viewer.setBackgroundColor(0x0a1830, 0); } catch(e){}
-      viewer.zoomTo();
-      // clean isometric-ish angle, enlarge ~28% and keep it centred
-      try { viewer.rotate(22, 'x'); viewer.rotate(-32, 'y'); viewer.zoom(1.28); } catch(e){}
-      viewer.render();
-      try { homeView = viewer.getView(); } catch(e){}
-      try { viewer.spin('y', 0.25); } catch(e){ isSpinning = false; }
-      if(loader) loader.style.display = 'none';
-
-      document.querySelectorAll('#moa .m3d-btn[data-style]').forEach(function(btn){
-        btn.addEventListener('click', function(){
-          document.querySelectorAll('#moa .m3d-btn[data-style]').forEach(function(b){ b.classList.remove('active'); });
-          btn.classList.add('active');
-          applyStyle(btn.dataset.style);
-        });
-      });
-
-      // No permanent labels — the structure stays clean and reads by element
-      // colour alone. Element identity appears only on hover (premium tooltip).
-      var EL_COLORS = {C:'#c3c9d4', N:'#7d93ff', O:'#ff6a6a', S:'#ffe23d', H:'#e8ecf3'};
-      var EL_NAMES  = {C:'Carbon', N:'Nitrogen', O:'Oxygen', S:'Sulfur', H:'Hydrogen'};
-      try { viewer.setHoverDuration(60); } catch(e){}
-      try {
-        viewer.setHoverable({}, true,
-          function(atom, v){
-            if(atom.__lbl) return;
-            atom.__lbl = v.addLabel((EL_NAMES[atom.elem] || atom.elem) + '  ·  ' + atom.elem, {
-              position:{x:atom.x, y:atom.y, z:atom.z}, inFront:true, alignment:'center',
-              font:'Helvetica', fontSize:13, fontColor:'#0a1524',
-              backgroundColor:'#ffffff', backgroundOpacity:0.94,
-              borderColor: EL_COLORS[atom.elem] || '#8899bb', borderThickness:1.6
-            });
-            v.render();
-          },
-          function(atom, v){
-            if(atom.__lbl){ v.removeLabel(atom.__lbl); delete atom.__lbl; v.render(); }
-          }
-        );
-        // 3Dmol only wires hover picking into the atom geometry on the next
-        // style build — rebuild the default style once so hover works from the
-        // start (otherwise it stays dormant until you switch styles manually).
-        applyStyle('bs');
-      } catch(e){}
-      var spinBtn = document.getElementById('m3d-spin');
-      if(spinBtn) spinBtn.addEventListener('click', function(){
-        isSpinning = !isSpinning;
-        try { if(isSpinning) viewer.spin('y', 0.25); else viewer.spin(false); } catch(e){}
-        spinBtn.classList.toggle('active', isSpinning);
-      });
-      var resetBtn = document.getElementById('m3d-reset');
-      if(resetBtn) resetBtn.addEventListener('click', function(){
-        try { if(homeView) viewer.setView(homeView); else viewer.zoomTo(); } catch(e){ viewer.zoomTo(); }
-        viewer.render();
-      });
-      var fsBtn = document.getElementById('m3d-fs');
-      if(fsBtn) fsBtn.addEventListener('click', function(){
-        if(!document.fullscreenElement){ if(el.requestFullscreen) el.requestFullscreen(); }
-        else { if(document.exitFullscreen) document.exitFullscreen(); }
-        setTimeout(function(){ try{ viewer.resize(); viewer.zoomTo(); viewer.zoom(1.28); viewer.render(); }catch(e){} }, 300);
-      });
-      window.addEventListener('resize', function(){ try{ viewer.resize(); }catch(e){} });
-
-      // Pause the WebGL spin loop whenever the molecule is off-screen so it
-      // doesn't burn GPU/CPU while the user is reading other sections.
-      if('IntersectionObserver' in window){
-        var visObs = new IntersectionObserver(function(entries){
-          entries.forEach(function(en){
-            try {
-              if(en.isIntersecting){ if(isSpinning) viewer.spin('y', 0.25); }
-              else { viewer.spin(false); }
-            } catch(e){}
-          });
-        }, {threshold:0.05});
-        visObs.observe(el);
-      }
-    } catch(err){
-      console.error('[MIQNAF 3D] viewer error:', err);
-      fail('3D viewer failed to initialise.<br>' + (err && err.message ? err.message : ''));
-    }
-  }
-  // Don't fetch the ~1 MB 3Dmol library or build the viewer until the section
-  // is near the viewport — keeps initial page load light and scroll-smooth.
-  function start(){
-    var el = document.getElementById('m3d-viewer');
-    if(!el || !('IntersectionObserver' in window)){ loadLib(0); return; }
-    var started = false;
-    var obs = new IntersectionObserver(function(entries){
-      if(started) return;
-      if(entries.some(function(en){ return en.isIntersecting; })){
-        started = true; obs.disconnect(); loadLib(0);
-      }
-    }, {rootMargin:'600px 0px'});
-    obs.observe(el);
-  }
-  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start);
-  else start();
-})();
-</script>
 <script>
 /* Interactive 70S ribosome scene — stylised, not crystallographic.
    Drag to rotate, scroll to zoom, toggle the drug in and out. Built on
