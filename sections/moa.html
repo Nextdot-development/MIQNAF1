@@ -35,12 +35,20 @@
     .rib-status.running{background:rgba(26,122,66,.1);color:#1A7A42}
 
     .rib-steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px}
+    .rib-steps[hidden]{display:none}
+    .rib-steps.is-on{animation:ribCards .55s cubic-bezier(.22,.61,.36,1) both}
+    @keyframes ribCards{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+    @media(prefers-reduced-motion:reduce){.rib-steps.is-on{animation:none}}
     .rib-step{flex:1;padding:16px 18px;border-radius:16px;background:var(--brand-navy);color:#fff;
       box-shadow:0 1px 4px rgba(0,0,0,.05),0 12px 30px rgba(41,57,127,.16);transition:transform .25s ease,box-shadow .25s ease}
     .rib-step:hover{transform:translateY(-3px);box-shadow:0 3px 10px rgba(0,0,0,.07),0 18px 40px rgba(41,57,127,.24)}
+    /* the running state reads green, the way the reference distinguishes them */
+    .rib-steps.running .rib-step{background:#186b3b;box-shadow:0 1px 4px rgba(0,0,0,.05),0 12px 30px rgba(24,107,59,.2)}
+    .rib-steps.running .rib-step:hover{box-shadow:0 3px 10px rgba(0,0,0,.07),0 18px 40px rgba(24,107,59,.3)}
+    .rib-steps.running .rib-step .n{color:#8fe0ad}
     .rib-step .n{font-family:'Acumin Variable',sans-serif;font-size:.62rem;font-weight:800;letter-spacing:.28em;color:var(--orange-section)}
     .rib-step h3{font-family:'Acumin Variable',sans-serif;font-size:.98rem;font-weight:800;line-height:1.3;margin:5px 0 6px;color:#fff}
-    .rib-step p{font-family:'Acumin Variable',sans-serif;font-size:.8rem;font-weight:500;line-height:1.6;margin:0;color:rgba(255,255,255,.8)}
+    .rib-step p{font-family:'Acumin Variable',sans-serif;font-size:.8rem;font-weight:500;line-height:1.6;margin:0;color:rgba(255,255,255,.82)}
 
     .rib-legend{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:12px}
     .rib-chip{display:flex;align-items:flex-start;gap:9px;padding:12px 15px;border:1px solid rgba(41,57,127,.1);border-radius:14px;background:#fff;
@@ -76,11 +84,11 @@
         <div class="rib-status stalled" id="rib-status">Translation stalled &mdash; the tRNA is held at the A site and the peptide chain stops growing.</div>
       </div>
 
-      <ol class="rib-steps">
+      <ol class="rib-steps is-on" id="rib-steps-on">
         <li class="rib-step">
           <div class="n">01</div>
           <h3>Binds to the 50S ribosomal subunit</h3>
-          <p>Nafithromycin, a lactone-ketolide, binds the 50S subunit at the entrance of the nascent peptide exit tunnel, anchoring to domain V of the 23S rRNA with an additional ketolide-type contact in domain II that increases binding affinity.</p>
+          <p>Nafithromycin, a lactone ketolide, binds to the 50S subunit at the entrance of the nascent peptide exit tunnel, anchoring to domain V of the 23S rRNA with an additional ketolide-type contact in domain II that increases binding affinity.</p>
         </li>
         <li class="rib-step">
           <div class="n">02</div>
@@ -96,6 +104,29 @@
           <div class="n">04</div>
           <h3>Growth and multiplication are inhibited</h3>
           <p>Without new proteins the bacterium can neither grow nor multiply. The effect is bacteriostatic for most organisms and bactericidal against several key respiratory pathogens.</p>
+        </li>
+      </ol>
+
+      <ol class="rib-steps running" id="rib-steps-off" hidden>
+        <li class="rib-step">
+          <div class="n">01</div>
+          <h3>Exit tunnel is open</h3>
+          <p>With no drug bound to domain V of the 23S rRNA, the growing peptide threads freely out through the 50S exit tunnel.</p>
+        </li>
+        <li class="rib-step">
+          <div class="n">02</div>
+          <h3>Translocation proceeds</h3>
+          <p>EF-G&ndash;driven translocation shifts the peptidyl-tRNA from the A site to the P site, the deacylated tRNA leaves via the E site, and the mRNA advances by one codon.</p>
+        </li>
+        <li class="rib-step">
+          <div class="n">03</div>
+          <h3>Chain elongation continues</h3>
+          <p>Each elongation cycle adds one amino acid, and the polypeptide lengthens as it passes through the exit tunnel.</p>
+        </li>
+        <li class="rib-step">
+          <div class="n">04</div>
+          <h3>Bacterium grows and multiplies</h3>
+          <p>Complete, functional proteins are produced, supporting bacterial growth and multiplication.</p>
         </li>
       </ol>
     </div>
@@ -143,6 +174,9 @@
   var scene, camera, renderer, root, drugGroup, crossGroup;
   var trnaA, trnaP, trnaE, chain = [], strandGroup;
   var started = false, drugOn = true, visible = true, raf = null;
+  // drugT: 0 = clear of the ribosome, 1 = docked. Animated, never snapped.
+  var drugT = 1, animFrom = 1, animTo = 1, animStart = 0, ANIM_MS = 1600;
+  var DOCK = null, AWAY = null, MAX_CHAIN = 12;
   var yaw = 0.06, pitch = 0.10, dist = 43, dragging = false, lastX = 0, lastY = 0, userZoomed = false;
   var clock = 0;
 
@@ -236,9 +270,15 @@
     return g;
   }
 
+  // the chain climbs with a gentle sway, the way a peptide threads out
+  function chainPos(i) {
+    return new THREE.Vector3(0.6 + Math.sin(i * 0.7) * 0.9, 3.0 + i * 1.5, 1.6 + Math.cos(i * 0.6) * 0.5);
+  }
+  function smooth(t) { t = Math.max(0, Math.min(1, t)); return t * t * (3 - 2 * t); }
+
   function buildCross() {
     var g = new THREE.Group();
-    var mat = new THREE.MeshBasicMaterial({ color: C.cross });
+    var mat = new THREE.MeshBasicMaterial({ color: C.cross, transparent: true, opacity: 1 });
     [-1, 1].forEach(function (s) {
       var bar = new THREE.Mesh(new THREE.BoxGeometry(6.6, 1.8, 1.0), mat);
       bar.rotation.z = s * Math.PI / 4;
@@ -290,18 +330,23 @@
     trnaP = capsule(7.0, 0.76, C.trna); trnaP.position.set(0.2, -1.9, 1.6); root.add(trnaP);
     trnaE = capsule(6.2, 0.74, C.trna); trnaE.position.set(-4.9, -2.4, 1.6); trnaE.visible = false; root.add(trnaE);
 
-    // the nascent peptide chain climbing out of the P site
-    for (var a = 0; a < 3; a++) {
-      var s = new THREE.Mesh(new THREE.SphereGeometry(0.78, 20, 16),
+    // the nascent peptide chain threading up out of the exit tunnel
+    for (var a = 0; a < MAX_CHAIN; a++) {
+      var sp = new THREE.Mesh(new THREE.SphereGeometry(0.78, 20, 16),
         new THREE.MeshPhongMaterial({ color: C.aa[a % C.aa.length], shininess: 70 }));
-      s.position.set(0.6 - a * 0.35, 3.0 + a * 1.5, 1.6);
-      chain.push(s);
-      root.add(s);
+      sp.position.copy(chainPos(a));
+      sp.visible = false;
+      chain.push(sp);
+      root.add(sp);
     }
+
+    // docked at the tunnel mouth; AWAY is clear of the subunit, up and to the right
+    DOCK = new THREE.Vector3(11.6, 7.9, 3.0);
+    AWAY = new THREE.Vector3(34.0, 22.0, 14.0);
 
     drugGroup = new THREE.Group();
     drugGroup.add(buildMolecule());
-    drugGroup.position.set(13.0, 8.6, 3.0);
+    drugGroup.position.copy(DOCK);
     root.add(drugGroup);
 
     crossGroup = buildCross();
@@ -314,7 +359,7 @@
     HOST.appendChild(renderer.domElement);
     camera = new THREE.PerspectiveCamera(40, 1, 0.1, 400);
     resize();
-    applyState();
+    applyState(false);
   }
 
   function resize() {
@@ -331,18 +376,32 @@
     }
   }
 
-  function applyState() {
-    drugGroup.visible = drugOn;
-    crossGroup.visible = drugOn;
+  function applyState(animate) {
     document.getElementById('rib-on').setAttribute('aria-pressed', drugOn ? 'true' : 'false');
     document.getElementById('rib-off').setAttribute('aria-pressed', drugOn ? 'false' : 'true');
+
     var st = document.getElementById('rib-status');
     st.classList.toggle('stalled', drugOn);
     st.classList.toggle('running', !drugOn);
     st.innerHTML = drugOn
       ? 'Translation stalled &mdash; the tRNA is held at the A site and the peptide chain stops growing.'
-      : 'Translating normally &mdash; the tRNA steps A &rarr; P &rarr; E and the peptide chain keeps growing.';
-    if (!drugOn) { clock = 0; }
+      : 'Translation running &mdash; the tRNA translocates from the A site to the P site and the peptide chain elongates.';
+
+    var on = document.getElementById('rib-steps-on');
+    var off = document.getElementById('rib-steps-off');
+    if (on && off) {
+      var show = drugOn ? on : off, hide = drugOn ? off : on;
+      hide.hidden = true; hide.classList.remove('is-on');
+      show.hidden = false;
+      show.classList.remove('is-on');
+      void show.offsetWidth;              // restart the entrance
+      show.classList.add('is-on');
+    }
+
+    animFrom = drugT;
+    animTo = drugOn ? 1 : 0;
+    animStart = (typeof performance !== 'undefined' ? performance.now() : Date.now());
+    if (!animate) { drugT = animTo; animFrom = animTo; }
   }
 
   var SITE_X = { A: 5.6, P: 0.2, E: -4.9 };
@@ -352,6 +411,30 @@
     if (!visible) return;
     clock += 0.016;
 
+    // ---- the drug's journey in or out of the binding site ----
+    var now = (typeof performance !== 'undefined' ? performance.now() : Date.now());
+    var k = smooth((now - animStart) / ANIM_MS);
+    drugT = animFrom + (animTo - animFrom) * k;
+
+    drugGroup.visible = drugT > 0.015;                 // gone only once it is clear
+    if (drugGroup.visible) {
+      var arc = Math.sin(Math.PI * drugT) * 3.4;       // a slight curve rather than a straight line
+      drugGroup.position.set(
+        AWAY.x + (DOCK.x - AWAY.x) * drugT,
+        AWAY.y + (DOCK.y - AWAY.y) * drugT + arc,
+        AWAY.z + (DOCK.z - AWAY.z) * drugT
+      );
+      var travelling = drugT > 0.02 && drugT < 0.98;
+      drugGroup.rotation.y += travelling ? 0.045 : 0.005;   // tumbles on the way, settles once docked
+      drugGroup.rotation.x = (1 - drugT) * 0.9;
+      drugGroup.scale.setScalar(0.86 + drugT * 0.14);
+    }
+
+    // the block marker only reads once the molecule has actually seated
+    var bound = smooth((drugT - 0.82) / 0.18);
+    crossGroup.visible = bound > 0.01;
+    crossGroup.traverse(function (o) { if (o.material) o.material.opacity = bound; });
+
     if (drugOn) {
       // held at the A site: it strains, but nothing advances
       trnaA.visible = true; trnaP.visible = true; trnaE.visible = false;
@@ -359,13 +442,16 @@
       trnaA.rotation.z = -0.1 + Math.sin(clock * 3) * 0.02;
       trnaP.position.set(SITE_X.P, -1.9, 1.6);
       strandGroup.position.x = 0;
-      chain.forEach(function (s, i) {
-        s.visible = i < 3;
-        s.position.set(0.6 - i * 0.35, 3.0 + i * 1.5 + Math.sin(clock * 2 + i) * 0.06, 1.6);
+      // elongation halts after a few residues, and only once the drug is seated
+      var held = 3 + Math.round((1 - bound) * 4);
+      chain.forEach(function (sp, i) {
+        sp.visible = i < held;
+        sp.scale.setScalar(1);
+        var q = chainPos(i);
+        sp.position.set(q.x, q.y + Math.sin(clock * 2 + i) * 0.06, q.z);
       });
       crossGroup.rotation.z = Math.sin(clock * 2.2) * 0.04;
-      crossGroup.scale.setScalar(1 + Math.sin(clock * 2.6) * 0.05);
-      drugGroup.rotation.y += 0.005;
+      crossGroup.scale.setScalar((0.85 + bound * 0.15) * (1 + Math.sin(clock * 2.6) * 0.05));
     } else {
       // one elongation cycle: A -> P -> E, the strip advances a codon,
       // and the peptide picks up another residue
@@ -381,11 +467,12 @@
       strandGroup.position.x = -ease * 1.16;
 
       var grown = Math.floor(clock / CYCLE) % (chain.length + 1);
-      chain.forEach(function (s, i) {
-        s.visible = i <= grown;
-        var pop = (i === grown) ? Math.min(1, (clock % CYCLE) / 0.5) : 1;
-        s.scale.setScalar(pop);
-        s.position.set(0.6 - i * 0.35, 3.0 + i * 1.5, 1.6);
+      chain.forEach(function (sp, i) {
+        sp.visible = i <= grown;
+        var pop = (i === grown) ? smooth((clock % CYCLE) / 0.6) : 1;
+        sp.scale.setScalar(pop);
+        var q = chainPos(i);
+        sp.position.set(q.x, q.y, q.z);
       });
     }
 
@@ -414,8 +501,14 @@
     dist = Math.max(24, Math.min(88, dist + (e.deltaY > 0 ? 2.5 : -2.5)));
   }, { passive: false });
 
-  document.getElementById('rib-on').addEventListener('click', function () { drugOn = true; applyState(); });
-  document.getElementById('rib-off').addEventListener('click', function () { drugOn = false; applyState(); });
+  document.getElementById('rib-on').addEventListener('click', function () {
+    if (drugOn) return;
+    drugOn = true; applyState(true);
+  });
+  document.getElementById('rib-off').addEventListener('click', function () {
+    if (!drugOn) return;
+    drugOn = false; clock = 0; applyState(true);
+  });
   window.addEventListener('resize', resize);
 
   function boot() {
