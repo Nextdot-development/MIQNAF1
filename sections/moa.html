@@ -22,7 +22,7 @@
       background:transparent;border:0;border-radius:999px;padding:8px 16px;cursor:pointer;transition:all .22s ease;white-space:nowrap}
     .rib-toggle button[aria-pressed="true"]{background:var(--brand-navy);color:#fff;box-shadow:0 6px 16px -6px rgba(41,57,127,.7)}
     .rib-canvas{position:relative;flex:1;min-height:430px;margin:14px;border-radius:14px;overflow:hidden;cursor:grab;
-      background:radial-gradient(110% 90% at 50% 22%,#f7f8fb 0%,#eceff6 60%,#e2e7f1 100%)}
+      background:#f6f3fa}
     .rib-canvas:active{cursor:grabbing}
     .rib-canvas canvas{display:block;width:100%;height:100%}
     .rib-hint{position:absolute;left:14px;bottom:12px;z-index:3;pointer-events:none;font-family:'Acumin Variable',sans-serif;
@@ -157,27 +157,28 @@
     'https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js'
   ];
 
+  // Palette lifted pixel-by-pixel off the reference frames.
   var C = {
-    sub50:  0xc2b2dc,
-    sub30:  0xd3ccea,
-    siteE:  0xa78bc9,
-    siteP:  0xd9c9b0,
-    siteA:  0x9b5fc0,
-    trna:   0x8794a8,
-    bar:    0xb8bcc4,
-    cross:  0xe8352b,
-    aa:     [0x8a3fb0, 0xd9a441, 0x2f6fd0, 0x3fa9a0, 0xd94a3d],
-    codon:  [0xe8b53a, 0x4a86d8, 0x55a860, 0xd94a3d, 0x3fa9a0, 0x8a6bd1]
+    sub50:  0xc7bcdb,
+    sub30:  0xc3bcdd,
+    siteE:  0xb9a9d0,
+    siteP:  0xd6cabf,
+    siteA:  0xa565c4,
+    trna:   0xc2c2d6,
+    bar:    0xa3a4ae,
+    cross:  0xe03b33,
+    aa:     [0x7929a4, 0xd5af4c, 0x2b7ec2, 0x58b386, 0xbc7db6, 0x82b6c1, 0x9d78be, 0xc8ad90, 0x7a95c0],
+    codon:  [0xd5af4c, 0x4a86d8, 0x58b386, 0xd94a3d, 0x82b6c1, 0x9d78be]
   };
   var ATOM = { C: 0x4a4a52, N: 0x2f5fd0, O: 0xe03127, S: 0xe8c020 };
 
   var scene, camera, renderer, root, drugGroup, crossGroup;
-  var trnaA, trnaP, trnaE, chain = [], strandGroup;
+  var trnaA, trnaP, trnaE, trnaDrop, chain = [], strandGroup;
   var started = false, drugOn = true, visible = true, raf = null;
   // drugT: 0 = clear of the ribosome, 1 = docked. Animated, never snapped.
   var drugT = 1, animFrom = 1, animTo = 1, animStart = 0, ANIM_MS = 1600;
   var DOCK = null, AWAY = null, MAX_CHAIN = 12;
-  var yaw = 0.06, pitch = 0.10, dist = 43, dragging = false, lastX = 0, lastY = 0, userZoomed = false;
+  var yaw = 0.06, pitch = 0.10, dist = 74, dragging = false, lastX = 0, lastY = 0, userZoomed = false;
   var clock = 0;
 
   function label(text, color, size) {
@@ -196,20 +197,22 @@
   function blob(rx, ry, rz, color, opacity) {
     var m = new THREE.Mesh(new THREE.SphereGeometry(1, 56, 40),
       new THREE.MeshPhongMaterial({ color: color, transparent: true, opacity: opacity,
-        shininess: 26, specular: 0x7a82a8, depthWrite: false }));
+        shininess: 14, specular: 0x4a5070, depthWrite: false }));
     m.scale.set(rx, ry, rz);
     return m;
   }
 
-  // flat upright plane, the way the reference draws the three tRNA positions
-  function sitePlane(x, color, name, w, h) {
+  // flat upright plane, the way the reference draws the three tRNA positions.
+  // The A site is the saturated one with a white letter; E and P are muted with
+  // dark letters, exactly as the reference distinguishes them.
+  function sitePlane(x, color, name, w, h, opacity, ink) {
     var g = new THREE.Group();
     g.add(new THREE.Mesh(new THREE.PlaneGeometry(w, h),
-      new THREE.MeshBasicMaterial({ color: color, transparent: true, opacity: 0.5, side: THREE.DoubleSide })));
-    var l = label(name, '#2b2b3a', 4.4);
+      new THREE.MeshBasicMaterial({ color: color, transparent: true, opacity: opacity, side: THREE.DoubleSide })));
+    var l = label(name, ink, 4.4);
     l.position.set(0, -h / 2 + 2.2, 0.4);
     g.add(l);
-    g.position.set(x, -1.0, 0);
+    g.position.set(x, -1.0, 6.4);
     return g;
   }
 
@@ -266,13 +269,13 @@
       mesh.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), dir.clone().normalize());
       g.add(mesh);
     }
-    g.scale.setScalar(0.82);
+    g.scale.setScalar(0.62);
     return g;
   }
 
   // the chain climbs with a gentle sway, the way a peptide threads out
   function chainPos(i) {
-    return new THREE.Vector3(0.6 + Math.sin(i * 0.7) * 0.9, 3.0 + i * 1.5, 1.6 + Math.cos(i * 0.6) * 0.5);
+    return new THREE.Vector3(0.4 + Math.sin(i * 0.55) * 0.7, 4.7 + i * 1.55, 7.6 + Math.cos(i * 0.6) * 0.4);
   }
   function smooth(t) { t = Math.max(0, Math.min(1, t)); return t * t * (3 - 2 * t); }
 
@@ -280,7 +283,7 @@
     var g = new THREE.Group();
     var mat = new THREE.MeshBasicMaterial({ color: C.cross, transparent: true, opacity: 1 });
     [-1, 1].forEach(function (s) {
-      var bar = new THREE.Mesh(new THREE.BoxGeometry(6.6, 1.8, 1.0), mat);
+      var bar = new THREE.Mesh(new THREE.BoxGeometry(5.6, 1.55, 0.9), mat);
       bar.rotation.z = s * Math.PI / 4;
       g.add(bar);
     });
@@ -292,47 +295,49 @@
     root = new THREE.Group();
     scene.add(root);
 
-    scene.add(new THREE.AmbientLight(0xffffff, 0.82));
-    var key = new THREE.DirectionalLight(0xffffff, 0.62); key.position.set(-8, 20, 26); scene.add(key);
-    var fill = new THREE.DirectionalLight(0xd8dcf2, 0.35); fill.position.set(18, -8, -16); scene.add(fill);
+    scene.add(new THREE.AmbientLight(0xffffff, 0.46));
+    var key = new THREE.DirectionalLight(0xffffff, 0.34); key.position.set(-8, 20, 26); scene.add(key);
+    var fill = new THREE.DirectionalLight(0xd8dcf2, 0.26); fill.position.set(18, -8, -16); scene.add(fill);
 
     // wide 50S over a flatter, wider 30S
-    var big = blob(11.6, 8.6, 9.6, C.sub50, 0.5);
-    big.position.set(0, 2.6, 0);
+    var big = blob(11.7, 7.2, 8.0, C.sub50, 0.66);
+    big.position.set(0, 6.0, -2.2);
     root.add(big);
-    var small = blob(12.4, 4.8, 9.0, C.sub30, 0.5);
-    small.position.set(0, -4.9, 0);
+    var small = blob(10.4, 3.1, 7.0, C.sub30, 0.62);
+    small.position.set(0, -3.9, -1.6);
     root.add(small);
 
-    root.add(sitePlane(-4.9, C.siteE, 'E', 5.0, 9.0));
-    root.add(sitePlane(0.2, C.siteP, 'P', 5.0, 9.0));
-    root.add(sitePlane(5.3, C.siteA, 'A', 5.0, 9.0));
+    root.add(sitePlane(-6.3, C.siteE, 'E', 5.0, 8.7, 1.0, '#473f58'));
+    root.add(sitePlane(0.0, C.siteP, 'P', 5.0, 8.7, 1.0, '#4c4652'));
+    root.add(sitePlane(6.3, C.siteA, 'A', 5.0, 8.7, 1.0, '#ffffff'));
 
-    var l50 = label('50S', '#1f8a82', 7.6); l50.position.set(-14.2, 3.4, 7); root.add(l50);
-    var l30 = label('30S', '#4f7fd0', 7.6); l30.position.set(-15.6, -3.2, 7); root.add(l30);
+    var l50 = label('50S', '#3f9c78', 6.2); l50.position.set(-15.4, 6.4, 7); root.add(l50);
+    var l30 = label('30S', '#4f8fc8', 6.2); l30.position.set(-15.0, -3.4, 7); root.add(l30);
 
     // mRNA: a long strip that runs well past the ribosome on both sides
     strandGroup = new THREE.Group();
     var bar = new THREE.Mesh(new THREE.BoxGeometry(40, 0.5, 1.9),
       new THREE.MeshPhongMaterial({ color: C.bar, shininess: 20 }));
-    bar.position.y = -8.7;
+    bar.position.y = -7.9;
     strandGroup.add(bar);
     for (var c = 0; c < 34; c++) {
-      var blk = new THREE.Mesh(new THREE.BoxGeometry(1.0, 1.75, 1.7),
+      var blk = new THREE.Mesh(new THREE.BoxGeometry(1.05, 2.0, 1.6),
         new THREE.MeshPhongMaterial({ color: C.codon[c % C.codon.length], shininess: 40 }));
-      blk.position.set(-19.4 + c * 1.16, -7.7, 0);
+      blk.position.set(-19.4 + c * 1.16, -6.6, 0.9);
       strandGroup.add(blk);
     }
     root.add(strandGroup);
 
     // tRNAs standing in the three sites
-    trnaA = capsule(8.2, 0.78, C.trna); trnaA.rotation.z = -0.1; trnaA.position.set(5.6, -0.8, 1.6); root.add(trnaA);
-    trnaP = capsule(7.0, 0.76, C.trna); trnaP.position.set(0.2, -1.9, 1.6); root.add(trnaP);
-    trnaE = capsule(6.2, 0.74, C.trna); trnaE.position.set(-4.9, -2.4, 1.6); trnaE.visible = false; root.add(trnaE);
+    trnaA = capsule(8.0, 0.8, C.trna); trnaA.rotation.z = -0.1; trnaA.position.set(5.6, -0.8, 7.4); root.add(trnaA);
+    trnaP = capsule(7.6, 0.78, C.trna); trnaP.position.set(0.2, -1.9, 7.4); root.add(trnaP);
+    trnaE = capsule(7.0, 0.76, C.trna); trnaE.position.set(-4.9, -2.4, 7.4); trnaE.visible = false; root.add(trnaE);
+    // the peptidyl-tRNA that dissociates once the drug has stalled the ribosome
+    trnaDrop = capsule(7.4, 0.78, C.trna); trnaDrop.visible = false; root.add(trnaDrop);
 
     // the nascent peptide chain threading up out of the exit tunnel
     for (var a = 0; a < MAX_CHAIN; a++) {
-      var sp = new THREE.Mesh(new THREE.SphereGeometry(0.78, 20, 16),
+      var sp = new THREE.Mesh(new THREE.SphereGeometry(0.84, 20, 16),
         new THREE.MeshPhongMaterial({ color: C.aa[a % C.aa.length], shininess: 70 }));
       sp.position.copy(chainPos(a));
       sp.visible = false;
@@ -341,7 +346,7 @@
     }
 
     // docked at the tunnel mouth; AWAY is clear of the subunit, up and to the right
-    DOCK = new THREE.Vector3(11.6, 7.9, 3.0);
+    DOCK = new THREE.Vector3(11.0, 10.6, 4.5);
     AWAY = new THREE.Vector3(34.0, 22.0, 14.0);
 
     drugGroup = new THREE.Group();
@@ -350,7 +355,7 @@
     root.add(drugGroup);
 
     crossGroup = buildCross();
-    crossGroup.position.set(11.6, 2.6, 6.5);
+    crossGroup.position.set(10.6, 5.4, 8.5);
     root.add(crossGroup);
 
     renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -372,7 +377,9 @@
     // 50S/30S labels run off the sides
     if (!userZoomed) {
       var a = Math.max(0.8, Math.min(1.9, camera.aspect));
-      dist = Math.max(40, Math.min(78, 66 / a));
+      // fit to width, but do not keep backing off on tall/narrow frames or the
+      // scene ends up marooned in empty space
+      dist = Math.max(62, Math.min(94, 115 / a));
     }
   }
 
@@ -404,7 +411,7 @@
     if (!animate) { drugT = animTo; animFrom = animTo; }
   }
 
-  var SITE_X = { A: 5.6, P: 0.2, E: -4.9 };
+  var SITE_X = { A: 6.3, P: 0.0, E: -6.3 };
 
   function frame() {
     raf = requestAnimationFrame(frame);
@@ -430,26 +437,46 @@
       drugGroup.scale.setScalar(0.86 + drugT * 0.14);
     }
 
-    // the block marker only reads once the molecule has actually seated
-    var bound = smooth((drugT - 0.82) / 0.18);
-    crossGroup.visible = bound > 0.01;
-    crossGroup.traverse(function (o) { if (o.material) o.material.opacity = bound; });
+    // In the reference the cross appears the instant the state flips, while the
+    // molecule is still on its way in — so it fades fast, and a separate value
+    // tracks how seated the drug actually is.
+    var crossIn = smooth(drugT / 0.12);
+    crossGroup.visible = crossIn > 0.01;
+    crossGroup.traverse(function (o) { if (o.material) o.material.opacity = crossIn; });
+    var bound = smooth((drugT - 0.45) / 0.45);
 
     if (drugOn) {
-      // held at the A site: it strains, but nothing advances
-      trnaA.visible = true; trnaP.visible = true; trnaE.visible = false;
-      trnaA.position.set(SITE_X.A, -0.8 + Math.sin(clock * 3) * 0.16, 1.6);
-      trnaA.rotation.z = -0.1 + Math.sin(clock * 3) * 0.02;
-      trnaP.position.set(SITE_X.P, -1.9, 1.6);
+      // Stalled. The A-site tRNA is held and tilted aside, and the short,
+      // incomplete peptidyl-tRNA periodically dissociates and drops away below
+      // the ribosome before another abortive attempt begins.
+      var ABORT = 4.2;
+      var a = (clock % ABORT) / ABORT;
+      var fall = smooth((a - 0.55) / 0.35);        // 0 while it sits, 1 once it has fallen clear
+      var drop = fall * 15.0;
+
+      trnaA.visible = true; trnaE.visible = false;
+      trnaA.position.set(SITE_X.A + 0.5, -0.6 + Math.sin(clock * 3) * 0.12, 7.9);
+      trnaA.rotation.z = -0.42 + Math.sin(clock * 3) * 0.02;   // shoved aside by the drug
+
+      trnaP.visible = fall < 0.02;
+      trnaP.position.set(SITE_X.P, -1.9, 7.4);
+      trnaP.rotation.z = 0;
+
+      trnaDrop.visible = fall > 0.02 && fall < 0.995;
+      trnaDrop.position.set(SITE_X.P + fall * 0.8, -1.9 - drop, 7.4);
+      trnaDrop.rotation.z = -0.5 - fall * 1.1;                 // tumbles as it falls
+
       strandGroup.position.x = 0;
-      // elongation halts after a few residues, and only once the drug is seated
-      var held = 3 + Math.round((1 - bound) * 4);
+
+      // never more than a few residues, and only once the drug has seated
+      var held = 3 + Math.round((1 - bound) * 3);
       chain.forEach(function (sp, i) {
-        sp.visible = i < held;
+        sp.visible = i < held && fall < 0.995;
         sp.scale.setScalar(1);
         var q = chainPos(i);
-        sp.position.set(q.x, q.y + Math.sin(clock * 2 + i) * 0.06, q.z);
+        sp.position.set(q.x + fall * 0.6, q.y - drop + Math.sin(clock * 2 + i) * 0.06, q.z);
       });
+
       crossGroup.rotation.z = Math.sin(clock * 2.2) * 0.04;
       crossGroup.scale.setScalar((0.85 + bound * 0.15) * (1 + Math.sin(clock * 2.6) * 0.05));
     } else {
@@ -460,9 +487,12 @@
       var ease = t < 0.55 ? (1 - Math.cos(Math.PI * (t / 0.55))) / 2 : 1;
 
       trnaA.visible = true; trnaP.visible = true; trnaE.visible = true;
-      trnaA.position.set(SITE_X.A + (SITE_X.P - SITE_X.A) * ease, -0.8 + ease * -0.7, 1.6);
-      trnaP.position.set(SITE_X.P + (SITE_X.E - SITE_X.P) * ease, -1.9 + ease * -0.5, 1.6);
-      trnaE.position.set(SITE_X.E - ease * 5.2, -2.4, 1.6);
+      trnaDrop.visible = false;
+      trnaA.rotation.z = -0.1;
+      trnaP.rotation.z = 0;
+      trnaA.position.set(SITE_X.A + (SITE_X.P - SITE_X.A) * ease, -0.8 + ease * -0.7, 7.4);
+      trnaP.position.set(SITE_X.P + (SITE_X.E - SITE_X.P) * ease, -1.9 + ease * -0.5, 7.4);
+      trnaE.position.set(SITE_X.E - ease * 5.2, -2.4, 7.4);
       trnaE.scale.setScalar(1 - ease * 0.55);
       strandGroup.position.x = -ease * 1.16;
 
@@ -498,7 +528,7 @@
   HOST.addEventListener('wheel', function (e) {
     e.preventDefault();
     userZoomed = true;
-    dist = Math.max(24, Math.min(88, dist + (e.deltaY > 0 ? 2.5 : -2.5)));
+    dist = Math.max(40, Math.min(150, dist + (e.deltaY > 0 ? 4 : -4)));
   }, { passive: false });
 
   document.getElementById('rib-on').addEventListener('click', function () {
