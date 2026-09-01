@@ -38,14 +38,16 @@
        drawn around it, exactly as the old slides had it */
     .pp-figure img{position:relative;width:100%;max-width:430px;height:auto;display:block}
 
-    .pp-body{padding:56px 58px 56px 18px;display:flex;flex-direction:column;justify-content:center}
-    .pp-kicker{font-family:'Acumin Variable',sans-serif;font-size:.74rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.7);margin-bottom:8px}
-    .pp-name{font-family:'Acumin Variable',sans-serif;font-size:clamp(2.3rem,3.7vw,3.5rem);font-weight:800;line-height:1.1;color:#fff;margin:0}
-    .pp-rule{height:2px;width:100%;max-width:540px;background:linear-gradient(90deg,rgba(255,255,255,.85),rgba(255,255,255,.15));border:0;border-radius:2px;margin:18px 0 20px}
-    .pp-text{font-family:'Acumin Variable',sans-serif;font-size:clamp(1.08rem,1.45vw,1.32rem);font-weight:500;line-height:1.72;color:rgba(255,255,255,.9);margin:0}
-    .pp-text + .pp-text{margin-top:18px}
-    .pp-text sup{font-size:.62em;opacity:.65}
-    .pp-text .pp-lead{color:#fff;font-weight:700}
+    .pp-body{padding:56px 58px 56px 18px;display:flex;flex-direction:column;justify-content:center;color:var(--text-light)}
+    /* the copy keeps the original slide type; state the colours outright so
+       nothing further up the sheet can win over inheritance */
+    /* style.css clips .patient-heading to nothing and only opens it inside a
+       .slide-fade that is in view — these panels are not slides, so the wipe
+       would never run and the heading would stay invisible */
+    #clinical-experience .patient-heading{color:#fff;opacity:.95;clip-path:none;transition:none}
+    #clinical-experience .patient-body{color:#fff}
+    #clinical-experience .patient-line{background-color:rgba(255,255,255,.8)}
+    #clinical-experience .patient-subheading{margin:0}
 
     @media(max-width:980px){
       .pp-panel.is-active{grid-template-columns:1fr}
@@ -75,45 +77,46 @@
       <div class="pp-panel is-active" role="tabpanel" id="pp-panel-elderly" data-tone="maroon" aria-labelledby="pp-tab-elderly">
         <div class="pp-figure"><img src="assests/clinical-elderly.png" alt="Elderly patient" loading="lazy"></div>
         <div class="pp-body">
-          <div class="pp-kicker">Patient profile 01</div>
-          <h3 class="pp-name">Elderly</h3>
-          <hr class="pp-rule">
-          <p class="pp-text"><span class="pp-lead">Elderly patients are at higher risk of rapid disease progression and complications.</span></p>
-          <p class="pp-text">Miqnaf supports early clinical improvement and timely recovery.<sup>3</sup></p>
+          <h2 class="patient-heading">Elderly</h2>
+          <hr class="patient-line">
+          <h3 class="patient-subheading"></h3>
+          <p class="patient-body">Elderly patients are at higher risk of rapid disease progression and complications.
+Miqnaf supports early clinical improvement and timely recovery.<sup>3</sup></p>
         </div>
       </div>
 
       <div class="pp-panel" role="tabpanel" id="pp-panel-comorbid" data-tone="navy" aria-labelledby="pp-tab-comorbid" hidden>
         <div class="pp-figure"><img src="assests/clinical-professional.png" alt="Patient with comorbidities" loading="lazy"></div>
         <div class="pp-body">
-          <div class="pp-kicker">Patient profile 02</div>
-          <h3 class="pp-name">Comorbid</h3>
-          <hr class="pp-rule">
-          <p class="pp-text"><span class="pp-lead">CABP can exacerbate respiratory (asthma/COPD) and cardio metabolic comorbidities, leading to hospitalization.</span></p>
-          <p class="pp-text">Miqnaf provides comprehensive coverage, early clinical response and reassured safety<sup>1</sup>,<sup>3</sup></p>
+          <h2 class="patient-heading">Comorbid</h2>
+          <hr class="patient-line">
+          <h3 class="patient-subheading"></h3>
+          <p class="patient-body">CABP can exacerbate respiratory (asthma/COPD) and cardio metabolic comorbidities, leading to hospitalization.
+Miqnaf provides comprehensive coverage, early clinical response and reassured safety<sup>1</sup>,<sup>3</sup></p>
         </div>
       </div>
 
       <div class="pp-panel" role="tabpanel" id="pp-panel-hosp" data-tone="orange" aria-labelledby="pp-tab-hosp" hidden>
         <div class="pp-figure"><img src="assests/clinical-hospitalized.png" alt="Hospitalized patient" loading="lazy"></div>
         <div class="pp-body">
-          <div class="pp-kicker">Patient profile 03</div>
-          <h3 class="pp-name">Hospitalized</h3>
-          <hr class="pp-rule">
-          <p class="pp-text"><span class="pp-lead">In moderate to severe hospitalized CABP, early clinical stabilization, shorter hospital stay, atypical coverage and safety are critical.</span></p>
-          <p class="pp-text">Miqnaf provides potent activity against atypical pathogens, enabling early clinical improvement with better safety over traditional macrolides.<sup>1</sup>,<sup>3</sup></p>
+          <h2 class="patient-heading">Hospitalized</h2>
+          <hr class="patient-line">
+          <h3 class="patient-subheading"></h3>
+          <p class="patient-body">In moderate to severe hospitalized CABP, early clinical stabilization, shorter hospital stay, atypical coverage and safety remain key treatment goals.
+Miqnaf provides potent activity against atypical pathogens, enabling early clinical improvement with better safety over traditional macrolides.<sup>1</sup>,<sup>3</sup></p>
         </div>
       </div>
 
       <div class="pp-panel" role="tabpanel" id="pp-panel-failure" data-tone="maroon" aria-labelledby="pp-tab-failure" hidden>
         <div class="pp-figure"><img src="assests/clinical-elderly.png" alt="Patient after prior treatment failure" loading="lazy"></div>
         <div class="pp-body">
-          <div class="pp-kicker">Patient profile 04</div>
-          <h3 class="pp-name">Prior Treatment Failure</h3>
-          <hr class="pp-rule">
-          <p class="pp-text"><span class="pp-lead">Inadequate response to initial antibiotics can prolong infection and increase disease burden.</span></p>
-          <p class="pp-text">Miqnaf delivers potent, targeted action, ensuring rapid bacterial clearance and clinical resolution.<sup>1</sup>,<sup>3</sup></p>
-          <p class="pp-text">Because second chances should not fail.</p>
+          <h2 class="patient-heading">Prior Treatment Failure</h2>
+          <hr class="patient-line">
+          <h3 class="patient-subheading"></h3>
+          <p class="patient-body">Inadequate response to initial antibiotics can prolong infection and increase disease burden.
+Miqnaf delivers potent, targeted action, ensuring rapid bacterial clearance and clinical resolution.<sup>1</sup>,<sup>3</sup>
+
+Because second chances should not fail.</p>
         </div>
       </div>
     </div>
