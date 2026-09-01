@@ -4,3 +4,6 @@
 node_modules/
 .env
 index.html
+
+# reference clips used while building; not part of the site
+*.mp4
