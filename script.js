@@ -6,32 +6,50 @@ function initializeNavbar() {
     const navMenu = document.getElementById('nav-links');
     const sections = document.querySelectorAll('section[id]');
 
+    // The link for each section, resolved once instead of on every scroll event.
+    const sectionLinks = Array.from(sections).map((section) => ({
+        section,
+        link: document.querySelector('.nav-links a[href*=' + section.getAttribute('id') + ']'),
+    })).filter((entry) => entry.link);
+
+    let activeLink = null;
+
     function updateActiveLink() {
-        let scrollY = window.pageYOffset;
-        sections.forEach(current => {
-            const sectionHeight = current.offsetHeight;
-            const sectionTop = current.offsetTop - 100;
-            const sectionId = current.getAttribute('id');
-            if (scrollY > sectionTop && scrollY <= sectionTop + sectionHeight) {
-                document.querySelector('.nav-links a[href*=' + sectionId + ']')?.classList.add('active');
-            } else {
-                document.querySelector('.nav-links a[href*=' + sectionId + ']')?.classList.remove('active');
+        const scrollY = window.pageYOffset;
+        // Every offsetTop/offsetHeight read is a layout, so they all happen
+        // before any class is written — interleaving the two forced a fresh
+        // layout per section on every scroll event.
+        let found = null;
+        for (const entry of sectionLinks) {
+            const top = entry.section.offsetTop - 100;
+            if (scrollY > top && scrollY <= top + entry.section.offsetHeight) {
+                found = entry.link;
+                break;
             }
-        });
+        }
+        if (found === activeLink) return;
+        activeLink?.classList.remove('active');
+        found?.classList.add('active');
+        activeLink = found;
     }
 
-    window.addEventListener('scroll', () => {
-        if (window.scrollY > 50) {
-            navbar.classList.add('scrolled');
-        } else {
-            navbar.classList.remove('scrolled');
-        }
+    let navTicking = false;
+
+    function onNavScroll() {
+        navTicking = false;
+        navbar.classList.toggle('scrolled', window.scrollY > 50);
         updateActiveLink();
         if (window.innerWidth <= 992 && navMenu?.classList.contains('active')) {
             menuToggle?.classList.remove('active');
             navMenu?.classList.remove('active');
         }
-    });
+    }
+
+    window.addEventListener('scroll', () => {
+        if (navTicking) return;
+        navTicking = true;
+        requestAnimationFrame(onNavScroll);
+    }, { passive: true });
 
     menuToggle?.addEventListener('click', () => {
         menuToggle.classList.toggle('active');
@@ -778,16 +796,36 @@ function initializeTilt() {
     targets.forEach((el) => {
         el.classList.add('mi-tilt');
 
-        el.addEventListener('mousemove', (e) => {
-            const r = el.getBoundingClientRect();
-            const px = (e.clientX - r.left) / r.width - 0.5;
-            const py = (e.clientY - r.top) / r.height - 0.5;
+        // The card cannot move while it is being hovered, so its box is measured
+        // once on entry rather than on every mousemove (each of those reads was
+        // forcing a synchronous layout), and the transform is written once a frame.
+        let rect = null;
+        let tiltRaf = null;
+        let mx = 0;
+        let my = 0;
+
+        function paint() {
+            tiltRaf = null;
+            if (!rect) return;
+            const px = (mx - rect.left) / rect.width - 0.5;
+            const py = (my - rect.top) / rect.height - 0.5;
             el.style.transform =
                 `perspective(800px) rotateX(${(-py * MAX).toFixed(2)}deg) ` +
                 `rotateY(${(px * MAX).toFixed(2)}deg) translateY(-4px)`;
-        });
+        }
+
+        el.addEventListener('mouseenter', () => { rect = el.getBoundingClientRect(); }, { passive: true });
+
+        el.addEventListener('mousemove', (e) => {
+            if (!rect) rect = el.getBoundingClientRect();
+            mx = e.clientX;
+            my = e.clientY;
+            if (tiltRaf == null) tiltRaf = requestAnimationFrame(paint);
+        }, { passive: true });
 
         el.addEventListener('mouseleave', () => {
+            if (tiltRaf != null) { cancelAnimationFrame(tiltRaf); tiltRaf = null; }
+            rect = null;
             el.style.transform = '';
         });
     });
@@ -845,13 +883,35 @@ function initializeBackToTop() {
     const canMagnet = window.matchMedia('(hover: hover) and (pointer: fine)').matches
         && !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (canMagnet) {
-        btn.addEventListener('mousemove', (e) => {
-            const r = btn.getBoundingClientRect();
-            const mx = e.clientX - (r.left + r.width / 2);
-            const my = e.clientY - (r.top + r.height / 2);
+        let btnRect = null;
+        let magRaf = null;
+        let magX = 0;
+        let magY = 0;
+
+        function magnet() {
+            magRaf = null;
+            if (!btnRect) return;
+            const mx = magX - (btnRect.left + btnRect.width / 2);
+            const my = magY - (btnRect.top + btnRect.height / 2);
             btn.style.transform = `translate(${(mx * 0.35).toFixed(1)}px, ${(my * 0.35).toFixed(1)}px) scale(1.08)`;
+        }
+
+        // Measured on entry, untransformed — measuring mid-lean would feed the
+        // button's own offset back into the next frame.
+        btn.addEventListener('mouseenter', () => { btnRect = btn.getBoundingClientRect(); }, { passive: true });
+
+        btn.addEventListener('mousemove', (e) => {
+            if (!btnRect) btnRect = btn.getBoundingClientRect();
+            magX = e.clientX;
+            magY = e.clientY;
+            if (magRaf == null) magRaf = requestAnimationFrame(magnet);
+        }, { passive: true });
+
+        btn.addEventListener('mouseleave', () => {
+            if (magRaf != null) { cancelAnimationFrame(magRaf); magRaf = null; }
+            btnRect = null;
+            btn.style.transform = '';
         });
-        btn.addEventListener('mouseleave', () => { btn.style.transform = ''; });
     }
 
     update();
@@ -1030,22 +1090,32 @@ function initializeCustomCursor() {
     const textSelector = 'h1, h2, h3, h4, p, span, li, .hero-headline-wrap, .stats-counter, .stats-value, .patient-body, .ref-text, .about-bridge-text, .about-entry-year, .about-entry-drug, .copyright-text';
     const interactiveSelector = 'a, button, [role="button"], .filter-table, .filter-head, .filter-selected, #video-container, input, select, textarea';
 
+    // Matching those two selector lists means walking the ancestor chain, so it
+    // only ever runs on mouseover (i.e. when the pointer actually enters a new
+    // element) — never on mousemove, which fires far more often.
+    let lastTarget = null;
+    let lastState = '';
+
     function setRingState(target) {
-        ring.classList.remove('is-hover', 'is-text');
-        if (!target || target.closest('.cursor-dot, .cursor-ring')) return;
+        if (target === lastTarget) return;
+        lastTarget = target;
 
-        if (target.closest(interactiveSelector)) {
-            ring.classList.add('is-hover');
-        } else if (target.closest(textSelector)) {
-            ring.classList.add('is-text');
+        let state = '';
+        if (target && !target.closest('.cursor-dot, .cursor-ring')) {
+            if (target.closest(interactiveSelector)) state = 'is-hover';
+            else if (target.closest(textSelector)) state = 'is-text';
         }
-    }
+        if (state === lastState) return;
 
-    function moveDot() {
-        dot.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0) translate(-50%, -50%)`;
+        if (lastState) ring.classList.remove(lastState);
+        if (state) ring.classList.add(state);
+        lastState = state;
     }
 
     function animateRing() {
+        // Both the dot and the ring are written here, so a burst of mousemove
+        // events collapses into one style write per frame instead of one each.
+        dot.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0) translate(-50%, -50%)`;
         ringX += (mouseX - ringX) * 0.18;
         ringY += (mouseY - ringY) * 0.18;
         ring.style.transform = `translate3d(${ringX}px, ${ringY}px, 0) translate(-50%, -50%)`;
@@ -1062,20 +1132,24 @@ function initializeCustomCursor() {
         if (rafId == null) rafId = requestAnimationFrame(animateRing);
     }
 
+    let cursorShown = false;
+
     document.addEventListener('mousemove', (e) => {
         mouseX = e.clientX;
         mouseY = e.clientY;
-        moveDot();
-        setRingState(e.target);
-        document.body.classList.add('custom-cursor-active');
+        if (!cursorShown) {
+            cursorShown = true;
+            document.body.classList.add('custom-cursor-active');
+        }
         startRing();
     }, { passive: true });
 
     document.addEventListener('mouseover', (e) => {
         setRingState(e.target);
-    });
+    }, { passive: true });
 
     document.addEventListener('mouseleave', () => {
+        cursorShown = false;
         document.body.classList.remove('custom-cursor-active');
     });
 
@@ -1083,6 +1157,7 @@ function initializeCustomCursor() {
 
     document.addEventListener('visibilitychange', () => {
         if (document.hidden) {
+            cursorShown = false;
             document.body.classList.remove('custom-cursor-active');
         }
     });

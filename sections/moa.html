@@ -309,8 +309,10 @@
     camera.position.set(0, 0.4, 8.2);
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.shadowMap.enabled = true;
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.75));
+    // No floor or backdrop receives one, so the shadow pass was rendering a map
+    // every frame that never reached the screen.
+    renderer.shadowMap.enabled = false;
     container.appendChild(renderer.domElement);
 
     const labelRenderer = new CSS2DRenderer();
@@ -471,8 +473,37 @@
       );
     }
 
+    /* The chain is rebuilt many times a second while it grows, so the beads and
+       the backbone are allocated once here and then reused. Rebuilding them per
+       call left the discarded geometries and materials on the GPU (Group.clear()
+       detaches but never disposes), which piled up the longer the page was open. */
+    const MAX_BEADS = 12;
+    const beadGeo = new THREE.SphereGeometry(0.15, 24, 24);
+    const beadPool = Array.from({ length: MAX_BEADS }, (_, i) => {
+      // Slot index decides the colour, and a bead never changes slot, so each
+      // material is built once. Emissive is pre-set and driven purely by its
+      // intensity, which keeps the shader from being recompiled for the tip.
+      const color = C.pep[i % C.pep.length] ?? "#2f6fb5";
+      const mesh = new THREE.Mesh(beadGeo, new THREE.MeshStandardMaterial({
+        color, roughness: 0.25, metalness: 0.15,
+        emissive: color, emissiveIntensity: 0,
+      }));
+      mesh.visible = false;
+      peptideGroup.add(mesh);
+      return mesh;
+    });
+
+    const linePositions = new Float32Array(MAX_BEADS * 3);
+    const lineGeo = new THREE.BufferGeometry();
+    lineGeo.setAttribute("position", new THREE.BufferAttribute(linePositions, 3));
+    lineGeo.setDrawRange(0, 0);
+    const peptideLine = new THREE.Line(lineGeo, new THREE.LineBasicMaterial({
+      color: "#9c8fb5", transparent: true, opacity: 0.8,
+    }));
+    peptideLine.frustumCulled = false; // the buffer is longer than the drawn range
+    peptideGroup.add(peptideLine);
+
     function rebuildPeptide(count, grow, anchor, dropped) {
-      peptideGroup.clear();
       peptideGroup.position.set(0, -dropped * 3.2, dropped * 0.6);
 
       const beads = Array.from({ length: count }, (_, i) => beadAt(anchor, i));
@@ -484,35 +515,29 @@
       }
       const points = tip ? [...beads, tip] : beads;
 
-      if (points.length > 1) {
-        const lineMat = new THREE.LineBasicMaterial({ color: "#9c8fb5", transparent: true, opacity: 0.8 });
-        const lineGeo = new THREE.BufferGeometry().setFromPoints(points);
-        peptideGroup.add(new THREE.Line(lineGeo, lineMat));
+      const drawn = Math.min(points.length, MAX_BEADS);
+      for (let i = 0; i < drawn; i++) {
+        const p = points[i];
+        linePositions[i * 3] = p.x;
+        linePositions[i * 3 + 1] = p.y;
+        linePositions[i * 3 + 2] = p.z;
       }
+      lineGeo.attributes.position.needsUpdate = true;
+      lineGeo.setDrawRange(0, drawn > 1 ? drawn : 0);
+      peptideLine.visible = drawn > 1;
 
-      beads.forEach((p, i) => {
-        const color = C.pep[i % C.pep.length] ?? "#2f6fb5";
-        const mesh = new THREE.Mesh(
-          new THREE.SphereGeometry(0.15, 24, 24),
-          new THREE.MeshStandardMaterial({ color, roughness: 0.25, metalness: 0.15 })
-        );
-        mesh.position.copy(p);
-        peptideGroup.add(mesh);
+      beadPool.forEach((mesh, i) => {
+        if (i >= drawn) { mesh.visible = false; return; }
+        mesh.visible = true;
+        mesh.position.copy(points[i]);
+        if (tip && i === drawn - 1) {
+          mesh.scale.setScalar(0.4 + grow * 0.6);
+          mesh.material.emissiveIntensity = 0.5 * (1 - grow);
+        } else {
+          mesh.scale.setScalar(1);
+          mesh.material.emissiveIntensity = 0;
+        }
       });
-
-      if (tip) {
-        const color = C.pep[count % C.pep.length] ?? "#2f6fb5";
-        const mesh = new THREE.Mesh(
-          new THREE.SphereGeometry(0.15, 24, 24),
-          new THREE.MeshStandardMaterial({
-            color, roughness: 0.25, metalness: 0.15,
-            emissive: color, emissiveIntensity: 0.5 * (1 - grow),
-          })
-        );
-        mesh.position.copy(tip);
-        mesh.scale.setScalar(0.4 + grow * 0.6);
-        peptideGroup.add(mesh);
-      }
     }
 
     /* ---- Nafithromycin drug ---- */
