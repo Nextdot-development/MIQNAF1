@@ -143,7 +143,8 @@ button, a {
     z-index: 100;
     display: flex;
     justify-content: center;
-    background-color: var(--bg-light);
+    /* the same cream the hero band opens with, so the header reads as part of it */
+    background-color: #fbf5f0;
     background-image: none;
     transition: box-shadow 0.3s ease, background-color 0.3s ease;
     border-bottom: 1px solid rgba(0, 0, 0, 0.06);
@@ -517,7 +518,7 @@ button, a {
 }
 
 .hero-tag {
-    margin: 0.9cqw 0 0 2.2cqw;
+    margin: 1.4cqw 0 0 -2.3cqw;
     display: flex;
     align-items: center;
     gap: 1.4cqw;
@@ -535,7 +536,7 @@ button, a {
 .hero-tag span {
     color: #fff;
     background: #ef6a2b;
-    font-size: 2.7cqw;
+    font-size: 2.85cqw;
     font-weight: 700;
     font-style: italic;
     letter-spacing: 0.01em;
@@ -547,20 +548,26 @@ button, a {
 
 /* ---- India's 1st Indigenously Researched Antibiotic ---- */
 .hero-first {
-    margin: 3.4cqw 0 0 1.3cqw;
+    margin: 4.4cqw 0 0 1.3cqw;
     display: flex;
     align-items: center;
-    gap: 1.1cqw;
+    gap: 0.4cqw;
 }
 
 .hero-first-country {
     color: var(--brand-navy);
-    font-size: 3.8cqw;
+    font-size: 3.3cqw;
     font-weight: 700;
     line-height: 1.1;
-    padding-bottom: 0.6cqw;
-    border-bottom: 0.55cqw solid transparent;
-    border-image: linear-gradient(to right, #ff9933 0 33.3%, #ffffff 33.3% 66.6%, #138808 66.6% 100%) 1;
+    padding: 0.4cqw 0;
+    border-top: 0.4cqw solid #ff9933;
+    border-bottom: 0.4cqw solid #138808;
+}
+
+.hero-first-claim {
+    display: flex;
+    align-items: center;
+    gap: 0.5cqw;
 }
 
 .hero-first-rank {
@@ -570,18 +577,23 @@ button, a {
     line-height: 0.86;
 }
 
-.hero-first-rank sup { font-size: 0.36em; vertical-align: super; }
+.hero-first-rank sup { font-size: 0.3em; vertical-align: super; }
 
 .hero-first-what {
     color: var(--brand-red);
     /* Acumin sets wider than the artwork's face, so the size is chosen to land
        on the reference's line WIDTH (26.7% of the pill); matching its height
        instead would push "Researched Antibiotic" onto a third line. */
-    font-size: 2.9cqw;
+    font-size: 2.5cqw;
     font-weight: 700;
     font-style: italic;
-    line-height: 1.24;
+    line-height: 1.16;
     white-space: nowrap;
+    /* the artwork rules a thin outline around these two lines only — the
+       numeral stands outside it and runs taller than the box */
+    padding: 0.55cqw 1.5cqw;
+    border: 0.13cqw solid rgba(214, 136, 82, 0.5);
+    border-radius: 1cqw;
 }
 
 /* ---- the pack ---- */
@@ -589,9 +601,11 @@ button, a {
     /* the cut-out keeps a transparent margin, so the box is wider than the
        47.5% the ink should cover; it is pushed right and allowed to overlap
        the left column, where only that margin lands */
-    width: 54cqw;
+    /* Sized off the podium's gold ring, which is unmistakable in both images:
+       the reference runs it from 50.2 to 104.2 in pill-width units. */
+    width: 48.2cqw;
     justify-self: end;
-    margin: 6.6cqw -3cqw 0 0;
+    margin: 7.9cqw -3.6cqw 0 0;
 }
 
 .hero-pack img {
@@ -600,7 +614,7 @@ button, a {
     height: auto;
     aspect-ratio: 466 / 262;
     /* cut out of the key visual, so it needs its own contact shadow */
-    filter: drop-shadow(0 1.4cqw 2.2cqw rgba(122, 62, 34, 0.16));
+    filter: drop-shadow(0 0.5cqw 0.7cqw rgba(122, 62, 34, 0.2));
 }
 
 /* ---- stacked below the tablet breakpoint: the reference layout is landscape ---- */
@@ -632,9 +646,9 @@ button, a {
 
     .hero-first { margin: 5cqw 0 0; justify-content: center; gap: 2cqw; max-width: 100%; }
     .hero-first-what { white-space: normal; }
-    .hero-first-country { font-size: 4.4cqw; padding-bottom: 0.8cqw; border-bottom-width: 0.7cqw; }
-    .hero-first-rank { font-size: 9.6cqw; }
-    .hero-first-what { font-size: 3.7cqw; }
+    .hero-first-country { font-size: 4.1cqw; padding: 0.6cqw 0; border-top-width: 0.6cqw; border-bottom-width: 0.6cqw; }
+    .hero-first-rank { font-size: 13cqw; }
+    .hero-first-what { font-size: 3.2cqw; padding: 0.7cqw 1.8cqw; border-radius: 1.4cqw; }
     .hero-pack { width: 82cqw; justify-self: center; margin: 5cqw 0 0; }
 
     @container (min-width: 1px) {
