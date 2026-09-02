@@ -1033,6 +1033,20 @@ body.page-loaded .hero-headline-wrap {
     max-width: 22ch;
 }
 
+#display-hospital {
+    /* institutions sit under the designation, one per line, quieter than it */
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    color: var(--text-grey, #6b6b6b);
+    font-family: 'Acumin Variable', sans-serif;
+    font-size: clamp(0.92rem, 1.15vw, 1.12rem);
+    font-weight: 500;
+    line-height: 1.4;
+    margin: 10px 0 0 0;
+    max-width: 34ch;
+}
+
 #display-spec {
     color: #2b2b2b;
     /* designations run up to ~55 characters, so this wraps rather than

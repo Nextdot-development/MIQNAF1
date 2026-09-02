@@ -293,6 +293,7 @@ function initializeDoctorSystem() {
             {
                 doctor: 'Dr. Sonam Solanki',
                 spec: 'Pulmonologist',
+                hospitals: ['INICIO Chest Clinic, Lalbagh'],
                 type: 'gdrive',
                 video: 'https://drive.google.com/file/d/136k8m5DCus7-WLW-_p7tW2H7bIOGct2I/preview',
                 thumb: 'thumbnails/dr-sonam-solanki.jpg'
@@ -300,6 +301,7 @@ function initializeDoctorSystem() {
             {
                 doctor: 'Dr. Sameer Garde',
                 spec: 'Interventional Pulmonologist',
+                hospitals: ['Gleneagles Hospital, Parel', 'S. L. Raheja Hospital, Mahim'],
                 type: 'gdrive',
                 video: 'https://drive.google.com/file/d/198uucZxoxBuoo5_iNCcReJmi6hub1yAw/preview',
                 thumb: 'thumbnails/dr-sameer-garde.jpg'
@@ -307,6 +309,7 @@ function initializeDoctorSystem() {
             {
                 doctor: 'Dr. Swami Pawar',
                 spec: 'Consultant Pulmonologist & ICU In-Charge',
+                hospitals: ['Thunga Hospital, Malad', 'Thunga Hospital, Mira Road'],
                 type: 'gdrive',
                 video: 'https://drive.google.com/file/d/17dEXA8utX1hWI_WF3ytw94NWPOwZZqWo/preview',
                 thumb: 'thumbnails/dr-swami-pawar.jpg'
@@ -316,6 +319,7 @@ function initializeDoctorSystem() {
             {
                 doctor: 'Dr. Suresh Kanna S',
                 spec: 'Consultant Physician & Diabetologist',
+                hospitals: ['Sree Balaji Medical College & Hospital, Chromepet'],
                 type: 'gdrive',
                 video: 'https://drive.google.com/file/d/1SQ-FZVNxu8OxvvxQ599UyW6ekK79DxmZ/preview',
                 thumb: 'thumbnails/dr-suresh-kanna.jpg'
@@ -325,6 +329,7 @@ function initializeDoctorSystem() {
             {
                 doctor: 'Dr. Indranil Haldar',
                 spec: 'Professor & Head of the Department, Pulmonary Medicine',
+                hospitals: ['College of Medicine and JNM Hospital, Kalyani, Nadia'],
                 type: 'gdrive',
                 video: 'https://drive.google.com/file/d/1AHWJVx6kVciOn16FezpDPFX64hIhioqi/preview',
                 thumb: 'thumbnails/dr-indranil-haldar.jpg'
@@ -332,6 +337,7 @@ function initializeDoctorSystem() {
             {
                 doctor: 'Dr. Raja Dhar',
                 spec: 'Head of the Department, Pulmonology',
+                hospitals: ['CK Birla Hospital, Kolkata'],
                 type: 'gdrive',
                 video: 'https://drive.google.com/file/d/1NjwexlkM1IxdVlh1rjB8gB2E_h2IwSda/preview',
                 thumb: 'thumbnails/dr-raja-dhar.jpg'
@@ -341,6 +347,7 @@ function initializeDoctorSystem() {
             {
                 doctor: 'Dr. Randeep Guleria',
                 spec: 'Chairman – Internal Medicine, Respiratory & Sleep Medicine',
+                hospitals: ['Medanta Hospital, Gurugram'],
                 type: 'gdrive',
                 video: 'https://drive.google.com/file/d/14JasufTbBaFpZEFLZwKLfm_TFlHNaqOb/preview',
                 thumb: 'thumbnails/dr-randeep-guleria.jpg'
@@ -355,6 +362,7 @@ function initializeDoctorSystem() {
     const docText      = document.getElementById('doctor-selected-text');
     const displayName  = document.getElementById('display-name');
     const displaySpec  = document.getElementById('display-spec');
+    const displayHosp  = document.getElementById('display-hospital');
     const displayThumb = document.getElementById('display-thumbnail');
     const placeholder  = document.getElementById('display-placeholder');
     const docList      = document.querySelector('.doc-list');
@@ -486,6 +494,7 @@ function initializeDoctorSystem() {
         docText.textContent = 'No doctor added yet';
         displayName.textContent = '';
         displaySpec.textContent = '';
+        if (displayHosp) displayHosp.innerHTML = '';
         clearIframes();
         if (displayThumb) { displayThumb.removeAttribute('src'); displayThumb.alt = ''; displayThumb.style.display = 'none'; }
         showPlaceholder(null);
@@ -513,6 +522,15 @@ function initializeDoctorSystem() {
 
         displayName.textContent = info.doctor;
         displaySpec.textContent = info.spec;
+        if (displayHosp) {
+            // one line per institution — two of the doctors practise at two
+            displayHosp.innerHTML = '';
+            (info.hospitals || []).forEach((h) => {
+                const line = document.createElement('span');
+                line.textContent = h;
+                displayHosp.appendChild(line);
+            });
+        }
         docText.textContent = info.doctor;
         cityText.textContent = getCityTitle(cityKey);
 
