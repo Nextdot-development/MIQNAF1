@@ -434,8 +434,50 @@ button, a {
     min-height: 100vh;
     display: flex;
     justify-content: center;
-    padding-top: 15vh;
+    align-items: center;
+    padding: calc(118px + 3vh) 0 6vh;
     background: transparent;
+}
+
+/* The hero is a single composed banner — headline, logo and pack are part of
+   the artwork — so it is centred at the widest size the viewport allows and
+   its own aspect ratio is reserved up front to keep the page from shifting. */
+.hero-banner {
+    /* Width is also capped by the height left over once the navbar and the
+       section padding are taken out (190px plus the vh share of it), so the
+       whole banner stays above the fold on a short laptop screen rather than
+       being cut off. 1.895 is the artwork's aspect ratio. */
+    width: min(1440px, max(320px, (100vh - 190px) * 1.895));
+    max-width: 92%;
+    position: relative;
+    z-index: 2;
+}
+
+.hero-banner-img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1186 / 626;
+    border-radius: 20px;
+}
+
+@media (max-width: 992px) {
+    .hero {
+        min-height: auto;
+        padding: calc(86px + 3vh) 0 5vh;
+    }
+}
+
+@media (max-width: 640px) {
+    /* The wording is baked into the artwork, so on a phone it is given the
+       full width rather than losing more of it to page gutters. */
+    .hero-banner {
+        max-width: 100%;
+    }
+
+    .hero-banner-img {
+        border-radius: 0;
+    }
 }
 
 .hero-content {
