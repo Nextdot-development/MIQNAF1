@@ -428,6 +428,10 @@ button, a {
 }
 
 /* HERO SECTION */
+/* The hero is one composed banner. Rather than letting it sit on the page as a
+   floating card, the section carries the artwork's own field colour across the
+   full width, so the banner has no visible edge — the band reads as part of it.
+   Sampled from the artwork's borders: cream on the left, warmer peach right. */
 .hero {
     position: relative;
     width: 100%;
@@ -435,19 +439,34 @@ button, a {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: calc(118px + 3vh) 0 6vh;
-    background: transparent;
+    padding: calc(118px + 3vh) 0 10vh;
 }
 
-/* The hero is a single composed banner — headline, logo and pack are part of
-   the artwork — so it is centred at the widest size the viewport allows and
-   its own aspect ratio is reserved up front to keep the page from shifting. */
+/* Matched by id as well as class: the page-wide `#page-root > section` reset
+   that strips every section's background outranks a plain `.hero`. */
+#hero.hero {
+    background: linear-gradient(103deg, #faf4f0 0%, #fdf5ed 46%, #fff1e5 100%);
+}
+
+/* The band ends in the page background instead of a hard line. The banner is
+   given the full bottom padding to clear it, so the fade only ever falls on
+   empty band. */
+.hero-fade {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 10vh;
+    background: linear-gradient(to bottom, rgba(242, 244, 246, 0), var(--bg-light, #F2F4F6));
+    pointer-events: none;
+    z-index: 1;
+}
+
 .hero-banner {
-    /* Width is also capped by the height left over once the navbar and the
-       section padding are taken out (190px plus the vh share of it), so the
-       whole banner stays above the fold on a short laptop screen rather than
-       being cut off. 1.895 is the artwork's aspect ratio. */
-    width: min(1440px, max(320px, (100vh - 190px) * 1.895));
+    /* Capped by the height left below the navbar as well as by width, so the
+       whole banner stays above the fold on a short laptop screen.
+       1.888 is the artwork's aspect ratio. */
+    width: min(1440px, max(320px, (87vh - 118px) * 1.888));
     max-width: 92%;
     position: relative;
     z-index: 2;
@@ -457,14 +476,30 @@ button, a {
     display: block;
     width: 100%;
     height: auto;
-    aspect-ratio: 1186 / 626;
-    border-radius: 20px;
+    aspect-ratio: 1182 / 626;
+    /* The artwork carries a warm pink wash toward its top-right that a flat
+       band gradient cannot match exactly, so its outer 3% is dissolved into
+       the band instead. The composition keeps 12% clear margin at the sides
+       and 6% at the bottom, so the fade only ever eats empty background.
+       Browsers without mask support simply show the faint edge. */
+    -webkit-mask-image:
+        linear-gradient(to right, transparent, #000 3%, #000 97%, transparent),
+        linear-gradient(to bottom, transparent, #000 3%, #000 97%, transparent);
+    -webkit-mask-composite: source-in;
+    mask-image:
+        linear-gradient(to right, transparent, #000 3%, #000 97%, transparent),
+        linear-gradient(to bottom, transparent, #000 3%, #000 97%, transparent);
+    mask-composite: intersect;
 }
 
 @media (max-width: 992px) {
     .hero {
         min-height: auto;
-        padding: calc(86px + 3vh) 0 5vh;
+        padding: calc(86px + 3vh) 0 9vh;
+    }
+
+    .hero-banner {
+        width: 100%;
     }
 }
 
@@ -473,10 +508,6 @@ button, a {
        full width rather than losing more of it to page gutters. */
     .hero-banner {
         max-width: 100%;
-    }
-
-    .hero-banner-img {
-        border-radius: 0;
     }
 }
 
@@ -4572,72 +4603,11 @@ body.page-loaded.mi-hero-parallax-ready .hero-people-layer {
     }
 }
 
-/* HERO: ambient aurora — two soft brand-colour glows drift slowly behind
-   the hero content, giving depth and a premium feel. They also lean a touch
-   with the cursor (reads the same --mi-px/--mi-py the pointer parallax sets
-   on .hero), so the layered depth reinforces the existing hero motion.
-   Pseudo-elements sit at z-index 0, behind hero-text (z2) and people (z1).
-   Keyframe drift uses the individual `translate` property so it composes
-   with the pointer offset in `transform` instead of overwriting it. */
+/* Clips the band's bottom fade to the section. The ambient aurora glows that
+   used to drift behind the hero went with the old two-column layout — over the
+   banner's cream band the navy one washed the top-left blue and broke the
+   colour match with the artwork. */
 .hero {
     overflow: hidden;
     overflow: clip;
-    --mi-px: 0;
-    --mi-py: 0;
-}
-
-.hero::before,
-.hero::after {
-    content: "";
-    position: absolute;
-    z-index: 0;
-    border-radius: 50%;
-    filter: blur(70px);
-    pointer-events: none;
-    will-change: transform, translate, opacity;
-}
-
-.hero::before {
-    width: 42vw;
-    height: 42vw;
-    max-width: 620px;
-    max-height: 620px;
-    top: -8%;
-    left: -6%;
-    background: radial-gradient(circle, rgba(41, 57, 127, 0.30), transparent 70%);
-    transform: translate3d(calc(var(--mi-px) * -22px), calc(var(--mi-py) * -18px), 0);
-    transition: transform 0.6s cubic-bezier(0.22, 0.61, 0.36, 1);
-    animation: mi-aurora-1 19s ease-in-out infinite;
-}
-
-.hero::after {
-    width: 36vw;
-    height: 36vw;
-    max-width: 540px;
-    max-height: 540px;
-    bottom: -12%;
-    right: -4%;
-    background: radial-gradient(circle, rgba(239, 106, 43, 0.24), transparent 70%);
-    transform: translate3d(calc(var(--mi-px) * 26px), calc(var(--mi-py) * 20px), 0);
-    transition: transform 0.6s cubic-bezier(0.22, 0.61, 0.36, 1);
-    animation: mi-aurora-2 24s ease-in-out infinite;
-}
-
-@keyframes mi-aurora-1 {
-    0%, 100% { translate: 0 0; opacity: 0.45; }
-    50%      { translate: 4% 6%; opacity: 0.62; }
-}
-
-@keyframes mi-aurora-2 {
-    0%, 100% { translate: 0 0; opacity: 0.40; }
-    50%      { translate: -5% -4%; opacity: 0.58; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .hero::before,
-    .hero::after {
-        animation: none !important;
-        transform: none !important;
-        transition: none !important;
-    }
 }
