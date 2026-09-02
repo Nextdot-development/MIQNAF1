@@ -299,14 +299,14 @@ function initializeDoctorSystem() {
             },
             {
                 doctor: 'Dr. Sameer Garde',
-                spec: 'Chest Physician',
+                spec: 'Interventional Pulmonologist',
                 type: 'gdrive',
                 video: 'https://drive.google.com/file/d/198uucZxoxBuoo5_iNCcReJmi6hub1yAw/preview',
                 thumb: 'thumbnails/dr-sameer-garde.jpg'
             },
             {
                 doctor: 'Dr. Swami Pawar',
-                spec: 'Chest Physician',
+                spec: 'Consultant Pulmonologist & ICU In-Charge',
                 type: 'gdrive',
                 video: 'https://drive.google.com/file/d/17dEXA8utX1hWI_WF3ytw94NWPOwZZqWo/preview',
                 thumb: 'thumbnails/dr-swami-pawar.jpg'
@@ -315,7 +315,7 @@ function initializeDoctorSystem() {
         chennai: [
             {
                 doctor: 'Dr. Suresh Kanna S',
-                spec: 'Chest Physician',
+                spec: 'Consultant Physician & Diabetologist',
                 type: 'gdrive',
                 video: 'https://drive.google.com/file/d/1SQ-FZVNxu8OxvvxQ599UyW6ekK79DxmZ/preview',
                 thumb: 'thumbnails/dr-suresh-kanna.jpg'
@@ -324,14 +324,14 @@ function initializeDoctorSystem() {
         kolkata: [
             {
                 doctor: 'Dr. Indranil Haldar',
-                spec: 'Pulmonologist',
+                spec: 'Professor & Head of the Department, Pulmonary Medicine',
                 type: 'gdrive',
                 video: 'https://drive.google.com/file/d/1AHWJVx6kVciOn16FezpDPFX64hIhioqi/preview',
                 thumb: 'thumbnails/dr-indranil-haldar.jpg'
             },
             {
                 doctor: 'Dr. Raja Dhar',
-                spec: 'Pulmonologist',
+                spec: 'Head of the Department, Pulmonology',
                 type: 'gdrive',
                 video: 'https://drive.google.com/file/d/1NjwexlkM1IxdVlh1rjB8gB2E_h2IwSda/preview',
                 thumb: 'thumbnails/dr-raja-dhar.jpg'
@@ -340,7 +340,7 @@ function initializeDoctorSystem() {
         delhi: [
             {
                 doctor: 'Dr. Randeep Guleria',
-                spec: 'Pulmonologist',
+                spec: 'Chairman – Internal Medicine, Respiratory & Sleep Medicine',
                 type: 'gdrive',
                 video: 'https://drive.google.com/file/d/14JasufTbBaFpZEFLZwKLfm_TFlHNaqOb/preview',
                 thumb: 'thumbnails/dr-randeep-guleria.jpg'
