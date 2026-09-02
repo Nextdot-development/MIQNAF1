@@ -451,7 +451,14 @@ button, a {
 /* Matched by id as well as class: the page-wide `#page-root > section` reset
    that strips every section's background outranks a plain `.hero`. */
 #hero.hero {
-    background: linear-gradient(103deg, #faf4f0 0%, #fdf5ed 46%, #fff1e5 100%);
+    /* The artwork's ground is pale (mean #fcf3ef) but it only has to cover
+       1182px; stretched across a full-width band the same tones washed out in
+       the middle. Two soft blotches carry its watercolour warmth back in, and
+       the ramp is pulled toward the frame's own edge readings. */
+    background:
+        radial-gradient(58% 76% at 16% 26%, rgba(247, 214, 198, 0.42), rgba(247, 214, 198, 0) 70%),
+        radial-gradient(52% 70% at 84% 72%, rgba(246, 206, 188, 0.38), rgba(246, 206, 188, 0) 70%),
+        linear-gradient(103deg, #fbf1ea 0%, #fdf4ef 34%, #fbf2ee 60%, #f8eee7 82%, #fdefe5 100%);
 }
 
 .hero-fade {
@@ -614,65 +621,26 @@ button, a {
     margin: 7.9cqw -3.6cqw 0 0;
 }
 
-/* The carton and its podium are separate cut-outs stacked in one box, so the
-   carton can lift while the podium stays put and the shadow under it tightens.
-   A single flat image could only bob as one piece. */
-.hero-pack-stage {
-    position: relative;
-    width: 100%;
-    aspect-ratio: 466 / 262;
-}
-
-.hero-pack-stage picture {
-    position: absolute;
-    inset: 0;
-    display: block;
-}
-
-.hero-pack-stage img {
+/* The pack lifts as one piece. Splitting the carton from its podium so only
+   the carton floated tore it: the podium cut-out had kept the carton's bottom
+   band, which stayed behind while the rest rose. */
+.hero-pack-img {
     display: block;
     width: 100%;
     height: auto;
-}
-
-.hero-pack-podium {
-    filter: drop-shadow(0 0.4cqw 0.6cqw rgba(122, 62, 34, 0.18));
-}
-
-.hero-pack-box {
-    filter: drop-shadow(0 0.5cqw 0.8cqw rgba(122, 62, 34, 0.14));
+    aspect-ratio: 466 / 262;
+    filter: drop-shadow(0 0.6cqw 0.9cqw rgba(122, 62, 34, 0.16));
     animation: hero-pack-float 5.6s ease-in-out 1.3s infinite;
     will-change: transform;
 }
 
-/* the shadow the carton casts on the podium's surface */
-.hero-pack-cast {
-    position: absolute;
-    left: 21%;
-    right: 23%;
-    top: 71%;
-    height: 7.5%;
-    border-radius: 50%;
-    background: radial-gradient(ellipse at 50% 50%, rgba(116, 66, 38, 0.34), rgba(116, 66, 38, 0) 72%);
-    animation: hero-pack-cast 5.6s ease-in-out 1.3s infinite;
-    will-change: transform, opacity;
-}
-
 @keyframes hero-pack-float {
     0%, 100% { transform: translateY(0); }
-    50%      { transform: translateY(-2.6%); }
-}
-
-@keyframes hero-pack-cast {
-    0%, 100% { transform: scale(1);          opacity: 0.9; }
-    50%      { transform: scale(0.92, 0.84); opacity: 0.55; }
+    50%      { transform: translateY(-2.4%); }
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .hero-pack-box,
-    .hero-pack-cast {
-        animation: none;
-    }
+    .hero-pack-img { animation: none; }
 }
 
 /* ---- stacked below the tablet breakpoint: the reference layout is landscape ---- */
