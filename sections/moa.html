@@ -17,10 +17,9 @@
     .rib-board{display:grid;grid-template-columns:minmax(0,1fr) minmax(300px,392px);gap:16px;align-items:stretch;margin-bottom:18px}
     .rib-stage{position:relative;border:1px solid rgba(41,57,127,.1);border-radius:20px;overflow:hidden;background:#fff;
       box-shadow:0 1px 4px rgba(0,0,0,.05),0 16px 40px rgba(41,57,127,.08);display:flex;flex-direction:column}
-    .rib-toggle{display:inline-flex;margin:16px 0 0 16px;padding:4px;gap:4px;border-radius:999px;background:var(--bg-light);border:1px solid rgba(41,57,127,.1);align-self:flex-start}
-    .rib-toggle button{font-family:'Acumin Variable',sans-serif;font-size:.76rem;font-weight:800;letter-spacing:.02em;color:var(--text-grey);
-      background:transparent;border:0;border-radius:999px;padding:8px 16px;cursor:pointer;transition:all .22s ease;white-space:nowrap}
-    .rib-toggle button[aria-pressed="true"]{background:var(--brand-navy);color:#fff;box-shadow:0 6px 16px -6px rgba(41,57,127,.7)}
+    
+    
+    
     /* the reference's own canvas metrics */
     .rib-canvas{position:relative;height:26rem;margin:14px;border-radius:14px;overflow:hidden;cursor:grab;
       background:radial-gradient(circle at 50% 35%,#fdfcfe,#ece6f3)}
@@ -31,6 +30,27 @@
     #moa .scene-subunit-label{font-family:'Acumin Variable',sans-serif;font-weight:800;font-size:1.15rem;letter-spacing:.06em;white-space:nowrap;user-select:none}
     #moa .scene-site-label{font-family:'Acumin Variable',sans-serif;font-weight:800;font-size:1.1rem;color:#2e2a33;user-select:none}
     #moa .scene-site-label.is-inverted{color:#fbf9fd}
+    /* names the parts of the ribosome, drawn as DOM by CSS2DRenderer */
+    #moa .structure-label{font-family:'Acumin Variable',sans-serif;font-weight:600;font-size:.72rem;line-height:1.2;
+      padding:3px 6px;border-radius:6px;border:1px solid rgba(41,57,127,.16);background:rgba(255,255,255,.88);
+      color:#3a3f52;white-space:nowrap;box-shadow:0 4px 12px rgba(41,57,127,.1);user-select:none}
+    #moa .structure-label.is-drug{color:#a31e23;border-color:rgba(239,106,43,.45)}
+    /* the stage narration, pinned over the top of the canvas */
+    #moa .moa-callout{position:absolute;z-index:5;top:14px;left:50%;width:min(23rem,74%);
+      padding:11px 14px;border-radius:12px;text-align:center;pointer-events:none;
+      border:1px solid rgba(41,57,127,.18);background:rgba(255,255,255,.95);
+      box-shadow:0 14px 34px -18px rgba(41,57,127,.55);
+      opacity:0;transform:translate(-50%,8px);transition:opacity .35s ease,transform .35s ease}
+    #moa .moa-callout.is-visible{opacity:1;transform:translate(-50%,0)}
+    #moa .moa-callout-title{margin:0;font-family:'Acumin Variable',sans-serif;font-weight:800;
+      font-size:.82rem;line-height:1.25;letter-spacing:.02em;color:#29397f}
+    #moa .moa-callout-body{margin:3px 0 0;font-size:.74rem;line-height:1.35;color:#6b6b6b}
+    @media(max-width:560px){
+      #moa .moa-callout{width:88%;padding:9px 11px}
+      #moa .moa-callout-title{font-size:.74rem}
+      #moa .moa-callout-body{font-size:.68rem}
+      #moa .structure-label{font-size:.62rem;padding:2px 5px}
+    }
     .rib-hint{position:absolute;left:14px;bottom:12px;z-index:3;pointer-events:none;font-family:'Acumin Variable',sans-serif;
       font-size:.66rem;font-weight:700;letter-spacing:.04em;color:rgba(41,57,127,.5)}
     .rib-loader{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:4;
@@ -51,21 +71,20 @@
     /* the running state reads green, the way the reference distinguishes them */
     .rib-steps.running .rib-step{background:#186b3b;box-shadow:0 1px 4px rgba(0,0,0,.05),0 12px 30px rgba(24,107,59,.2)}
     .rib-steps.running .rib-step:hover{box-shadow:0 3px 10px rgba(0,0,0,.07),0 18px 40px rgba(24,107,59,.3)}
-    .rib-steps.running .rib-step .n{color:#8fe0ad}
+    
     .rib-step .n{font-family:'Acumin Variable',sans-serif;font-size:.62rem;font-weight:800;letter-spacing:.28em;color:var(--orange-section)}
     .rib-step h3{font-family:'Acumin Variable',sans-serif;font-size:.98rem;font-weight:800;line-height:1.3;margin:5px 0 6px;color:#fff}
     .rib-step p{font-family:'Acumin Variable',sans-serif;font-size:.8rem;font-weight:500;line-height:1.6;margin:0;color:rgba(255,255,255,.82)}
 
-    .rib-legend{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:12px}
-    .rib-chip{display:flex;align-items:flex-start;gap:9px;padding:12px 15px;border:1px solid rgba(41,57,127,.1);border-radius:14px;background:#fff;
-      font-family:'Acumin Variable',sans-serif;font-size:.78rem;font-weight:600;line-height:1.45;color:var(--text-muted);box-shadow:0 1px 4px rgba(0,0,0,.04)}
-    .rib-chip i{width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-top:5px}
+    
+    
+    
     .rib-foot{font-family:'Acumin Variable',sans-serif;font-size:.74rem;font-weight:500;color:var(--text-grey);margin:0 0 34px}
 
 
     @media(max-width:980px){
       .rib-board{grid-template-columns:1fr}
-      .rib-legend{grid-template-columns:1fr}
+      
     }
   </style>
 
@@ -78,10 +97,6 @@
 
     <div class="rib-board">
       <div class="rib-stage">
-        <div class="rib-toggle" role="group" aria-label="Drug state">
-          <button type="button" id="rib-off" aria-pressed="false">Drug removed</button>
-          <button type="button" id="rib-on" aria-pressed="true">Nafithromycin present</button>
-        </div>
         <div class="rib-canvas" id="rib-canvas">
           <div class="rib-loader" id="rib-loader">Loading ribosome&hellip;</div>
           <div class="rib-hint">Drag to rotate &middot; scroll to zoom</div>
@@ -112,35 +127,8 @@
         </li>
       </ol>
 
-      <ol class="rib-steps running" id="rib-steps-off" hidden>
-        <li class="rib-step">
-          <div class="n">01</div>
-          <h3>Exit tunnel is open</h3>
-          <p>With no drug bound to domain V of the 23S rRNA, the growing peptide threads freely out through the 50S exit tunnel.</p>
-        </li>
-        <li class="rib-step">
-          <div class="n">02</div>
-          <h3>Translocation proceeds</h3>
-          <p>EF-G&ndash;driven translocation shifts the peptidyl-tRNA from the A site to the P site, the deacylated tRNA leaves via the E site, and the mRNA advances by one codon.</p>
-        </li>
-        <li class="rib-step">
-          <div class="n">03</div>
-          <h3>Chain elongation continues</h3>
-          <p>Each elongation cycle adds one amino acid, and the polypeptide lengthens as it passes through the exit tunnel.</p>
-        </li>
-        <li class="rib-step">
-          <div class="n">04</div>
-          <h3>Bacterium grows and multiplies</h3>
-          <p>Complete, functional proteins are produced, supporting bacterial growth and multiplication.</p>
-        </li>
-      </ol>
     </div>
 
-    <div class="rib-legend">
-      <div class="rib-chip"><i style="background:#8fa0d4"></i>50S &amp; 30S subunits &mdash; the bacterial 70S ribosome</div>
-      <div class="rib-chip"><i style="background:#29397f"></i>E, P and A sites &mdash; the exit, peptidyl and aminoacyl tRNA positions</div>
-      <div class="rib-chip"><i style="background:#ef6a2b"></i>Nafithromycin docked in the nascent peptide exit tunnel</div>
-    </div>
     <p class="rib-foot">Schematic representation for educational use; geometry is stylized, not a crystallographic structure.</p>
 
   </div>
@@ -159,44 +147,17 @@
   if (!container) return;
 
   const loadingEl = document.getElementById("rib-loader");
-  let blocked = true;
+  /* The scene now only ever shows the drug-present state, so this is fixed. */
+  const blocked = true;
   let started = false;
-  let setSceneBlocked = null;
 
-  function renderStatus() {
-    const el = document.getElementById("rib-status");
-    el.classList.toggle("stalled", blocked);
-    el.classList.toggle("running", !blocked);
-    el.innerHTML = blocked
-      ? "Translation stalled &mdash; the tRNA is held at the A site and the peptide chain stops growing."
-      : "Translation running &mdash; the tRNA translocates from the A site to the P site and the peptide chain elongates.";
+  const statusEl = document.getElementById("rib-status");
+  if (statusEl) {
+    statusEl.classList.add("stalled");
+    statusEl.innerHTML = "Translation stalled &mdash; the tRNA is held at the A site and the peptide chain stops growing.";
   }
-
-  function renderFacts() {
-    const on = document.getElementById("rib-steps-on");
-    const off = document.getElementById("rib-steps-off");
-    if (!on || !off) return;
-    const show = blocked ? on : off, hide = blocked ? off : on;
-    hide.hidden = true; hide.classList.remove("is-on");
-    show.hidden = false;
-    show.classList.remove("is-on");
-    void show.offsetWidth;
-    show.classList.add("is-on");
-  }
-
-  function setBlocked(v) {
-    blocked = v;
-    document.getElementById("rib-off").setAttribute("aria-pressed", blocked ? "false" : "true");
-    document.getElementById("rib-on").setAttribute("aria-pressed", blocked ? "true" : "false");
-    renderFacts();
-    renderStatus();
-    if (setSceneBlocked) setSceneBlocked(v);
-  }
-
-  document.getElementById("rib-off").addEventListener("click", () => setBlocked(false));
-  document.getElementById("rib-on").addEventListener("click", () => setBlocked(true));
-  renderFacts();
-  renderStatus();
+  const stepsEl = document.getElementById("rib-steps-on");
+  if (stepsEl) { stepsEl.hidden = false; stepsEl.classList.add("is-on"); }
 
   async function boot() {
     if (started) return;
@@ -553,7 +514,7 @@
 
     /* ---- Block sign ---- */
     const blockGroup = new THREE.Group();
-    blockGroup.position.set(1.75, 0.45, 1.7);
+    blockGroup.position.set(0.48, 0.45, 1.7);
     blockGroup.rotation.z = Math.PI / 4;
     [0, Math.PI / 2].forEach((rz) => {
       const bar = new THREE.Mesh(
@@ -567,25 +528,80 @@
     let blockScale = 0;
 
     /* ---------------------------------------------------------------- */
+    /* Structure labels, exit tunnel, A to P path, and the stage callout */
+    /* ---------------------------------------------------------------- */
+    function addStructureLabel(parent, text, position, extraClass = "") {
+      const div = document.createElement("div");
+      div.className = "structure-label " + extraClass;
+      div.textContent = text;
+      const obj = new CSS2DObject(div);
+      obj.position.set(...position);
+      parent.add(obj);
+      return obj;
+    }
+
+    addStructureLabel(mrnaGroup, "mRNA", [-3.25, -1.45, 0]);
+    addStructureLabel(pT, "tRNA", [-0.2, -0.85, 0]);
+    addStructureLabel(aT, "tRNA", [0.25, -0.85, 0]);
+    addStructureLabel(peptideGroup, "Growing peptide chain", [-1.6, 1.95, 0]);
+    addStructureLabel(drugOuter, "Nafithromycin", [-0.85, 0.62, 0], "is-drug");
+
+    const tunnelMarker = new THREE.Mesh(
+      new THREE.TorusGeometry(0.36, 0.045, 12, 42),
+      new THREE.MeshStandardMaterial({
+        color: C.drug, emissive: C.drug, emissiveIntensity: 0.65,
+        transparent: true, opacity: 0.55,
+      })
+    );
+    tunnelMarker.position.set(1.85, 1.15, 1.6);
+    tunnelMarker.rotation.x = Math.PI / 2;
+    scene.add(tunnelMarker);
+    addStructureLabel(tunnelMarker, "Nascent peptide exit tunnel", [-1.05, 0.5, 0]);
+
+    const translocationArrow = new THREE.ArrowHelper(
+      new THREE.Vector3(-1, 0, 0),
+      new THREE.Vector3(SITE_X.A + 0.15, 0.45, 1.7),
+      1.12, 0x6b4632, 0.22, 0.14
+    );
+    scene.add(translocationArrow);
+
+    const pathPulse = new THREE.Mesh(
+      new THREE.SphereGeometry(0.085, 16, 16),
+      new THREE.MeshStandardMaterial({ color: C.block, emissive: C.block, emissiveIntensity: 0.8 })
+    );
+    scene.add(pathPulse);
+
+    const calloutDiv = document.createElement("div");
+    calloutDiv.className = "moa-callout";
+    calloutDiv.innerHTML =
+      "<p class=\"moa-callout-title\"></p><p class=\"moa-callout-body\"></p>";
+    container.appendChild(calloutDiv);
+
+    let lastCalloutKey = "";
+    function updateCallout(title, body) {
+      const key = title + "|" + body;
+      if (key === lastCalloutKey) return;
+      lastCalloutKey = key;
+      calloutDiv.querySelector(".moa-callout-title").textContent = title;
+      calloutDiv.querySelector(".moa-callout-body").textContent = body;
+      calloutDiv.classList.add("is-visible");
+    }
+
+    /* ---------------------------------------------------------------- */
     /* Animation state                                                  */
     /* ---------------------------------------------------------------- */
-    const PH = [1.1, 0.8, 1.1, 0.7]; // arrival · peptide-bond formation · translocation · E-site release
     const easeInOut = (t) => (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2);
     const damp = (cur, target, lambda, dt) => THREE.MathUtils.damp(cur, target, lambda, dt);
 
     let chain = 3;
     let grow = 0;
     let dropped = 0;
-    let phase = 0;
-    let tPhase = 0;
     let stall = 0;
+    /* The mechanism is told once, in eight stages across fourteen seconds. */
+    let mechanismTime = 0;
 
-    let lastSiteActive = null;
     rebuildPeptide(chain, grow, [SITE_X.P, 0, 0.95], dropped);
-    updateSiteActivity(!blocked);
-    lastSiteActive = !blocked;
-
-    setSceneBlocked = () => { stall = 0; phase = 0; tPhase = 0; };
+    updateSiteActivity(false);
 
     const clock = new THREE.Clock();
     let onScreen = true;
@@ -597,103 +613,102 @@
       const elapsed = clock.elapsedTime;
       const Y = -0.2, Z = 0.95;
 
-      if (lastSiteActive !== !blocked) {
-        updateSiteActivity(!blocked);
-        lastSiteActive = !blocked;
-      }
+      mechanismTime = Math.min(mechanismTime + dt, 14);
+      const moaStage =
+        mechanismTime < 1.6 ? 0 : mechanismTime < 3.1 ? 1 : mechanismTime < 4.2 ? 2 :
+        mechanismTime < 6 ? 3 : mechanismTime < 8.2 ? 4 : mechanismTime < 10.3 ? 5 :
+        mechanismTime < 12.2 ? 6 : 7;
 
       let peptideNeedsRebuild = false;
 
-      if (blocked) {
-        stall += dt;
-        const s = stall;
-        aT.visible = true;
-        aT.position.set(SITE_X.A + 0.25 + Math.sin(s * 16) * 0.05, Y + 0.15, Z + 0.35);
-        aT.rotation.z = Math.sin(s * 13) * 0.09;
-        aT.scale.setScalar(1);
+      stall += dt;
+      const s = stall;
+      const arrival = easeInOut(Math.min(mechanismTime / 1.6, 1));
+      const elongation = easeInOut(Math.max(0, Math.min((mechanismTime - 1.6) / 1.5, 1)));
+      const normalShift = easeInOut(Math.max(0, Math.min((mechanismTime - 3.1) / 1.1, 1)));
+      const blockedTry = easeInOut(Math.max(0, Math.min((mechanismTime - 8.2) / 1.4, 1)));
 
-        const cyc = s % 4;
-        const drop = cyc > 3 ? easeInOut((cyc - 3) / 1) : 0;
-        pT.visible = true;
-        pT.position.set(SITE_X.P, Y - drop * 3.2, Z + drop * 0.6);
-        pT.rotation.z = drop * 1.2 + Math.sin(s * 9) * 0.04;
-        pT.scale.setScalar(1);
-
-        if (Math.abs(drop - dropped) > 0.02) { dropped = drop; peptideNeedsRebuild = true; }
-        if (chain !== 3) { chain = 3; peptideNeedsRebuild = true; }
-        if (grow !== 0) { grow = 0; peptideNeedsRebuild = true; }
-        phase = 0;
-        tPhase = 0;
+      aT.visible = true;
+      if (moaStage === 0) {
+        aT.position.set(
+          THREE.MathUtils.lerp(3.6, SITE_X.A, arrival),
+          THREE.MathUtils.lerp(1.1, Y, arrival),
+          THREE.MathUtils.lerp(2.6, Z, arrival)
+        );
+      } else if (moaStage === 2) {
+        aT.position.set(
+          THREE.MathUtils.lerp(SITE_X.A, SITE_X.P, normalShift),
+          Y + Math.sin(normalShift * Math.PI) * 0.16, Z
+        );
+      } else if (moaStage >= 5) {
+        aT.position.set(
+          THREE.MathUtils.lerp(SITE_X.A, 0.55, blockedTry),
+          Y + Math.sin(blockedTry * Math.PI) * 0.12, Z
+        );
       } else {
-        stall = 0;
-        if (dropped !== 0) { dropped = 0; peptideNeedsRebuild = true; }
-
-        tPhase += dt;
-        const dur = PH[phase] ?? 1;
-        const k = Math.min(tPhase / dur, 1);
-        const e = easeInOut(k);
-
-        let aPos = [SITE_X.A, Y, Z];
-        let pPos = [SITE_X.P, Y, Z];
-        let pScale = 1;
-
-        if (phase === 0) {
-          aPos = [
-            THREE.MathUtils.lerp(3.6, SITE_X.A, e),
-            THREE.MathUtils.lerp(1.1, Y, e),
-            THREE.MathUtils.lerp(2.6, Z, e),
-          ];
-          if (grow !== 0) { grow = 0; peptideNeedsRebuild = true; }
-        } else if (phase === 1) {
-          const q = Math.round(k * 12) / 12;
-          if (q !== grow) { grow = q; peptideNeedsRebuild = true; }
-        } else if (phase === 2) {
-          aPos = [THREE.MathUtils.lerp(SITE_X.A, SITE_X.P, e), Y + Math.sin(e * Math.PI) * 0.16, Z];
-          pPos = [THREE.MathUtils.lerp(SITE_X.P, SITE_X.E, e), Y + Math.sin(e * Math.PI) * 0.16, Z];
-          if (grow !== 0) { grow = 0; peptideNeedsRebuild = true; }
-        } else {
-          aPos = [SITE_X.P, Y, Z];
-          pPos = [THREE.MathUtils.lerp(SITE_X.E, -2.9, e), Y - e * 0.5, Z + e * 0.8];
-          pScale = 1 - e * 0.9;
-        }
-
-        aT.visible = true;
-        aT.position.set(...aPos);
-        aT.rotation.z = Math.sin(elapsed * 2) * 0.05;
-        aT.scale.setScalar(1);
-
-        pT.position.set(...pPos);
-        pT.scale.setScalar(Math.max(pScale, 0.001));
-        pT.visible = pScale > 0.02;
-        pT.rotation.z = Math.sin(elapsed * 1.6) * 0.04;
-
-        if (k >= 1) {
-          tPhase = 0;
-          if (phase === 1) {
-            chain = chain >= 9 ? 3 : chain + 1;
-            grow = 0;
-            peptideNeedsRebuild = true;
-          }
-          phase = (phase + 1) % PH.length;
-        }
+        aT.position.set(SITE_X.A, Y, Z);
       }
+      aT.rotation.z = moaStage >= 5 ? Math.sin(s * 13) * 0.07 : Math.sin(s * 2) * 0.035;
+      aT.scale.setScalar(1);
+
+      pT.visible = true;
+      pT.position.set(SITE_X.P, Y, Z);
+      pT.rotation.z = Math.sin(s * 1.8) * 0.035;
+      pT.scale.setScalar(1);
+
+      const nextGrow = moaStage === 1 ? Math.round(elongation * 12) / 12 : 0;
+      if (Math.abs(nextGrow - grow) > 0.01) { grow = nextGrow; peptideNeedsRebuild = true; }
+      const nextChain = moaStage >= 2 ? 4 : 3;
+      if (chain !== nextChain) { chain = nextChain; peptideNeedsRebuild = true; }
+      if (dropped !== 0) { dropped = 0; peptideNeedsRebuild = true; }
 
       if (peptideNeedsRebuild) {
         rebuildPeptide(chain, grow, [SITE_X.P, 0, Z - 0.35], dropped);
       }
 
-      /* Drug approach / spin */
-      drugApproach = damp(drugApproach, blocked ? 1 : 0, 2.4, dt);
+      /* Drug approach and spin */
+      drugApproach = damp(drugApproach, moaStage >= 3 ? 1 : 0, 2.2, dt);
       const a = drugApproach;
-      drugOuter.position.set(3.1 - 1.15 * a, 1.35 - 0.2 * a, 1.9 - 0.15 * a);
+      drugOuter.position.set(3.7 - 1.75 * a, 1.7 - 0.55 * a, 2.35 - 0.6 * a);
       drugOuter.scale.setScalar(0.001 + a);
       drugOuter.rotation.y = (1 - a) * 1.6;
       drugOuter.visible = a > 0.01;
       drugSpinGroup.rotation.y = elapsed * 0.35;
       drugSpinGroup.rotation.x = Math.sin(elapsed * 0.4) * 0.12;
 
-      /* Block sign */
-      blockScale = damp(blockScale, blocked ? 1 : 0, 6, dt);
+      const docked = moaStage >= 4;
+      drugLight.intensity = docked ? 2.4 + Math.sin(elapsed * 4) * 0.45 : 1.1;
+      tunnelMarker.material.emissiveIntensity = docked ? 0.9 + Math.sin(elapsed * 4) * 0.25 : 0.2;
+      tunnelMarker.material.opacity = docked ? 0.82 : 0.28;
+
+      if (moaStage <= 2) {
+        updateCallout(
+          "NORMAL TRANSLATION",
+          moaStage === 0 ? "A-site tRNA approaches"
+            : moaStage === 1 ? "Peptide elongation occurs"
+            : "A to P translocation occurs"
+        );
+      } else if (moaStage === 3) {
+        updateCallout("NAFITHROMYCIN APPROACHES", "Moving toward the 50S peptide exit tunnel");
+      } else if (moaStage === 4) {
+        updateCallout("NAFITHROMYCIN BINDS TO THE 50S SUBUNIT", "Interacts at the entrance of the nascent peptide exit tunnel");
+      } else if (moaStage === 5) {
+        updateCallout("TRANSLOCATION BLOCKED", "A-site tRNA cannot move to the P site");
+      } else if (moaStage === 6) {
+        updateCallout("PEPTIDE ELONGATION STOPS", "The growing peptide chain can no longer elongate");
+      } else {
+        updateCallout("PROTEIN SYNTHESIS HALTED", "The stalled ribosome cannot complete a functional protein");
+      }
+
+      /* The blocked A to P move */
+      const showPath = moaStage >= 5;
+      translocationArrow.visible = showPath;
+      pathPulse.visible = showPath;
+      const pathProgress = showPath ? Math.min((mechanismTime - 8.2) / 1.25, 0.52) : 0;
+      pathPulse.position.set(
+        THREE.MathUtils.lerp(SITE_X.A + 0.1, SITE_X.P, Math.max(0, pathProgress)), 0.45, 1.7
+      );
+      blockScale = damp(blockScale, showPath ? 1 : 0, 6, dt);
       const pulse = 1 + Math.sin(elapsed * 4) * 0.06;
       blockGroup.scale.setScalar(blockScale * pulse);
       blockGroup.visible = blockScale > 0.02;
@@ -711,7 +726,10 @@
     // idle the render loop whenever the section is off-screen
     if ("IntersectionObserver" in window) {
       new IntersectionObserver((entries) => {
-        entries.forEach((en) => { onScreen = en.isIntersecting; });
+        entries.forEach((en) => {
+          if (en.isIntersecting && !onScreen) { mechanismTime = 0; stall = 0; }
+          onScreen = en.isIntersecting;
+        });
       }, { threshold: 0.01 }).observe(container);
     }
 
