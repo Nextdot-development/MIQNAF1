@@ -357,7 +357,7 @@ function initializeDoctorSystem() {
                 spec: 'Head of the Department, Pulmonology',
                 hospitals: ['CK Birla Hospital, Kolkata'],
                 type: 'gdrive',
-                video: 'https://drive.google.com/file/d/1NjwexlkM1IxdVlh1rjB8gB2E_h2IwSda/preview',
+                video: 'https://drive.google.com/file/d/1d-PqFdxlM6_Lua8RLXSl72mOSBki-Ox2/preview',
                 thumb: 'thumbnails/dr-raja-dhar.jpg'
             }
         ],
@@ -367,7 +367,7 @@ function initializeDoctorSystem() {
                 spec: 'Chairman – Internal Medicine, Respiratory & Sleep Medicine',
                 hospitals: ['Medanta Hospital, Gurugram'],
                 type: 'gdrive',
-                video: 'https://drive.google.com/file/d/14JasufTbBaFpZEFLZwKLfm_TFlHNaqOb/preview',
+                video: 'https://drive.google.com/file/d/1UN1PC6vdYapvTe4y7-YIny9tZ1SS1cg0/preview',
                 thumb: 'thumbnails/dr-randeep-guleria.jpg'
             }
         ]

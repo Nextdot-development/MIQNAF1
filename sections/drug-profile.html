@@ -1,0 +1,143 @@
+<!-- DRUG PROFILE — the four evidence slides, as tabs -->
+<section id="drug-profile" class="dp-section fade-in-on-scroll">
+  <style>
+    .dp-section{width:100%;padding:2.5rem 1rem 4rem;overflow:hidden;background:transparent}
+    .dp-container{width:100%;max-width:1300px;margin:0 auto}
+    .dp-head{margin-bottom:2rem}
+    .dp-eyebrow{font-family:'Acumin Variable',sans-serif;font-size:.8rem;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--orange-section);margin-bottom:.6rem}
+    .dp-title{font-family:'Acumin Variable',sans-serif;font-size:clamp(2rem,3.4vw,3.3rem);font-weight:800;line-height:1.12;color:var(--brand-navy);margin:0}
+    .dp-title em{font-style:italic;color:var(--brand-red)}
+    .dp-reg{font-size:.42em;vertical-align:super;font-style:normal;letter-spacing:0}
+    .dp-sub{font-family:'Acumin Variable',sans-serif;font-size:clamp(1rem,1.4vw,1.2rem);font-weight:600;color:var(--text-muted);margin-top:.7rem;max-width:66ch}
+
+    /* ---- tab strip: the same one the patient profiles use ---- */
+    .dp-tabs{display:flex;gap:12px;margin-bottom:26px;overflow-x:auto;padding-bottom:4px;-webkit-overflow-scrolling:touch}
+    .dp-tab{flex:1 1 0;min-width:max-content;white-space:nowrap;cursor:pointer;
+      font-family:'Acumin Variable',sans-serif;font-size:.92rem;font-weight:800;letter-spacing:.09em;text-transform:uppercase;
+      color:var(--text-grey);background:#fff;border:1px solid rgba(41,57,127,.14);border-radius:999px;padding:17px 28px;
+      transition:color .25s ease,background .25s ease,border-color .25s ease,box-shadow .25s ease,transform .25s ease}
+    .dp-tab:hover{color:var(--brand-navy);border-color:rgba(41,57,127,.34);transform:translateY(-2px)}
+    .dp-tab[aria-selected="true"]{color:#fff;border-color:transparent;transform:none}
+    .dp-tab[aria-selected="true"][data-tone="maroon"]{background:var(--red-section);box-shadow:0 8px 22px -8px rgba(153,31,37,.7)}
+    .dp-tab[aria-selected="true"][data-tone="navy"]{background:var(--blue-section);box-shadow:0 8px 22px -8px rgba(41,57,127,.7)}
+    .dp-tab[aria-selected="true"][data-tone="orange"]{background:var(--orange-section);box-shadow:0 8px 22px -8px rgba(239,106,43,.7)}
+
+    /* ---- panels: each slide is a finished composition, so it is shown whole
+           on a plain card rather than dropped onto a coloured ground ---- */
+    .dp-panels{position:relative}
+    .dp-panel{border-radius:22px;overflow:hidden;border:1px solid rgba(41,57,127,.12);
+      box-shadow:0 26px 60px -34px rgba(41,57,127,.5);background:#fdf5ee;
+      animation:dp-panel-in .45s cubic-bezier(.22,.61,.36,1) both}
+    .dp-panel[hidden]{display:none}
+    .dp-panel img{display:block;width:100%;height:auto;aspect-ratio:1920/1092}
+    @keyframes dp-panel-in{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+    @media (prefers-reduced-motion: reduce){.dp-panel{animation:none}}
+
+    .dp-foot{font-family:'Acumin Variable',sans-serif;font-size:.82rem;color:var(--text-grey);margin:1.1rem 0 0}
+
+    .dp-hint{display:none;font-family:'Acumin Variable',sans-serif;font-size:.78rem;font-weight:600;
+      color:var(--text-grey);margin:0 0 10px;align-items:center;gap:6px}
+    .dp-hint svg{flex:none}
+
+    @media (max-width:860px){
+      .dp-section{padding:2rem 1rem 3rem}
+      .dp-tabs{gap:8px}
+      .dp-tab{flex:0 0 auto;font-size:.8rem;padding:13px 20px}
+      .dp-panel{border-radius:16px}
+    }
+
+    @media (max-width:760px){
+      /* the slide keeps a readable size and the card scrolls under it */
+      .dp-hint{display:flex}
+      .dp-panel{overflow-x:auto;-webkit-overflow-scrolling:touch}
+      .dp-panel img{min-width:820px}
+    }
+  </style>
+
+  <div class="dp-container">
+    <div class="dp-head">
+      <div class="dp-eyebrow">Drug Profile</div>
+      <h2 class="dp-title">The evidence behind <em>MIQNAF<span class="dp-reg">&reg;</span></em></h2>
+      <p class="dp-sub">Pathogen-level outcomes, the Phase III cure rate, lung exposure and susceptibility &mdash; the four findings that define nafithromycin.</p>
+    </div>
+
+    <div class="dp-tabs" role="tablist" aria-label="Drug profile">
+      <button type="button" class="dp-tab" role="tab" id="dp-tab-outcomes" data-tone="maroon" aria-controls="dp-panel-outcomes" aria-selected="true">Assured Outcomes</button>
+      <button type="button" class="dp-tab" role="tab" id="dp-tab-lancet" data-tone="navy" aria-controls="dp-panel-lancet" aria-selected="false">Clinical Cure</button>
+      <button type="button" class="dp-tab" role="tab" id="dp-tab-lung" data-tone="orange" aria-controls="dp-panel-lung" aria-selected="false">Lung Exposure</button>
+      <button type="button" class="dp-tab" role="tab" id="dp-tab-susceptibility" data-tone="maroon" aria-controls="dp-panel-susceptibility" aria-selected="false">Susceptibility</button>
+    </div>
+
+    <p class="dp-hint" aria-hidden="true">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M5 12l4-4M5 12l4 4M19 12l-4-4M19 12l-4 4"/></svg>
+      Swipe the slide sideways to read it
+    </p>
+
+    <div class="dp-panels">
+      <div class="dp-panel" role="tabpanel" id="dp-panel-outcomes" aria-labelledby="dp-tab-outcomes">
+        <picture>
+          <source srcset="assests/dp-outcomes.webp" type="image/webp">
+          <img src="assests/dp-outcomes.jpg" width="1920" height="1092" loading="eager"
+               alt="Guarantees rapid response and assured outcomes. Multicentric Indian Phase III clinical trial with a DCGI approved protocol aligned with FDA recommended end points. Typical pathogens: Streptococcus pneumoniae 100% (n=7), methicillin-susceptible S. aureus 100% (n=1), Haemophilus influenzae 93% (n=15). Atypical pathogens: Chlamydophila pneumoniae 97% (n=95), Legionella pneumophilia 100% (n=46), Mycoplasma pneumophilia 96% (n=50).">
+        </picture>
+      </div>
+
+      <div class="dp-panel" role="tabpanel" id="dp-panel-lancet" aria-labelledby="dp-tab-lancet" hidden>
+        <picture>
+          <source srcset="assests/dp-lancet.webp" type="image/webp">
+          <img src="assests/dp-lancet.jpg" width="1920" height="1092" loading="lazy"
+               alt="Assures approximately 100% susceptibility and rapid bactericidal action. The Lancet Regional Health Southeast Asia, October 2025: efficacy and safety of a 3-day once-daily regimen of oral nafithromycin compared to oral moxifloxacin for community-acquired bacterial pneumonia in adults, a phase III randomized double-blind controlled trial. 97% cure rate in the Phase III clinical trial at test of cure.">
+        </picture>
+      </div>
+
+      <div class="dp-panel" role="tabpanel" id="dp-panel-lung" aria-labelledby="dp-tab-lung" hidden>
+        <picture>
+          <source srcset="assests/dp-lung.webp" type="image/webp">
+          <img src="assests/dp-lung.jpg" width="1920" height="1092" loading="lazy"
+               alt="Offers high and sustained lung exposures, enhancing pk/pd to support a short 3-day regimen. A human BAL study conducted in the US shows approximately 8 times higher lung concentration versus azithromycin.">
+        </picture>
+      </div>
+
+      <div class="dp-panel" role="tabpanel" id="dp-panel-susceptibility" aria-labelledby="dp-tab-susceptibility" hidden>
+        <picture>
+          <source srcset="assests/dp-susceptibility.webp" type="image/webp">
+          <img src="assests/dp-susceptibility.jpg" width="1920" height="1092" loading="lazy"
+               alt="Assures approximately 100% susceptibility and rapid bactericidal action. Nafithromycin shows 100% susceptibility towards S. pneumoniae with rapid and early clinical response and bactericidal activity, killing 99.9% of azithromycin-resistant strains. ICMR data: erythromycin 21.31% versus nafithromycin 100%.">
+        </picture>
+      </div>
+    </div>
+
+    <p class="dp-foot">Data on file and published sources; see references. Schematic slides reproduced from the MIQNAF&reg; scientific deck.</p>
+  </div>
+
+  <script>
+  (function () {
+    var root = document.getElementById('drug-profile');
+    if (!root) return;
+    var tabs = Array.prototype.slice.call(root.querySelectorAll('.dp-tab'));
+
+    function select(tab) {
+      tabs.forEach(function (t) {
+        var panel = document.getElementById(t.getAttribute('aria-controls'));
+        var on = t === tab;
+        t.setAttribute('aria-selected', on ? 'true' : 'false');
+        if (!panel) return;
+        panel.hidden = !on;
+      });
+    }
+
+    tabs.forEach(function (tab, i) {
+      tab.addEventListener('click', function () { select(tab); });
+      // left/right arrows move between tabs, as a tablist should
+      tab.addEventListener('keydown', function (e) {
+        var step = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+        if (!step) return;
+        e.preventDefault();
+        var next = tabs[(i + step + tabs.length) % tabs.length];
+        next.focus();
+        select(next);
+      });
+    });
+  })();
+  </script>
+</section>
