@@ -618,7 +618,8 @@ function initializeBouncingTitles() {
                 charIndex = 0;
             }
 
-            line.trim().split(/\s+/).filter(Boolean).forEach((word, wordIndex) => {
+            line.trim().split(/\s+/).filter(Boolean).forEach((rawWord, wordIndex) => {
+                let word = rawWord;
                 if (wordIndex > 0) {
                     const space = document.createElement('span');
                     space.className = 'bounce-char';
@@ -630,6 +631,14 @@ function initializeBouncingTitles() {
 
                 const wordWrap = document.createElement('span');
                 wordWrap.className = 'bounce-word';
+
+                // *word* sets the accent colour, ~word~ the accent in italic;
+                // the heading is split per character, so markup cannot be used
+                const accent = /^([*~])(.+)\1$/.exec(word);
+                if (accent) {
+                    word = accent[2];
+                    wordWrap.classList.add(accent[1] === '~' ? 'is-accent-em' : 'is-accent');
+                }
 
                 [...word].forEach((char) => {
                     const span = document.createElement('span');

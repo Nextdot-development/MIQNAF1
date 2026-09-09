@@ -1720,7 +1720,8 @@ body.doctor-modal-open {
 }
 
 .about-bouncing-title {
-    color: var(--brand-red);
+    /* the line now carries two colours: dark, with the marked words in red */
+    color: #2f2f38;
     font-size: clamp(18px, 2.4vw, 34px);
     font-weight: 800;
     line-height: 1.35;
@@ -1731,6 +1732,15 @@ body.doctor-modal-open {
 .bouncing-title .bounce-word {
     display: inline-block;
     white-space: nowrap;
+}
+
+.bouncing-title .bounce-word.is-accent,
+.bouncing-title .bounce-word.is-accent-em {
+    color: var(--brand-red);
+}
+
+.bouncing-title .bounce-word.is-accent-em {
+    font-style: italic;
 }
 
 .bouncing-title .bounce-char {
