@@ -1,65 +1,23 @@
-<!-- MACROLIDE LINEAGE — the 2D structures, revealed the way the deck builds them -->
+<!-- MACROLIDE LINEAGE — the supplied structure animation -->
 <section id="lineage" class="lin-section fade-in-on-scroll">
   <style>
     .lin-section{width:100%;padding:2.5rem 1rem 4rem;overflow:hidden;background:transparent}
-    .lin-container{width:100%;max-width:1300px;margin:0 auto}
-    .lin-head{margin-bottom:2rem}
+    .lin-container{width:100%;max-width:1180px;margin:0 auto}
+    .lin-head{margin-bottom:1.8rem}
     .lin-eyebrow{font-family:'Acumin Variable',sans-serif;font-size:.8rem;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--orange-section);margin-bottom:.6rem}
     .lin-title{font-family:'Acumin Variable',sans-serif;font-size:clamp(2rem,3.4vw,3.3rem);font-weight:800;line-height:1.12;color:var(--brand-navy);margin:0}
     .lin-title em{font-style:italic;color:var(--brand-red)}
     .lin-sub{font-family:'Acumin Variable',sans-serif;font-size:clamp(1rem,1.4vw,1.2rem);font-weight:600;color:var(--text-muted);margin-top:.7rem;max-width:70ch}
 
-    /* ---- the board ---- */
-    .lin-board{background:#fff;border:1px solid rgba(41,57,127,.12);border-radius:22px;
-      box-shadow:0 26px 60px -38px rgba(41,57,127,.45);padding:clamp(1.2rem,2.6vw,2.2rem);
-      display:grid;grid-template-columns:minmax(0,0.78fr) 1px minmax(0,1.22fr);gap:clamp(1rem,2.4vw,2rem);align-items:center}
-    .lin-rule{background:linear-gradient(180deg,rgba(41,57,127,0),rgba(41,57,127,.22) 12%,rgba(41,57,127,.22) 88%,rgba(41,57,127,0));
-      align-self:stretch;transform:scaleY(0);transform-origin:center;transition:transform .7s cubic-bezier(.22,.61,.36,1)}
-    .lin-rule.is-in{transform:scaleY(1)}
+    .lin-board{background:#fff;border:1px solid rgba(41,57,127,.12);border-radius:22px;overflow:hidden;
+      box-shadow:0 26px 60px -38px rgba(41,57,127,.45)}
+    .lin-board img{display:block;width:100%;height:auto;aspect-ratio:1174/696}
 
-    .lin-legacy{display:flex;flex-direction:column;gap:clamp(.9rem,2vw,1.6rem)}
-
-    .lin-item{opacity:0;transform:translateY(16px);transition:opacity .75s ease,transform .75s cubic-bezier(.22,.61,.36,1)}
-    .lin-item.is-in{opacity:1;transform:none}
-    /* capped so the whole comparison is taken in at once rather than scrolled */
-    .lin-item img{display:block;width:auto;max-width:100%;height:auto;max-height:270px;margin:0 auto}
-    .lin-new img{max-height:430px}
-    .lin-item figcaption{font-family:'Acumin Variable',sans-serif;font-size:.9rem;line-height:1.5;
-      color:var(--text-grey);margin-top:.45rem;text-align:center}
-    .lin-item figcaption b{color:var(--brand-navy);font-weight:700}
-    .lin-new figcaption{font-size:.96rem;color:#3c3c46;max-width:52ch;margin-left:auto;margin-right:auto}
-    .lin-new figcaption b{color:var(--brand-red)}
-    figure.lin-item{margin:0}
-
-    .lin-foot{display:flex;flex-wrap:wrap;align-items:center;gap:14px;margin-top:1.3rem}
-    .lin-replay{font-family:'Acumin Variable',sans-serif;font-size:.86rem;font-weight:800;letter-spacing:.08em;
-      text-transform:uppercase;color:var(--brand-navy);background:#fff;border:1px solid rgba(41,57,127,.2);
-      border-radius:999px;padding:11px 22px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;
-      transition:background .25s ease,color .25s ease,transform .25s ease}
-    .lin-replay:hover{background:var(--brand-navy);color:#fff;transform:translateY(-2px)}
-    .lin-note{font-family:'Acumin Variable',sans-serif;font-size:.82rem;line-height:1.55;color:var(--text-grey);margin:0}
+    .lin-note{font-family:'Acumin Variable',sans-serif;font-size:.82rem;line-height:1.55;color:var(--text-grey);margin:1rem 0 0}
 
     @media (max-width:900px){
       .lin-section{padding:2rem 1rem 3rem}
-      .lin-board{grid-template-columns:1fr;gap:1.4rem;border-radius:16px}
-      .lin-rule{height:1px;align-self:auto;background:linear-gradient(90deg,rgba(41,57,127,0),rgba(41,57,127,.22) 12%,rgba(41,57,127,.22) 88%,rgba(41,57,127,0));
-        transform:scaleX(0)}
-      .lin-rule.is-in{transform:scaleX(1)}
-      .lin-legacy{flex-direction:row;gap:1rem}
-      .lin-legacy .lin-item{flex:1 1 0;min-width:0}
-      .lin-item img{max-height:210px}
-      .lin-new img{max-height:330px}
-    }
-
-    @media (max-width:560px){
-      /* side by side leaves each structure too small to read on a phone */
-      .lin-legacy{flex-direction:column;gap:1.3rem}
-      .lin-item img{max-height:250px}
-      .lin-new img{max-height:290px}
-    }
-
-    @media (prefers-reduced-motion: reduce){
-      .lin-item,.lin-rule{transition:none}
+      .lin-board{border-radius:16px}
     }
   </style>
 
@@ -70,97 +28,39 @@
       <p class="lin-sub">Nafithromycin is a novel semisynthetic derivative of clarithromycin. Set beside the macrolides that came before it, the additions that make it a lactone ketolide are the whole story.</p>
     </div>
 
-    <div class="lin-board" id="lin-board">
-      <div class="lin-legacy">
-        <figure class="lin-item" data-step="1">
-          <picture>
-            <source srcset="assests/struct-azithromycin.webp" type="image/webp">
-            <img src="assests/struct-azithromycin.png" width="704" height="758" loading="lazy"
-                 alt="Structural formula of azithromycin, a 15-membered azalide macrolide">
-          </picture>
-          <figcaption><b>Azithromycin</b> &mdash; a 15-membered azalide</figcaption>
-        </figure>
-
-        <figure class="lin-item" data-step="2">
-          <picture>
-            <source srcset="assests/struct-clarithromycin.webp" type="image/webp">
-            <img src="assests/struct-clarithromycin.png" width="739" height="733" loading="lazy"
-                 alt="Structural formula of clarithromycin, a 14-membered macrolide">
-          </picture>
-          <figcaption><b>Clarithromycin</b> &mdash; the 14-membered macrolide nafithromycin is derived from</figcaption>
-        </figure>
-      </div>
-
-      <div class="lin-rule" id="lin-rule" aria-hidden="true"></div>
-
-      <figure class="lin-item lin-new" data-step="3">
-        <picture>
-          <source srcset="assests/struct-nafithromycin.webp" type="image/webp">
-          <img src="assests/struct-nafithromycin.png" width="900" height="831" loading="lazy"
-               alt="Structural formula of nafithromycin, a lactone ketolide. The macrolactone ring is highlighted in orange, the added thiadiazolyl-pyridine side arm and the polar groups in blue, and the methoxy group carrying GI stability is called out.">
-        </picture>
-        <figcaption>A lactone ketolide: the side arm and the 3-keto group give it a second ribosomal contact in <b>domain II</b> alongside domain V, and the methoxy group carries its <b>GI stability</b>.</figcaption>
-      </figure>
+    <div class="lin-board">
+      <!-- The still is what loads; the animation is swapped in only when the
+           section comes into view, and never under prefers-reduced-motion. -->
+      <img id="lin-anim" src="assests/lineage-structures.jpg"
+           data-anim="assests/lineage-structures.webp"
+           width="1174" height="696" loading="lazy" decoding="async"
+           alt="Azithromycin and clarithromycin structural formulae set beside nafithromycin, whose added thiadiazolyl-pyridine side arm and 3-keto group are highlighted in orange and its polar groups in blue.">
     </div>
 
-    <div class="lin-foot">
-      <button type="button" class="lin-replay" id="lin-replay">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 3v6h-6"/></svg>
-        Replay
-      </button>
-      <p class="lin-note">Structures reproduced from the MIQNAF&reg; scientific deck.</p>
-    </div>
+    <p class="lin-note">Structures reproduced from the MIQNAF&reg; scientific deck.</p>
   </div>
 
   <script>
   (function () {
-    var root = document.getElementById('lin-board');
-    if (!root) return;
+    var img = document.getElementById('lin-anim');
+    if (!img || !img.dataset.anim) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-    var items = Array.prototype.slice.call(root.querySelectorAll('.lin-item'));
-    var rule = document.getElementById('lin-rule');
-    var replay = document.getElementById('lin-replay');
-    var timers = [];
-    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    function clear() {
-      timers.forEach(clearTimeout);
-      timers = [];
-    }
-
-    function showAll() {
-      items.forEach(function (el) { el.classList.add('is-in'); });
-      rule.classList.add('is-in');
-    }
-
-    /* The deck builds this one structure at a time, ending on the comparison,
-       so the section does the same rather than dropping it in whole. */
     function play() {
-      clear();
-      if (reduce) { showAll(); return; }
-      items.forEach(function (el) { el.classList.remove('is-in'); });
-      rule.classList.remove('is-in');
-      // reflow, so removing and re-adding the class restarts the transition
-      void root.offsetWidth;
-      [[0, 120], [1, 900], [2, 2200]].forEach(function (pair) {
-        timers.push(setTimeout(function () {
-          items[pair[0]].classList.add('is-in');
-        }, pair[1]));
-      });
-      timers.push(setTimeout(function () { rule.classList.add('is-in'); }, 1700));
+      img.src = img.dataset.anim;
+      delete img.dataset.anim;
     }
 
-    replay.addEventListener('click', play);
-
-    var played = false;
+    // half a megabyte of animation is not worth fetching until it is near
     if ('IntersectionObserver' in window) {
-      new IntersectionObserver(function (entries) {
+      var io = new IntersectionObserver(function (entries) {
         entries.forEach(function (en) {
-          if (en.isIntersecting && !played) { played = true; play(); }
+          if (en.isIntersecting) { play(); io.disconnect(); }
         });
-      }, { threshold: 0.3 }).observe(root);
+      }, { rootMargin: '300px' });
+      io.observe(img);
     } else {
-      showAll();
+      play();
     }
   })();
   </script>
