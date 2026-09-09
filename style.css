@@ -1243,13 +1243,39 @@ body.page-loaded .hero-headline-wrap {
     max-width: 100%;
 }
 
+.doctor-eyebrow {
+    font-family: 'Acumin Variable', sans-serif;
+    font-size: .8rem;
+    font-weight: 800;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--orange-section);
+    margin-bottom: .6rem;
+}
+
 .doctor-section-title {
     color: var(--brand-navy);
-    font-size: 26px;
+    /* was 26px, which read as a label beside a full-height video */
+    font-size: clamp(1.8rem, 2.9vw, 2.7rem);
     font-family: 'Acumin Variable', sans-serif;
-    font-weight: 700;
-    line-height: 1.25;
+    font-weight: 800;
+    line-height: 1.15;
     margin: 0;
+}
+
+.doctor-section-title em {
+    font-style: italic;
+    color: var(--brand-red);
+}
+
+.doctor-section-sub {
+    font-family: 'Acumin Variable', sans-serif;
+    font-size: clamp(.95rem, 1.15vw, 1.08rem);
+    font-weight: 500;
+    line-height: 1.6;
+    color: var(--text-muted);
+    margin: .9rem 0 0;
+    max-width: 46ch;
 }
 
 .doctor-play-icon {

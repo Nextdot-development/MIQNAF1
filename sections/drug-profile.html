@@ -1,223 +1,122 @@
-<!-- DRUG PROFILE — the four evidence slides, as a carousel -->
+<!-- DRUG PROFILE — indication and uses, taken from the prescribing information -->
 <section id="drug-profile" class="dp-section fade-in-on-scroll">
   <style>
     .dp-section{width:100%;padding:2.5rem 1rem 4rem;overflow:hidden;background:transparent}
-    .dp-container{width:100%;max-width:1300px;margin:0 auto}
-    .dp-head{margin-bottom:2rem}
+    .dp-container{width:100%;max-width:1180px;margin:0 auto}
+    .dp-head{margin-bottom:2.2rem}
     .dp-eyebrow{font-family:'Acumin Variable',sans-serif;font-size:.8rem;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--orange-section);margin-bottom:.6rem}
     .dp-title{font-family:'Acumin Variable',sans-serif;font-size:clamp(2rem,3.4vw,3.3rem);font-weight:800;line-height:1.12;color:var(--brand-navy);margin:0}
     .dp-title em{font-style:italic;color:var(--brand-red)}
     .dp-reg{font-size:.42em;vertical-align:super;font-style:normal;letter-spacing:0}
     .dp-sub{font-family:'Acumin Variable',sans-serif;font-size:clamp(1rem,1.4vw,1.2rem);font-weight:600;color:var(--text-muted);margin-top:.7rem;max-width:66ch}
 
-    /* ---- carousel ---- */
-    .dp-carousel{position:relative}
-    .dp-track{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;
-      border-radius:22px;border:1px solid rgba(41,57,127,.12);background:#fdf5ee;
-      box-shadow:0 26px 60px -34px rgba(41,57,127,.5);
-      scrollbar-width:none;-ms-overflow-style:none;-webkit-overflow-scrolling:touch}
-    .dp-track::-webkit-scrollbar{display:none}
-    .dp-slide{flex:0 0 100%;scroll-snap-align:start;margin:0;cursor:zoom-in}
-    .dp-slide img{display:block;width:100%;height:auto;aspect-ratio:1920/1092}
+    /* ---- the leaflet itself, set as a document ---- */
+    .dp-sheet{background:#fff;border:1px solid rgba(41,57,127,.12);border-radius:22px;
+      box-shadow:0 26px 60px -38px rgba(41,57,127,.45);padding:clamp(1.6rem,3.4vw,3rem)}
+    .dp-block + .dp-block{margin-top:2.1rem;padding-top:2.1rem;border-top:1px solid rgba(41,57,127,.1)}
+    .dp-label{font-family:'Acumin Variable',sans-serif;font-size:.78rem;font-weight:800;letter-spacing:.14em;
+      text-transform:uppercase;color:var(--brand-red);margin:0 0 .7rem}
+    .dp-text{font-family:'Acumin Variable',sans-serif;font-size:1.02rem;line-height:1.65;color:#3c3c46;margin:0;max-width:78ch}
+    .dp-text + .dp-text{margin-top:.85rem}
+    .dp-text strong{color:var(--brand-navy);font-weight:700}
+    .dp-text em{font-style:italic}
 
-    .dp-nav{position:absolute;top:50%;transform:translateY(-50%);z-index:3;
-      width:52px;height:52px;border-radius:999px;cursor:pointer;display:grid;place-items:center;
-      background:#fff;color:var(--brand-navy);border:1px solid rgba(41,57,127,.16);
-      box-shadow:0 12px 28px -12px rgba(41,57,127,.55);
-      transition:background .25s ease,color .25s ease,transform .25s ease,opacity .25s ease}
-    .dp-nav:hover{background:var(--brand-navy);color:#fff;transform:translateY(-50%) scale(1.06)}
-    .dp-nav[disabled]{opacity:.32;cursor:default;pointer-events:none}
-    .dp-nav-prev{left:-18px}
-    .dp-nav-next{right:-18px}
+    .dp-dose{list-style:none;margin:.9rem 0 0;padding:0}
+    .dp-dose li{position:relative;padding-left:1.5rem;font-family:'Acumin Variable',sans-serif;
+      font-size:1.02rem;line-height:1.6;color:#3c3c46;max-width:78ch}
+    .dp-dose li + li{margin-top:.6rem}
+    .dp-dose li::before{content:"";position:absolute;left:0;top:.62em;width:.5rem;height:.5rem;
+      border-radius:999px;background:var(--orange-section)}
 
-    .dp-dots{display:flex;justify-content:center;gap:10px;margin-top:20px}
-    .dp-dot{width:10px;height:10px;border-radius:999px;cursor:pointer;padding:0;
-      background:rgba(41,57,127,.22);border:none;transition:background .25s ease,width .25s ease}
-    .dp-dot[aria-current="true"]{background:var(--brand-red);width:30px}
+    /* ---- organism groups ---- */
+    .dp-bugs{display:grid;gap:1rem;margin-top:1.1rem;grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
+    .dp-bug{border:1px solid rgba(41,57,127,.12);border-radius:14px;padding:1rem 1.1rem;background:#fcfbfe}
+    .dp-bug h4{font-family:'Acumin Variable',sans-serif;font-size:.82rem;font-weight:800;letter-spacing:.06em;
+      text-transform:uppercase;color:var(--brand-navy);margin:0 0 .55rem}
+    .dp-bug ul{list-style:none;margin:0;padding:0}
+    .dp-bug li{font-family:'Acumin Variable',sans-serif;font-size:.95rem;line-height:1.5;color:#3c3c46}
+    .dp-bug li + li{margin-top:.4rem}
+    .dp-bug i{font-style:italic}
+    .dp-bug small{display:block;font-size:.82rem;color:var(--text-grey);line-height:1.45;margin-top:.15rem}
 
-    .dp-foot{font-family:'Acumin Variable',sans-serif;font-size:.82rem;color:var(--text-grey);margin:1.1rem 0 0}
-
-    /* ---- full-size view: the slides carry dense body text, which on a phone
-           is far too small to read at the width of the carousel ---- */
-    .dp-viewer{position:fixed;inset:0;z-index:2000;display:none;background:rgba(20,16,24,.9);
-      padding:16px;overflow:auto;-webkit-overflow-scrolling:touch}
-    .dp-viewer.is-open{display:block}
-    .dp-viewer img{display:block;min-width:900px;width:100%;max-width:1600px;margin:auto;border-radius:10px}
-    .dp-viewer-close{position:fixed;top:14px;right:14px;width:44px;height:44px;border-radius:999px;
-      background:#fff;color:var(--brand-navy);border:none;cursor:pointer;display:grid;place-items:center;
-      box-shadow:0 10px 26px -10px rgba(0,0,0,.6)}
-    body.dp-viewer-open{overflow:hidden}
+    .dp-note{font-family:'Acumin Variable',sans-serif;font-size:.86rem;line-height:1.55;color:var(--text-grey);
+      margin:1.1rem 0 0;padding:.9rem 1.1rem;border-left:3px solid var(--orange-section);background:#fff8f3;
+      border-radius:0 10px 10px 0;max-width:82ch}
+    .dp-foot{font-family:'Acumin Variable',sans-serif;font-size:.82rem;line-height:1.55;color:var(--text-grey);margin:1.3rem 0 0}
 
     @media (max-width:860px){
       .dp-section{padding:2rem 1rem 3rem}
-      .dp-track{border-radius:16px}
-      .dp-nav{width:42px;height:42px}
-      .dp-nav-prev{left:6px}
-      .dp-nav-next{right:6px}
+      .dp-sheet{border-radius:16px}
+      .dp-text,.dp-dose li{font-size:.98rem}
     }
-
-    @media (prefers-reduced-motion: reduce){.dp-track{scroll-behavior:auto}}
   </style>
 
   <div class="dp-container">
     <div class="dp-head">
       <div class="dp-eyebrow">Drug Profile</div>
-      <h2 class="dp-title">The evidence behind <em>MIQNAF<span class="dp-reg">&reg;</span></em></h2>
-      <p class="dp-sub">Pathogen-level outcomes, the Phase III cure rate, lung exposure and susceptibility &mdash; the four findings that define nafithromycin.</p>
+      <h2 class="dp-title">Indication and <em>Uses</em></h2>
+      <p class="dp-sub">From the prescribing information for MIQNAF<span class="dp-reg">&reg;</span> (nafithromycin tablets).</p>
     </div>
 
-    <div class="dp-carousel">
-      <div class="dp-track" id="dp-track" tabindex="0" role="region" aria-roledescription="carousel" aria-label="Drug profile slides">
-        <figure class="dp-slide" role="group" aria-roledescription="slide" aria-label="1 of 4: assured outcomes by pathogen">
-          <picture>
-            <source srcset="assests/dp-outcomes.webp" type="image/webp">
-            <img src="assests/dp-outcomes.jpg" width="1920" height="1092" loading="eager"
-                 alt="Guarantees rapid response and assured outcomes. Multicentric Indian Phase III clinical trial with a DCGI approved protocol aligned with FDA recommended end points. Typical pathogens: Streptococcus pneumoniae 100% (n=7), methicillin-susceptible S. aureus 100% (n=1), Haemophilus influenzae 93% (n=15). Atypical pathogens: Chlamydophila pneumoniae 97% (n=95), Legionella pneumophilia 100% (n=46), Mycoplasma pneumophilia 96% (n=50).">
-          </picture>
-        </figure>
-
-        <figure class="dp-slide" role="group" aria-roledescription="slide" aria-label="2 of 4: clinical cure rate">
-          <picture>
-            <source srcset="assests/dp-lancet.webp" type="image/webp">
-            <img src="assests/dp-lancet.jpg" width="1920" height="1092" loading="lazy"
-                 alt="Assures approximately 100% susceptibility and rapid bactericidal action. The Lancet Regional Health Southeast Asia, October 2025: efficacy and safety of a 3-day once-daily regimen of oral nafithromycin compared to oral moxifloxacin for community-acquired bacterial pneumonia in adults, a phase III randomized double-blind controlled trial. 97% cure rate in the Phase III clinical trial at test of cure.">
-          </picture>
-        </figure>
-
-        <figure class="dp-slide" role="group" aria-roledescription="slide" aria-label="3 of 4: lung exposure">
-          <picture>
-            <source srcset="assests/dp-lung.webp" type="image/webp">
-            <img src="assests/dp-lung.jpg" width="1920" height="1092" loading="lazy"
-                 alt="Offers high and sustained lung exposures, enhancing pk/pd to support a short 3-day regimen. A human BAL study conducted in the US shows approximately 8 times higher lung concentration versus azithromycin.">
-          </picture>
-        </figure>
-
-        <figure class="dp-slide" role="group" aria-roledescription="slide" aria-label="4 of 4: susceptibility">
-          <picture>
-            <source srcset="assests/dp-susceptibility.webp" type="image/webp">
-            <img src="assests/dp-susceptibility.jpg" width="1920" height="1092" loading="lazy"
-                 alt="Assures approximately 100% susceptibility and rapid bactericidal action. Nafithromycin shows 100% susceptibility towards S. pneumoniae with rapid and early clinical response and bactericidal activity, killing 99.9% of azithromycin-resistant strains. ICMR data: erythromycin 21.31% versus nafithromycin 100%.">
-          </picture>
-        </figure>
+    <div class="dp-sheet">
+      <div class="dp-block">
+        <p class="dp-label">Dosage form and strength</p>
+        <p class="dp-text">MIQNAF<span class="dp-reg">&reg;</span> (nafithromycin) tablet is a white, oval shaped, biconvex, film-coated, immediate release <strong>400&nbsp;mg</strong> tablet for oral use. The tablet is debossed with &lsquo;W755&rsquo; on one side and plain on the other side.</p>
       </div>
 
-      <button type="button" class="dp-nav dp-nav-prev" id="dp-prev" aria-label="Previous slide">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
-      </button>
-      <button type="button" class="dp-nav dp-nav-next" id="dp-next" aria-label="Next slide">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>
-      </button>
+      <div class="dp-block">
+        <p class="dp-label">Therapeutic indication</p>
+        <p class="dp-text">MIQNAF<span class="dp-reg">&reg;</span> is a macrolide class of antibacterial drug indicated for the treatment of <strong>adults (&ge;&nbsp;18 years of age) with community-acquired bacterial pneumonia (CABP)</strong>.</p>
+      </div>
+
+      <div class="dp-block">
+        <p class="dp-label">Organisms</p>
+        <p class="dp-text">Nafithromycin has been shown to be active against most strains of the following microorganisms, both <em>in vitro</em> and in clinical infections.</p>
+        <div class="dp-bugs">
+          <div class="dp-bug">
+            <h4>Aerobic typical Gram-positive</h4>
+            <ul>
+              <li><i>Streptococcus pneumoniae</i><small>including macrolide-resistant, penicillin-resistant, clindamycin-resistant and multi-drug resistant isolates (MDRSP)</small></li>
+              <li><i>Streptococcus anginosus</i></li>
+              <li><i>Streptococcus mitis/oralis</i></li>
+              <li><i>Staphylococcus aureus</i></li>
+            </ul>
+          </div>
+          <div class="dp-bug">
+            <h4>Aerobic typical Gram-negative fastidious</h4>
+            <ul>
+              <li><i>Haemophilus influenzae</i><small>including macrolide-, penicillin-, clindamycin-, trimethoprim/sulfamethoxazole- and moxifloxacin-resistant isolates</small></li>
+              <li><i>Haemophilus parainfluenzae</i></li>
+              <li><i>Haemophilus parahaemolyticus</i></li>
+              <li><i>Moraxella catarrhalis</i></li>
+            </ul>
+          </div>
+          <div class="dp-bug">
+            <h4>Atypical</h4>
+            <ul>
+              <li><i>Mycoplasma pneumoniae</i></li>
+              <li><i>Chlamydophila pneumoniae</i></li>
+              <li><i>Legionella pneumophila</i></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="dp-block">
+        <p class="dp-label">Usage</p>
+        <p class="dp-text">To reduce the development of drug-resistant bacteria and maintain the effectiveness of MIQNAF<span class="dp-reg">&reg;</span> and other antibacterial drugs, MIQNAF<span class="dp-reg">&reg;</span> should be used only to treat infections that are proven or strongly suspected to be caused by susceptible bacteria. When culture and susceptibility information are available, they should be used to choose or alter antibacterial therapy. In the absence of such data, local epidemiology and susceptibility patterns may guide the empiric selection of therapy.</p>
+      </div>
+
+      <div class="dp-block">
+        <p class="dp-label">Posology</p>
+        <p class="dp-text">For the treatment of adults (&ge;&nbsp;18 years of age) with CABP, the recommended dosage regimen of MIQNAF<span class="dp-reg">&reg;</span> tablets is as follows:</p>
+        <ul class="dp-dose">
+          <li>Administer <strong>800&nbsp;mg (2 tablets of 400&nbsp;mg each) orally, once daily at every 24&nbsp;hour interval for 3 days</strong>. The tablets should preferably be taken after a meal.</li>
+        </ul>
+        <p class="dp-note"><strong>Method of administration.</strong> Each 800&nbsp;mg dose consists of two 400&nbsp;mg tablets, taken orally once every 24&nbsp;hours, preferably after a meal. Swallow the tablets sequentially, with enough water. Do not crush or chew the tablets.</p>
+      </div>
     </div>
 
-    <div class="dp-dots" id="dp-dots" role="tablist" aria-label="Choose slide"></div>
-
-    <p class="dp-foot">Data on file and published sources; see references. Slides reproduced from the MIQNAF&reg; scientific deck &mdash; tap one to see it full size.</p>
+    <p class="dp-foot">Abridged from the MIQNAF<span class="dp-reg">&reg;</span> prescribing information (Wockhardt Limited, revision 03/2025). To be sold against the prescription of a medical specialist only. Refer to the full prescribing information for contraindications, warnings, precautions, interactions and undesirable effects.</p>
   </div>
-
-  <div class="dp-viewer" id="dp-viewer" role="dialog" aria-modal="true" aria-label="Slide, full size">
-    <button type="button" class="dp-viewer-close" id="dp-viewer-close" aria-label="Close">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
-    </button>
-    <img id="dp-viewer-img" alt="">
-  </div>
-
-  <script>
-  (function () {
-    var track = document.getElementById('dp-track');
-    var dots = document.getElementById('dp-dots');
-    if (!track || !dots) return;
-
-    var slides = Array.prototype.slice.call(track.querySelectorAll('.dp-slide'));
-    var prev = document.getElementById('dp-prev');
-    var next = document.getElementById('dp-next');
-    var index = 0;
-
-    slides.forEach(function (_, i) {
-      var b = document.createElement('button');
-      b.type = 'button';
-      b.className = 'dp-dot';
-      b.setAttribute('aria-label', 'Slide ' + (i + 1));
-      b.setAttribute('aria-current', i === 0 ? 'true' : 'false');
-      b.addEventListener('click', function () { go(i); });
-      dots.appendChild(b);
-    });
-    var dotEls = Array.prototype.slice.call(dots.children);
-
-    function go(i) {
-      index = Math.max(0, Math.min(i, slides.length - 1));
-      track.scrollTo({ left: index * track.clientWidth, behavior: 'smooth' });
-      sync();
-    }
-
-    function sync() {
-      dotEls.forEach(function (d, i) { d.setAttribute('aria-current', i === index ? 'true' : 'false'); });
-      prev.disabled = index === 0;
-      next.disabled = index === slides.length - 1;
-    }
-
-    prev.addEventListener('click', function () { go(index - 1); });
-    next.addEventListener('click', function () { go(index + 1); });
-
-    // swiping scrolls the track directly, so the position is read back from it
-    var ticking = false;
-    track.addEventListener('scroll', function () {
-      if (ticking) return;
-      ticking = true;
-      requestAnimationFrame(function () {
-        ticking = false;
-        var w = track.clientWidth;
-        if (!w) return;
-        var i = Math.round(track.scrollLeft / w);
-        if (i !== index) { index = i; sync(); }
-      });
-    }, { passive: true });
-
-    track.addEventListener('keydown', function (e) {
-      var step = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
-      if (!step) return;
-      e.preventDefault();
-      go(index + step);
-    });
-
-    window.addEventListener('resize', function () {
-      track.scrollLeft = index * track.clientWidth;
-    }, { passive: true });
-
-    sync();
-
-    /* ---- full-size view ---- */
-    var viewer = document.getElementById('dp-viewer');
-    var viewerImg = document.getElementById('dp-viewer-img');
-    var viewerClose = document.getElementById('dp-viewer-close');
-    var lastFocus = null;
-
-    function open(img) {
-      lastFocus = document.activeElement;
-      viewerImg.src = img.currentSrc || img.src;
-      viewerImg.alt = img.alt;
-      viewer.classList.add('is-open');
-      document.body.classList.add('dp-viewer-open');
-      viewerClose.focus();
-    }
-
-    function close() {
-      viewer.classList.remove('is-open');
-      document.body.classList.remove('dp-viewer-open');
-      viewerImg.removeAttribute('src');
-      if (lastFocus) lastFocus.focus();
-    }
-
-    slides.forEach(function (slide) {
-      slide.addEventListener('click', function () {
-        var img = slide.querySelector('img');
-        if (img) open(img);
-      });
-    });
-    viewerClose.addEventListener('click', close);
-    viewer.addEventListener('click', function (e) { if (e.target === viewer) close(); });
-    document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape' && viewer.classList.contains('is-open')) close();
-    });
-  })();
-  </script>
 </section>
