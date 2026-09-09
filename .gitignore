@@ -7,6 +7,9 @@ index.html
 
 # working files that are not part of the site
 *.mp4
+# the hero film is the exception: re-encoded to 25MB for the web, well under
+# GitHub's limit, so it ships with the site rather than through a third party
+!assests/hero-video.mp4
 *.zip
 *.7z
 *.rar

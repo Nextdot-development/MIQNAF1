@@ -1,36 +1,161 @@
-<!-- HERO SECTION -->
+<!-- HERO SECTION — two slides: the key visual, and the film -->
 <section id="hero" class="hero">
-    <div class="hero-inner">
-        <h1 class="hero-claim reveal-up">
-            A novel lactone-ketolide designed<br>
-            to overcome resistance in <strong>CABP pathogens</strong>
-        </h1>
+    <div class="hero-carousel">
+        <div class="hero-track" id="hero-track" tabindex="0" role="region"
+             aria-roledescription="carousel" aria-label="MIQNAF introduction">
 
-        <div class="hero-main">
-            <div class="hero-lead reveal-up reveal-delay-2">
-                <img src="assests/miqnaf-lockup.svg" class="hero-lockup"
-                     alt="MIQNAF — Nafithromycin 800mg" width="1073" height="291" fetchpriority="high">
+            <div class="hero-slide" role="group" aria-roledescription="slide" aria-label="1 of 2: MIQNAF">
+                <div class="hero-inner">
+                    <h1 class="hero-claim reveal-up">
+                        A novel lactone-ketolide designed<br>
+                        to overcome resistance in <strong>CABP pathogens</strong>
+                    </h1>
 
-                <p class="hero-tag"><span>A Next Gen Macrolide</span></p>
+                    <div class="hero-main">
+                        <div class="hero-lead reveal-up reveal-delay-2">
+                            <img src="assests/miqnaf-lockup.svg" class="hero-lockup"
+                                 alt="MIQNAF — Nafithromycin 800mg" width="1073" height="291" fetchpriority="high">
 
-                <p class="hero-first">
-                    <span class="hero-first-country">India&rsquo;s</span>
-                    <span class="hero-first-claim">
-                        <span class="hero-first-rank">1<sup>st</sup></span>
-                        <span class="hero-first-what">Indigenously<br>Researched Antibiotic</span>
-                    </span>
-                </p>
+                            <p class="hero-tag"><span>A Next Gen Macrolide</span></p>
+
+                            <p class="hero-first">
+                                <span class="hero-first-country">India&rsquo;s</span>
+                                <span class="hero-first-claim">
+                                    <span class="hero-first-rank">1<sup>st</sup></span>
+                                    <span class="hero-first-what">Indigenously<br>Researched Antibiotic</span>
+                                </span>
+                            </p>
+                        </div>
+
+                        <div class="hero-pack reveal-up reveal-delay-3">
+                            <picture>
+                                <source srcset="assests/hero-pack.webp" type="image/webp">
+                                <img src="assests/hero-pack.png" class="hero-pack-img"
+                                     alt="MIQNAF Nafithromycin Tablets — 1 x 6 film coated tablets"
+                                     width="466" height="262">
+                            </picture>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <div class="hero-pack reveal-up reveal-delay-3">
-                <picture>
-                    <source srcset="assests/hero-pack.webp" type="image/webp">
-                    <img src="assests/hero-pack.png" class="hero-pack-img"
-                         alt="MIQNAF Nafithromycin Tablets — 1 x 6 film coated tablets"
-                         width="466" height="262">
-                </picture>
+            <div class="hero-slide" role="group" aria-roledescription="slide" aria-label="2 of 2: film">
+                <div class="hero-inner">
+                    <!-- The poster is all that loads; the film is only fetched once
+                         someone asks for it, which is the point of the play button. -->
+                    <div class="hero-film" id="hero-film"
+                         data-src="assests/hero-video.mp4" data-poster="assests/hero-video-poster.jpg">
+                        <picture>
+                            <source srcset="assests/hero-video-poster.webp" type="image/webp">
+                            <img src="assests/hero-video-poster.jpg" class="hero-film-poster"
+                                 alt="Still from the MIQNAF film: older macrolides compared with MIQNAF, a 21st century macrolide"
+                                 width="1280" height="720" loading="lazy">
+                        </picture>
+                        <button type="button" class="hero-film-play" id="hero-film-play"
+                                aria-label="Play the MIQNAF film">
+                            <svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>
+                        </button>
+                        <p class="hero-film-note">For private circulation to healthcare professionals only, for information purposes.</p>
+                    </div>
+                </div>
             </div>
         </div>
+
+        <button type="button" class="hero-nav hero-nav-prev" id="hero-prev" aria-label="Previous slide">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
+        </button>
+        <button type="button" class="hero-nav hero-nav-next" id="hero-next" aria-label="Next slide">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>
+        </button>
+
+        <div class="hero-dots" id="hero-dots" aria-label="Choose slide"></div>
     </div>
+
     <div class="hero-fade" aria-hidden="true"></div>
+
+    <script>
+    (function () {
+        var track = document.getElementById('hero-track');
+        var dots = document.getElementById('hero-dots');
+        if (!track || !dots) return;
+
+        var slides = Array.prototype.slice.call(track.querySelectorAll('.hero-slide'));
+        var prev = document.getElementById('hero-prev');
+        var next = document.getElementById('hero-next');
+        var index = 0;
+
+        slides.forEach(function (_, i) {
+            var b = document.createElement('button');
+            b.type = 'button';
+            b.className = 'hero-dot';
+            b.setAttribute('aria-label', 'Slide ' + (i + 1));
+            b.setAttribute('aria-current', i === 0 ? 'true' : 'false');
+            b.addEventListener('click', function () { go(i); });
+            dots.appendChild(b);
+        });
+        var dotEls = Array.prototype.slice.call(dots.children);
+
+        function go(i) {
+            index = Math.max(0, Math.min(i, slides.length - 1));
+            track.scrollTo({ left: index * track.clientWidth, behavior: 'smooth' });
+            sync();
+        }
+
+        function sync() {
+            dotEls.forEach(function (d, i) { d.setAttribute('aria-current', i === index ? 'true' : 'false'); });
+            prev.disabled = index === 0;
+            next.disabled = index === slides.length - 1;
+        }
+
+        prev.addEventListener('click', function () { go(index - 1); });
+        next.addEventListener('click', function () { go(index + 1); });
+
+        // swiping scrolls the track itself, so the position is read back from it
+        var ticking = false;
+        track.addEventListener('scroll', function () {
+            if (ticking) return;
+            ticking = true;
+            requestAnimationFrame(function () {
+                ticking = false;
+                var w = track.clientWidth;
+                if (!w) return;
+                var i = Math.round(track.scrollLeft / w);
+                if (i !== index) { index = i; sync(); }
+            });
+        }, { passive: true });
+
+        track.addEventListener('keydown', function (e) {
+            var step = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+            if (!step) return;
+            e.preventDefault();
+            go(index + step);
+        });
+
+        window.addEventListener('resize', function () {
+            track.scrollLeft = index * track.clientWidth;
+        }, { passive: true });
+
+        sync();
+
+        /* ---- the film ---- */
+        var film = document.getElementById('hero-film');
+        var play = document.getElementById('hero-film-play');
+        if (!film || !play) return;
+
+        play.addEventListener('click', function () {
+            var video = document.createElement('video');
+            video.className = 'hero-film-video';
+            video.src = film.dataset.src;
+            video.poster = film.dataset.poster;
+            video.controls = true;
+            video.autoplay = true;
+            video.playsInline = true;
+            video.setAttribute('controlsList', 'nodownload');
+            film.innerHTML = '';
+            film.appendChild(video);
+            film.classList.add('is-playing');
+            video.focus();
+        });
+    })();
+    </script>
 </section>
