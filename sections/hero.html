@@ -40,7 +40,11 @@
             </div>
 
             <div class="hero-slide" role="group" aria-roledescription="slide" aria-label="2 of 2: film">
-                <div class="hero-inner">
+                <div class="hero-inner hero-inner-film">
+                    <div class="hero-film-head">
+                        <p class="hero-film-eyebrow">The MIQNAF film</p>
+                        <h2 class="hero-film-title">For the first time in 30 years, a new macrolide</h2>
+                    </div>
                     <!-- The poster is all that loads; the film is only fetched once
                          someone asks for it, which is the point of the play button. -->
                     <div class="hero-film" id="hero-film"
@@ -151,6 +155,11 @@
             video.autoplay = true;
             video.playsInline = true;
             video.setAttribute('controlsList', 'nodownload');
+            // the film opens on five seconds of the private-circulation card,
+            // which is already printed under the poster - start past it
+            video.addEventListener('loadedmetadata', function () {
+                try { video.currentTime = 6; } catch (err) { /* seek unsupported */ }
+            }, { once: true });
             film.innerHTML = '';
             film.appendChild(video);
             film.classList.add('is-playing');

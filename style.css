@@ -217,8 +217,9 @@ button, a {
     display: flex;
     align-items: center;
     justify-content: center;
-    /* 56px target; shrinks on narrower screens so it never crowds the MAP */
-    gap: clamp(22px, 3vw, 56px);
+    /* the six labels have to fit the centre track at every desktop width,
+       so both the gap and the type stay inside what the column can hold */
+    gap: clamp(20px, 2.1vw, 34px);
 }
 
 .nav-links li {
@@ -232,8 +233,8 @@ button, a {
     text-decoration: none;
     font-family: 'Acumin Variable', sans-serif;
     font-weight: 700;
-    font-size: clamp(14px, 1.05vw, 18px);
-    letter-spacing: 1px;
+    font-size: clamp(14px, 0.88vw, 16px);
+    letter-spacing: 0.8px;
     text-transform: uppercase;
     color: var(--brand-navy);
     white-space: nowrap;
@@ -335,10 +336,10 @@ button, a {
 
 /* ============== Responsive ============== */
 /* The nav carries six labels now, one of them long ("Trusted by Doctors").
-   Between the mobile breakpoint and ~1240px the centre track needs a little
+   Between the mobile breakpoint and ~1340px the centre track needs a little
    more room, so the side columns and the label metrics tighten slightly.
    Same type, same colours — only the scale changes. */
-@media (min-width: 993px) and (max-width: 1240px) {
+@media (min-width: 993px) and (max-width: 1340px) {
     .nav-container {
         padding: 0 24px;
         grid-template-columns: 200px 1fr 150px;
@@ -565,9 +566,42 @@ button, a {
 .hero-dot[aria-current="true"] { background: var(--brand-red); width: 28px; }
 
 /* ---- the film: a poster until someone asks for it ---- */
+.hero-inner-film {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+}
+
+.hero-film-head {
+    text-align: center;
+    max-width: 58ch;
+}
+
+.hero-film-eyebrow {
+    margin: 0 0 6px;
+    font-family: 'Acumin Variable', sans-serif;
+    font-size: .78rem;
+    font-weight: 800;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--orange-section);
+}
+
+.hero-film-title {
+    margin: 0;
+    font-family: 'Acumin Variable', sans-serif;
+    font-size: clamp(1.4rem, 2vw, 2.1rem);
+    font-weight: 800;
+    line-height: 1.15;
+    color: var(--brand-navy);
+}
+
 .hero-film {
     position: relative;
-    width: 100%;
+    /* the frame is 1440 wide; 16:9 at that width is 810px tall and leaves no
+       room for the heading, so the film itself stops a little short of it */
+    width: min(100%, 1180px, (100vh - 330px) * 1.778);
     aspect-ratio: 16 / 9;
     border-radius: 18px;
     overflow: hidden;
