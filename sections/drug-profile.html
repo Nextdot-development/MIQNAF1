@@ -1,88 +1,558 @@
-<!-- DRUG PROFILE — indication and uses, set out as the reference leaflet page does -->
+<!-- DRUG PROFILE — the prescribing information, split across tabs as the reference site does -->
 <section id="drug-profile" class="dp-section fade-in-on-scroll">
   <style>
     .dp-section{width:100%;padding:2.2rem 1rem 3.2rem;overflow:hidden;background:transparent}
-    /* The reference leaflet page is dense: small type, tight leading, and lines
-       that run the full width of the column rather than a narrow measure. */
     .dp-container{width:100%;max-width:1240px;margin:0 auto}
 
     .dp-eyebrow{font-family:'Acumin Variable',sans-serif;font-size:.72rem;font-weight:800;letter-spacing:.18em;
       text-transform:uppercase;color:var(--orange-section);margin-bottom:.35rem}
-    .dp-title{font-family:'Acumin Variable',sans-serif;font-size:clamp(1.35rem,1.9vw,1.65rem);font-weight:800;
-      line-height:1.2;color:var(--brand-navy);margin:0 0 .95rem}
+    .dp-title{font-family:'Acumin Variable',sans-serif;font-size:clamp(1.5rem,2.2vw,2rem);font-weight:800;
+      line-height:1.2;color:var(--brand-navy);margin:0 0 .35rem}
+    .dp-standfirst{font-family:'Acumin Variable',sans-serif;font-size:.9rem;line-height:1.55;
+      color:var(--text-muted);margin:0 0 1.1rem;max-width:80ch}
 
-    .dp-block + .dp-block{margin-top:.95rem}
+    /* ---- tab bar: one strip across the top, as the reference lays it out ---- */
+    .dp-tabs{display:flex;gap:2px;overflow-x:auto;background:var(--brand-navy);border-radius:10px;
+      padding:4px;scrollbar-width:none;-ms-overflow-style:none}
+    .dp-tabs::-webkit-scrollbar{display:none}
+    .dp-tab{flex:0 0 auto;cursor:pointer;white-space:nowrap;border:none;border-radius:7px;
+      font-family:'Acumin Variable',sans-serif;font-size:.76rem;font-weight:700;letter-spacing:.03em;
+      padding:9px 14px;color:rgba(255,255,255,.78);background:transparent;
+      transition:background .2s ease,color .2s ease}
+    .dp-tab:hover{color:#fff;background:rgba(255,255,255,.1)}
+    .dp-tab[aria-selected="true"]{color:#fff;background:var(--brand-red)}
+
+    /* ---- panels ---- */
+    .dp-panel{padding-top:1.3rem}
+    .dp-panel[hidden]{display:none}
+    .dp-h{font-family:'Acumin Variable',sans-serif;font-size:1.1rem;font-weight:800;color:var(--brand-navy);
+      margin:0 0 .6rem}
+    /* anything preceding a block opens the same gap, not just another block */
+    .dp-block + .dp-block,.dp-tnote + .dp-block,.dp-tablewrap + .dp-block,
+    .dp-text + .dp-block,.dp-list + .dp-block{margin-top:.95rem}
     .dp-label{font-family:'Acumin Variable',sans-serif;font-size:.82rem;font-weight:800;letter-spacing:.01em;
       color:#1f2430;margin:0 0 .22rem}
     .dp-label.is-caps{text-transform:uppercase;letter-spacing:.04em;font-size:.78rem}
     .dp-text{font-family:'Acumin Variable',sans-serif;font-size:.875rem;line-height:1.55;color:#41414c;margin:0}
     .dp-text + .dp-text{margin-top:.5rem}
     .dp-text i{font-style:italic}
-    .dp-text strong{color:#1f2430;font-weight:700}
+    .dp-text b,.dp-text strong{color:#1f2430;font-weight:700}
 
-    .dp-dose{list-style:none;margin:.4rem 0 0;padding:0}
-    .dp-dose li{position:relative;padding-left:1.1rem;font-family:'Acumin Variable',sans-serif;
+    .dp-list{list-style:none;margin:.4rem 0 0;padding:0}
+    .dp-list li{position:relative;padding-left:1.1rem;font-family:'Acumin Variable',sans-serif;
       font-size:.875rem;line-height:1.55;color:#41414c}
-    .dp-dose li + li{margin-top:.3rem}
-    .dp-dose li::before{content:"";position:absolute;left:.28rem;top:.66em;width:.3rem;height:.3rem;
+    .dp-list li + li{margin-top:.35rem}
+    .dp-list li::before{content:"";position:absolute;left:.28rem;top:.66em;width:.3rem;height:.3rem;
       border-radius:999px;background:#41414c}
+    .dp-list li b{color:#1f2430;font-weight:700}
 
-    .dp-note{font-family:'Acumin Variable',sans-serif;font-size:.875rem;line-height:1.55;color:#41414c;margin:.5rem 0 0}
-    .dp-note b{color:#1f2430;font-weight:700}
+    /* ---- tables scroll inside their own box rather than pushing the page ---- */
+    .dp-tablewrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin-top:.55rem;
+      border:1px solid rgba(41,57,127,.14);border-radius:9px}
+    .dp-table{border-collapse:collapse;width:100%;min-width:520px;
+      font-family:'Acumin Variable',sans-serif;font-size:.82rem;line-height:1.45;color:#41414c}
+    .dp-table caption{caption-side:top;text-align:left;font-weight:700;color:#1f2430;
+      padding:.55rem .7rem .35rem;font-size:.82rem}
+    .dp-table th,.dp-table td{border-top:1px solid rgba(41,57,127,.12);padding:.42rem .7rem;text-align:left;vertical-align:top}
+    .dp-table thead th{background:#f4f5f9;color:#1f2430;font-weight:700;border-top:none;white-space:nowrap}
+    .dp-table td i{font-style:italic}
+    .dp-tnote{font-family:'Acumin Variable',sans-serif;font-size:.76rem;line-height:1.45;
+      color:var(--text-grey);margin:.35rem 0 0}
 
     .dp-foot{font-family:'Acumin Variable',sans-serif;font-size:.78rem;line-height:1.5;color:var(--text-grey);
-      margin:1.4rem 0 0;padding-top:.8rem;border-top:1px solid rgba(41,57,127,.12)}
+      margin:1.6rem 0 0;padding-top:.8rem;border-top:1px solid rgba(41,57,127,.12)}
 
     @media (max-width:860px){
       .dp-section{padding:1.8rem 1rem 2.6rem}
-      .dp-text,.dp-dose li,.dp-note{font-size:.86rem}
+      .dp-text,.dp-list li{font-size:.86rem}
+      .dp-tab{font-size:.72rem;padding:8px 12px}
     }
   </style>
 
   <div class="dp-container">
     <div class="dp-eyebrow">Drug Profile</div>
-    <h2 class="dp-title">Indication and Uses</h2>
+    <h2 class="dp-title">Prescribing Information</h2>
+    <p class="dp-standfirst">MIQNAF<sup>&reg;</sup> (nafithromycin tablets) 400&nbsp;mg. To be sold against the prescription of a medical specialist only. For supply only to medical colleges, tertiary care hospitals and district hospitals.</p>
 
-    <div class="dp-block">
-      <p class="dp-label is-caps">Dosage form and strength</p>
-      <p class="dp-text">MIQNAF<sup>&reg;</sup> (nafithromycin) tablet is a white, oval shaped, biconvex, film-coated, immediate release 400&nbsp;mg tablet for oral use. The tablet is debossed with &lsquo;W755&rsquo; on one side and plain on other side.</p>
+    <div class="dp-tabs" role="tablist" aria-label="Prescribing information">
+      <button type="button" class="dp-tab" role="tab" id="dpt-indication" aria-controls="dpp-indication" aria-selected="true">Indication &amp; Uses</button>
+      <button type="button" class="dp-tab" role="tab" id="dpt-dosage" aria-controls="dpp-dosage" aria-selected="false">Dosage</button>
+      <button type="button" class="dp-tab" role="tab" id="dpt-contra" aria-controls="dpp-contra" aria-selected="false">Contraindications</button>
+      <button type="button" class="dp-tab" role="tab" id="dpt-warnings" aria-controls="dpp-warnings" aria-selected="false">Warnings</button>
+      <button type="button" class="dp-tab" role="tab" id="dpt-interactions" aria-controls="dpp-interactions" aria-selected="false">Interactions</button>
+      <button type="button" class="dp-tab" role="tab" id="dpt-populations" aria-controls="dpp-populations" aria-selected="false">Special Populations</button>
+      <button type="button" class="dp-tab" role="tab" id="dpt-adverse" aria-controls="dpp-adverse" aria-selected="false">Adverse Reactions</button>
+      <button type="button" class="dp-tab" role="tab" id="dpt-micro" aria-controls="dpp-micro" aria-selected="false">Microbiology</button>
+      <button type="button" class="dp-tab" role="tab" id="dpt-pk" aria-controls="dpp-pk" aria-selected="false">Pharmacokinetics</button>
+      <button type="button" class="dp-tab" role="tab" id="dpt-clinical" aria-controls="dpp-clinical" aria-selected="false">Clinical Studies</button>
+      <button type="button" class="dp-tab" role="tab" id="dpt-product" aria-controls="dpp-product" aria-selected="false">Product Details</button>
     </div>
 
-    <div class="dp-block">
-      <p class="dp-label is-caps">Therapeutic indication</p>
-      <p class="dp-text">MIQNAF<sup>&reg;</sup> is a macrolide class of antibacterial drug indicated for the treatment of adults (&ge;&nbsp;18 years of age) with community-acquired bacterial pneumonia (CABP).</p>
-      <p class="dp-text">Nafithromycin has been shown to be active against most strains of the following microorganisms, both <i>in vitro</i> and in clinical infections:</p>
+    <!-- ============ INDICATION & USES ============ -->
+    <div class="dp-panel" role="tabpanel" id="dpp-indication" aria-labelledby="dpt-indication">
+      <h3 class="dp-h">Indication and Uses</h3>
+
+      <div class="dp-block">
+        <p class="dp-label is-caps">Dosage form and strength</p>
+        <p class="dp-text">MIQNAF<sup>&reg;</sup> (nafithromycin) tablet is a white, oval shaped, biconvex, film-coated, immediate release 400&nbsp;mg tablet for oral use. The tablet is debossed with &lsquo;W755&rsquo; on one side and plain on other side.</p>
+      </div>
+
+      <div class="dp-block">
+        <p class="dp-label is-caps">Therapeutic indication</p>
+        <p class="dp-text">MIQNAF<sup>&reg;</sup> is a macrolide class of antibacterial drug indicated for the treatment of adults (&ge;&nbsp;18 years of age) with community-acquired bacterial pneumonia (CABP).</p>
+        <p class="dp-text">Nafithromycin has been shown to be active against most strains of the following microorganisms, both <i>in vitro</i> and in clinical infections:</p>
+      </div>
+
+      <div class="dp-block">
+        <p class="dp-label">Aerobic typical Gram-positive bacteria</p>
+        <p class="dp-text"><i>Streptococcus pneumoniae</i> (including macrolide-resistant, penicillin-resistant, clindamycin-resistant and multi-drug resistant isolates [MDRSP]), <i>Streptococcus anginosus</i>, <i>Streptococcus mitis/oralis</i>, <i>Staphylococcus aureus</i>.</p>
+      </div>
+
+      <div class="dp-block">
+        <p class="dp-label">Aerobic typical Gram-negative fastidious bacteria</p>
+        <p class="dp-text"><i>Haemophilus influenzae</i> and <i>Haemophilus parainfluenzae</i> (both including macrolide-resistant, penicillin-resistant, clindamycin-resistant, trimethoprim/sulfamethoxazole-resistant and moxifloxacin-resistant isolates), <i>Haemophilus parahaemolyticus</i>, <i>Moraxella catarrhalis</i>.</p>
+      </div>
+
+      <div class="dp-block">
+        <p class="dp-label">Atypical bacteria</p>
+        <p class="dp-text"><i>Mycoplasma pneumoniae</i>, <i>Chlamydophila pneumoniae</i>, <i>Legionella pneumophila</i>.</p>
+      </div>
+
+      <div class="dp-block">
+        <p class="dp-label">Usage</p>
+        <p class="dp-text">To reduce the development of drug-resistant bacteria and maintain the effectiveness of MIQNAF<sup>&reg;</sup> and other antibacterial drugs, MIQNAF<sup>&reg;</sup> should be used only to treat infections that are proven or strongly suspected to be caused by susceptible bacteria. When culture and susceptibility information are available, they should be used to choose or alter antibacterial therapy. In the absence of such data, local epidemiology and susceptibility patterns may guide the empiric selection of therapy.</p>
+      </div>
     </div>
 
-    <div class="dp-block">
-      <p class="dp-label">Aerobic typical Gram-positive bacteria</p>
-      <p class="dp-text"><i>Streptococcus pneumoniae</i> (including macrolide-resistant, penicillin-resistant, clindamycin-resistant and multi-drug resistant isolates [MDRSP]), <i>Streptococcus anginosus</i>, <i>Streptococcus mitis/oralis</i>, <i>Staphylococcus aureus</i>.</p>
+    <!-- ============ DOSAGE ============ -->
+    <div class="dp-panel" role="tabpanel" id="dpp-dosage" aria-labelledby="dpt-dosage" hidden>
+      <h3 class="dp-h">Posology and Method of Administration</h3>
+
+      <div class="dp-block">
+        <p class="dp-label is-caps">Posology</p>
+        <p class="dp-text">For the treatment of adults (&ge;&nbsp;18 years of age) with CABP, the recommended dosage regimen of MIQNAF<sup>&reg;</sup> tablets is as follows:</p>
+        <ul class="dp-list">
+          <li>Administer <b>800&nbsp;mg (2 tablets of 400&nbsp;mg each) orally, once-daily at every 24&nbsp;hour interval for 3 days</b>. The tablets should preferably be taken after a meal.</li>
+        </ul>
+      </div>
+
+      <div class="dp-block">
+        <p class="dp-label">Method of administration</p>
+        <p class="dp-text">Each 800&nbsp;mg dose of MIQNAF<sup>&reg;</sup> consists of two 400&nbsp;mg tablets. Two tablets of MIQNAF<sup>&reg;</sup> should be taken orally, once every 24&nbsp;hours, preferably after a meal. Swallow the MIQNAF<sup>&reg;</sup> tablets sequentially, with enough water. Do not crush or chew the tablets.</p>
+      </div>
+
+      <div class="dp-block">
+        <p class="dp-label">Hepatic impairment</p>
+        <p class="dp-text">The pharmacokinetics of MIQNAF<sup>&reg;</sup> in subjects with hepatic impairment has not been established. For dose recommendations in patients with hepatic impairment, refer to Warnings and Special Populations.</p>
+      </div>
+
+      <div class="dp-block">
+        <p class="dp-label">Renal impairment</p>
+        <p class="dp-text">The pharmacokinetics of MIQNAF<sup>&reg;</sup> in subjects with renal impairment has not been established. For dose recommendations in patients with renal impairment, refer to Warnings and Special Populations.</p>
+      </div>
+
+      <div class="dp-block">
+        <p class="dp-label">Paediatric population</p>
+        <p class="dp-text">The safety and efficacy of MIQNAF<sup>&reg;</sup> in children and adolescents less than 18 years of age have not yet been established.</p>
+      </div>
     </div>
 
-    <div class="dp-block">
-      <p class="dp-label">Aerobic typical Gram-negative fastidious bacteria</p>
-      <p class="dp-text"><i>Haemophilus influenzae</i> and <i>Haemophilus parainfluenzae</i> (both including macrolide-resistant, penicillin-resistant, clindamycin-resistant, trimethoprim/sulfamethoxazole-resistant and moxifloxacin-resistant isolates), <i>Haemophilus parahaemolyticus</i>, <i>Moraxella catarrhalis</i>.</p>
-    </div>
-
-    <div class="dp-block">
-      <p class="dp-label">Atypical bacteria</p>
-      <p class="dp-text"><i>Mycoplasma pneumoniae</i>, <i>Chlamydophila pneumoniae</i>, <i>Legionella pneumophila</i>.</p>
-    </div>
-
-    <div class="dp-block">
-      <p class="dp-label">Usage</p>
-      <p class="dp-text">To reduce the development of drug-resistant bacteria and maintain the effectiveness of MIQNAF<sup>&reg;</sup> and other antibacterial drugs, MIQNAF<sup>&reg;</sup> should be used only to treat infections that are proven or strongly suspected to be caused by susceptible bacteria. When culture and susceptibility information are available, they should be used to choose or alter antibacterial therapy. In the absence of such data, local epidemiology and susceptibility patterns may guide the empiric selection of therapy.</p>
-    </div>
-
-    <div class="dp-block">
-      <p class="dp-label is-caps">Posology</p>
-      <p class="dp-text">For the treatment of adults (&ge;&nbsp;18 years of age) with CABP, the recommended dosage regimen of MIQNAF<sup>&reg;</sup> tablets is as follows:</p>
-      <ul class="dp-dose">
-        <li>Administer 800&nbsp;mg (2 tablets of 400&nbsp;mg each) orally, once-daily at every 24&nbsp;hour interval for 3 days. The tablets should preferably be taken after a meal.</li>
+    <!-- ============ CONTRAINDICATIONS ============ -->
+    <div class="dp-panel" role="tabpanel" id="dpp-contra" aria-labelledby="dpt-contra" hidden>
+      <h3 class="dp-h">Contraindications</h3>
+      <ul class="dp-list">
+        <li>MIQNAF<sup>&reg;</sup> is contraindicated in patients with a history of hypersensitivity to nafithromycin and/or any components of the MIQNAF<sup>&reg;</sup> tablet or any macrolide antibiotic.</li>
+        <li>MIQNAF<sup>&reg;</sup> is contraindicated in patients with a history of cholestatic jaundice or hepatic dysfunction associated without or with prior use of MIQNAF<sup>&reg;</sup> tablets or any other macrolide antibiotic.</li>
       </ul>
-      <p class="dp-note"><b>Method of administration.</b> Each 800&nbsp;mg dose of MIQNAF<sup>&reg;</sup> consists of two 400&nbsp;mg tablets. Two tablets of MIQNAF<sup>&reg;</sup> should be taken orally, once every 24&nbsp;hours, preferably after a meal. Swallow the MIQNAF<sup>&reg;</sup> tablets sequentially, with enough water. Do not crush or chew the tablets.</p>
     </div>
 
-    <p class="dp-foot">To be sold against the prescription of a medical specialist only. Abridged from the MIQNAF<sup>&reg;</sup> prescribing information (Wockhardt Limited, revision 03/2025); refer to the full prescribing information for contraindications, warnings and precautions, drug interactions, use in special populations and undesirable effects.</p>
+    <!-- ============ WARNINGS ============ -->
+    <div class="dp-panel" role="tabpanel" id="dpp-warnings" aria-labelledby="dpt-warnings" hidden>
+      <h3 class="dp-h">Special Warnings and Precautions for Use</h3>
+
+      <div class="dp-block">
+        <p class="dp-label">Renal impairment</p>
+        <p class="dp-text">No studies have been conducted in patients with severe renal impairment. MIQNAF<sup>&reg;</sup> is therefore not recommended in patients with severe renal impairment or in patients with both renal and hepatic impairment. For patients with mild or moderate renal impairment, safety has been established in Phase 2 and Phase 3 clinical studies. In a Phase 2 CABP trial (N=74), MIQNAF<sup>&reg;</sup> was administered at the therapeutic dosing regimen to about 28% of patients with mild and about 12% with moderate renal impairment; in the Phase 3 CABP trial (N=244) to patients with mild (24.2%) or moderate (8.6%) renal impairment. In both studies, none of the patients treated with MIQNAF<sup>&reg;</sup> developed drug-related severe or serious adverse events, and there were no drug-related adverse events leading to premature discontinuation.</p>
+      </div>
+
+      <div class="dp-block">
+        <p class="dp-label">Hepatic impairment</p>
+        <p class="dp-text">Pharmacokinetic and safety data are not available in patients with hepatic impairment. However, similar to other known macrolide antibiotics, dosage adjustment would not be required in mild, moderate or severe hepatic impairment, as the diminished metabolic clearance in such patients is known to be compensated by higher renal elimination of the unchanged parent drug. This is also supported by a higher urinary elimination of nafithromycin (28.6% as both parent drug and metabolites; 13.7% as unchanged drug). In the absence of studies in this specified population, use can only be considered based on a careful benefit-risk assessment.</p>
+      </div>
+
+      <div class="dp-block">
+        <p class="dp-label">Hepatobiliary disorders</p>
+        <p class="dp-text">Alterations in hepatic enzymes have been observed with the macrolide antibiotics. Although rare, post-marketing cases of severe hepatitis and liver failure, including fatal cases, have been reported with these drugs; such reactions were observed during or immediately after treatment and in most cases were reversible after discontinuation.</p>
+        <p class="dp-text">In the Phase 3 CABP study (N=244 in the MIQNAF<sup>&reg;</sup> group), potentially clinically significant changes (post-baseline rise &gt;3x ULN and a 200% rise from baseline) in ALT were seen in 5 patients and in AST in 4 patients. None showed a concomitant rise in total bilirubin. Incidences were low and mostly asymptomatic, and elevated transaminases had returned to normal or near-baseline at the last follow-up visit.</p>
+        <p class="dp-text">If the patient develops signs and symptoms of hepatic dysfunction &mdash; anorexia, jaundice, dark-coloured urine, pruritis, right upper belly pain, bleeding tendency or hepatic encephalopathy &mdash; liver function tests or other relevant investigations should be performed. In the event of hepatic dysfunction, MIQNAF<sup>&reg;</sup> should be immediately discontinued and appropriate treatment measures initiated.</p>
+      </div>
+
+      <div class="dp-block">
+        <p class="dp-label">Long term use</p>
+        <p class="dp-text">There is no data on the long-term safety and efficacy of MIQNAF<sup>&reg;</sup> for this indication. Administered for a longer duration it can accumulate in tissues including liver, resulting in transient elevation of liver enzymes. In a Phase 2 study in CABP patients, once-daily oral administration for 5 days resulted in relatively higher incidences of ALT and AST elevations compared with the 3-day treatment. In cases of frequent recurrence of CABP, treatment with another antibiotic should be considered.</p>
+      </div>
+
+      <div class="dp-block">
+        <p class="dp-label">QT interval prolongation</p>
+        <p class="dp-text">Prolonged cardiac repolarization or QT prolongation, imparting a risk of cardiac arrhythmia and torsades de pointes, has been reported with the macrolide antibiotics. Non-clinical cardiovascular studies with nafithromycin at supratherapeutic exposures revealed no adverse effect on any cardiovascular parameter including QTc interval; in healthy adult subjects, single high oral doses of 1200&nbsp;mg and an intravenous dose of 600&nbsp;mg showed no clinically relevant changes in ECG parameters. In the Phase 3 study, clinically significant ECG changes were broadly comparable between groups; 3 (1.2%) patients in the moxifloxacin group showed a greater than 500&nbsp;ms rise in QTcF versus none in the MIQNAF<sup>&reg;</sup> group.</p>
+        <p class="dp-text">Considering structural similarities with other macrolide antibiotics, it is advisable to avoid MIQNAF<sup>&reg;</sup> in patients with congenital or documented acquired QT prolongation, and in patients with cardiac arrhythmia or severe cardiac insufficiency. It should not be used concurrently with medicinal products with a narrow therapeutic window that have the potential to prolong the QT interval. Where use cannot be avoided in populations predisposed to QT prolongation, ECG monitoring is recommended during treatment.</p>
+      </div>
+
+      <div class="dp-block">
+        <p class="dp-label">Myasthenia gravis</p>
+        <p class="dp-text">Exacerbations of myasthenia gravis have been reported in patients taking macrolide antibiotics, in some cases with fatal and life-threatening acute respiratory failure of rapid onset and progression. MIQNAF<sup>&reg;</sup> should be used cautiously in these patients, who should seek medical assistance immediately if symptoms worsen; MIQNAF<sup>&reg;</sup> must then be discontinued and supportive measures implemented as medically advised.</p>
+      </div>
+
+      <div class="dp-block">
+        <p class="dp-label"><i>Clostridium difficile</i>-associated diarrhoea</p>
+        <p class="dp-text">CDAD has been reported with nearly all antibacterial agents and may range from mild diarrhoea to fatal colitis. In the clinical studies of nafithromycin (Phase 1 to Phase 3), approximately 453 subjects received multiple (3 to 7 day) once-daily oral doses and none developed CDAD. However, the diagnosis of CDAD must be considered in all patients who develop diarrhoea during or after administration. Appropriate fluid and electrolyte management, protein supplementation, antibiotic treatment of <i>Clostridium difficile</i> and surgical evaluation should be instituted as clinically indicated.</p>
+      </div>
+
+      <div class="dp-block">
+        <p class="dp-label">Development of drug-resistant bacteria</p>
+        <p class="dp-text">Prescribing MIQNAF<sup>&reg;</sup> in the absence of a proven or strongly suspected bacterial infection is unlikely to provide benefit to the patient and may increase the risk of the development of drug-resistant bacteria.</p>
+      </div>
+    </div>
+
+    <!-- ============ INTERACTIONS ============ -->
+    <div class="dp-panel" role="tabpanel" id="dpp-interactions" aria-labelledby="dpt-interactions" hidden>
+      <h3 class="dp-h">Drug Interactions</h3>
+      <p class="dp-text">No clinical drug-drug interaction studies have been conducted with MIQNAF<sup>&reg;</sup>.</p>
+
+      <div class="dp-block">
+        <p class="dp-label"><i>In vitro</i> findings</p>
+        <p class="dp-text">Nafithromycin and its metabolite (nafithromycin N-demethyl) did not inhibit key CYP isoforms (CYP1A2, 2B6, 2C8, 2C9, 2C19 and 2D6) at supratherapeutic concentrations, except 3A4, which showed weak inhibition potential. Nafithromycin did not induce CYP1A2, 2B6 or 3A4. It did not inhibit efflux (BCRP) or uptake transporters (OAT1, OAT3, OCT2), but did inhibit P-gp (IC<sub>50</sub>: 3.4&micro;M), OATP1B1 (20&micro;M) and OATP1B3 (67&micro;M). It showed no substrate potential towards BCRP, OATP1B1 or OATP1B3, but is a substrate of the efflux transporter P-gp.</p>
+      </div>
+
+      <div class="dp-block">
+        <p class="dp-label">Effect of co-medication on nafithromycin</p>
+        <p class="dp-text"><b>CYP3A4 inhibitors.</b> Ketoconazole increased the C<sub>max</sub> and AUC of nafithromycin 1.0&ndash;1.3 and 1.3&ndash;2.0 fold in rats and dogs, suggesting co-administration of CYP3A4 inhibitors (ketoconazole, itraconazole, fluconazole, clarithromycin, cimetidine, grapefruit juice) could increase exposure. Given the class-specific pharmacokinetic variability of macrolides this appears non-significant, but caution is recommended.</p>
+        <p class="dp-text"><b>CYP3A4 inducers.</b> Rifampicin decreased nafithromycin exposure 2 to 5 fold. Moderate to strong CYP3A and P-gp inducers (rifampicin, phenobarbital, St John&rsquo;s wort, carbamazepine, phenytoin, bosentan, efavirenz) are <b>not recommended</b>, as they may lower efficacy.</p>
+        <p class="dp-text"><b>P-gp inhibitors.</b> Verapamil increased both C<sub>max</sub> and AUC 1.3-fold in dogs. As nafithromycin is itself a P-gp inhibitor this was not a significant alteration, but caution is recommended with P-gp inhibitors (cyclosporine, carvedilol, clarithromycin, amiodarone, dronedarone, itraconazole, ketoconazole, lapatinib, quinidine, ritonavir, tacrolimus and others).</p>
+      </div>
+
+      <div class="dp-block">
+        <p class="dp-label">Effect of nafithromycin on other medicinal products</p>
+        <p class="dp-text"><b>CYP3A4 substrates.</b> A multiple-dose study with midazolam showed no change in exposure, indicating nafithromycin may not have DDI potential with CYP3A4 substrates (midazolam, alprazolam, triazolam, alfentanil, simvastatin, lovastatin, oral contraceptives).</p>
+        <p class="dp-text"><b>P-gp substrates.</b> C<sub>max</sub> and AUC of digoxin increased 1.3 to 1.5 fold, suggesting co-administration of P-gp substrates (fexofenadine, digoxin, talinolol, colchicine, tacrolimus, doxorubicin, dexamethasone, vinblastine, quinidine) may increase their exposure. Caution is recommended with sensitive P-gp substrates that have a narrow therapeutic window.</p>
+        <p class="dp-text">Interaction studies with OATP1B1 and OATP1B3 transporters were not assessed; caution is recommended with sensitive substrates of both (repaglinide, valsartan, telmisartan, olmesartan, enalapril, temocaprilat, tacrolimus, statins).</p>
+      </div>
+    </div>
+
+    <!-- ============ SPECIAL POPULATIONS ============ -->
+    <div class="dp-panel" role="tabpanel" id="dpp-populations" aria-labelledby="dpt-populations" hidden>
+      <h3 class="dp-h">Use in Special Populations</h3>
+
+      <div class="dp-block">
+        <p class="dp-label">Pregnancy &mdash; Category C</p>
+        <p class="dp-text">Nafithromycin had no effect on maternal toxicity, reproduction or growth of the F2 generation in the pre- and post-natal oral study in rats up to 60&nbsp;mg/kg. In a teratogenicity study, oral doses of 100 and 200&nbsp;mg/kg led to developmental delay of the foetus, probably due to maternal toxicity; there was no teratogenic effect in live foetuses up to 200&nbsp;mg/kg, at which the serum AUC in female rats was approximately 14-fold higher than the therapeutic AUC.</p>
+        <p class="dp-text">There are no adequate and well-controlled studies in pregnant women. MIQNAF<sup>&reg;</sup> should be used during pregnancy only if the potential benefit justifies the potential risk to the foetus and the mother.</p>
+      </div>
+
+      <div class="dp-block">
+        <p class="dp-label">Nursing mothers</p>
+        <p class="dp-text">It is not known whether nafithromycin or its metabolites are excreted in human milk. Because many drugs are excreted in human milk, caution should be exercised when MIQNAF<sup>&reg;</sup> is administered to a nursing woman.</p>
+      </div>
+
+      <div class="dp-block">
+        <p class="dp-label">Paediatric use</p>
+        <p class="dp-text">The safety and effectiveness of MIQNAF<sup>&reg;</sup> in patients less than 18 years of age has not yet been established.</p>
+      </div>
+
+      <div class="dp-block">
+        <p class="dp-label">Geriatric use</p>
+        <p class="dp-text">In the Phase 3 CABP trial, 21 (approximately 8.6%) patients in the MIQNAF<sup>&reg;</sup> group were &ge;65 years of age. Early clinical response rates in this subgroup were similar to patients &lt;65 years and comparable across treatment groups. Adverse reactions were numerically higher in patients &ge;65 years: 28.6% had at least one adverse reaction versus 19.3% of patients &lt;65 years. None had severe or serious adverse reactions and none discontinued because of one.</p>
+        <p class="dp-text">In the Phase 2 study, 33.8% of CABP patients treated with MIQNAF<sup>&reg;</sup> were &ge;65 years. No drug-related severe or serious adverse reactions were reported in these patients and none discontinued.</p>
+      </div>
+
+      <div class="dp-block">
+        <p class="dp-label">Renal impairment</p>
+        <p class="dp-text">No studies have been conducted in patients with severe renal impairment (creatinine clearance &lt;30&nbsp;mL/min), and MIQNAF<sup>&reg;</sup> is not recommended in such patients, nor in patients with severe renal impairment and co-existing hepatic impairment. In mild and moderate renal impairment it was well tolerated in Phase 2 and Phase 3 clinical studies.</p>
+      </div>
+
+      <div class="dp-block">
+        <p class="dp-label">Hepatic impairment</p>
+        <p class="dp-text">Clinical data are not available in patients with hepatic impairment. Based on reported studies for other macrolides, no dosage adjustment would be required, because the disposition profile is largely identical and diminished metabolic clearance is expected to be compensated by higher renal clearance of the unchanged parent drug. In the absence of studies in this population, use can be considered based on a careful benefit-risk analysis.</p>
+      </div>
+
+      <div class="dp-block">
+        <p class="dp-label">Ability to drive and use machines</p>
+        <p class="dp-text">No studies have been performed to assess the effect of MIQNAF<sup>&reg;</sup> on the ability to drive and use machines.</p>
+      </div>
+    </div>
+
+    <!-- ============ ADVERSE REACTIONS ============ -->
+    <div class="dp-panel" role="tabpanel" id="dpp-adverse" aria-labelledby="dpt-adverse" hidden>
+      <h3 class="dp-h">Undesirable Effects</h3>
+      <p class="dp-text">Since clinical trials are conducted under widely varying conditions, adverse reaction rates observed in the clinical trials of a drug cannot be directly compared to rates in the clinical trials of another drug and may not reflect the rates observed in practice. MIQNAF<sup>&reg;</sup> was evaluated in two clinical trials in CABP patients.</p>
+
+      <div class="dp-block">
+        <p class="dp-label">Phase 2 CABP trial</p>
+        <p class="dp-text">Serious adverse reactions occurred in 1/74 (1.4%) patient treated with MIQNAF<sup>&reg;</sup> and 2/76 (2.6%) treated with moxifloxacin; in both groups these were not related to drug treatment. There was no death or treatment discontinuation in MIQNAF<sup>&reg;</sup>-treated patients.</p>
+        <div class="dp-tablewrap">
+          <table class="dp-table">
+            <caption>Table 1: Adverse reactions occurring in &ge;2% of patients receiving MIQNAF<sup>&reg;</sup></caption>
+            <thead><tr><th>Adverse reaction</th><th>MIQNAF<sup>&reg;</sup> (N=74)</th><th>Moxifloxacin (N=76)</th></tr></thead>
+            <tbody>
+              <tr><td>Nausea</td><td>4.1%</td><td>2.6%</td></tr>
+              <tr><td>Vomiting</td><td>4.1%</td><td>0.0%</td></tr>
+              <tr><td>Hypertension</td><td>4.1%</td><td>2.6%</td></tr>
+              <tr><td>Diarrhoea</td><td>2.7%</td><td>3.9%</td></tr>
+              <tr><td>Dysgeusia</td><td>2.7%</td><td>1.3%</td></tr>
+              <tr><td>Chronic obstructive pulmonary disease</td><td>2.7%</td><td>1.3%</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="dp-tnote">All the above adverse reactions in the MIQNAF<sup>&reg;</sup> treatment group were either mild or moderate in intensity. Reactions at &lt;2%: atrial flutter (1.4%), tachycardia (1.4%), chest pain (1.4%), gamma-glutamyltransferase increased (1.4%).</p>
+      </div>
+
+      <div class="dp-block">
+        <p class="dp-label">Phase 3 CABP trial</p>
+        <p class="dp-text">There were no deaths or serious adverse events in either treatment group. None of the patients treated with MIQNAF<sup>&reg;</sup> were discontinued due to an adverse reaction, while 2 patients from the moxifloxacin group were. The most frequently reported reactions by system organ class in MIQNAF<sup>&reg;</sup>-treated patients were gastrointestinal disorders (11.1%), nervous system disorders (6.6%), general disorders (2.0%) and metabolism and nutrition disorders (2.0%).</p>
+        <div class="dp-tablewrap">
+          <table class="dp-table">
+            <caption>Table 2: Adverse reactions occurring in &ge;2% of patients receiving MIQNAF<sup>&reg;</sup></caption>
+            <thead><tr><th>Adverse reaction</th><th>MIQNAF<sup>&reg;</sup> (N=244)</th><th>Moxifloxacin (N=242)</th></tr></thead>
+            <tbody>
+              <tr><td>Headache</td><td>6.1%</td><td>2.5%</td></tr>
+              <tr><td>Abdominal pain upper</td><td>3.7%</td><td>2.9%</td></tr>
+              <tr><td>Nausea</td><td>2.9%</td><td>2.9%</td></tr>
+              <tr><td>Diarrhoea</td><td>2.0%</td><td>4.1%</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="dp-tnote">All the above adverse events in both treatment groups were mild in intensity. Reactions at &lt;2% included constipation (0.8%), dyspepsia (1.2%), vomiting (0.4%), tachycardia (0.4%), palpitation (0.4%), dizziness (0.4%), ageusia (0.4%), pruritus (0.4%), asthenia (1.6%), ALT increased (1.2%), AST increased (1.2%), prothrombin time prolonged (0.4%) and decreased appetite (1.6%).</p>
+      </div>
+
+      <div class="dp-block">
+        <p class="dp-label">Overdose</p>
+        <p class="dp-text">The effect of an overdose on humans is unknown. In healthy adult subjects, nafithromycin was safe and very well tolerated up to a single high oral dose of 1.2&nbsp;g and multiple once-daily oral doses of 1&nbsp;g for up to 7 days. In the event of an acute overdose the stomach should be emptied, the patient closely monitored and given symptomatic and supportive treatment, and adequate hydration maintained. The effectiveness of haemodialysis in an overdose situation is unknown.</p>
+      </div>
+    </div>
+
+    <!-- ============ MICROBIOLOGY ============ -->
+    <div class="dp-panel" role="tabpanel" id="dpp-micro" aria-labelledby="dpt-micro" hidden>
+      <h3 class="dp-h">Mechanism of Action and Microbiology</h3>
+
+      <div class="dp-block">
+        <p class="dp-label">Mechanism of action</p>
+        <p class="dp-text">Nafithromycin blocks bacterial protein synthesis by binding to <b>domains II and V of the 23S rRNA of the 50S ribosomal subunit</b> &mdash; unlike classical macrolides such as erythromycin, azithromycin and clarithromycin, which bind only to domain V. Because of this additional binding to domain II, nafithromycin exhibits potent antibacterial activity against macrolide-resistant pneumococci, including strains expressing ermB or mefA genes or both together. It also retained a higher degree of activity under hyper-ermB-induction conditions in <i>Streptococcus pneumoniae</i>. In <i>Haemophilus influenzae</i>, the production of &beta;-lactamases had no impact on its antibacterial activity.</p>
+        <p class="dp-text"><i>In vitro</i> time-kill studies have shown nafithromycin to be bactericidal against <i>Streptococcus pneumoniae</i> at clinically relevant concentrations, with a prolonged post-antibiotic effect that would provide continued pharmacodynamic action and aid sustained clinical response.</p>
+      </div>
+
+      <div class="dp-block">
+        <p class="dp-label">Mechanisms of resistance</p>
+        <p class="dp-text">Resistance to nafithromycin is observed in certain methicillin-resistant <i>S. aureus</i> strains, possibly due to constitutive expression of ermC or other erm genes.</p>
+      </div>
+
+      <div class="dp-block">
+        <p class="dp-label">Organisms with <i>in vitro</i> data of unknown clinical significance</p>
+        <p class="dp-text">At least 90% of the following exhibit an <i>in vitro</i> MIC at or below the susceptible breakpoint, but efficacy in treating clinical infections caused by them has not been established in adequate and well-controlled clinical trials: <i>Streptococcus pyogenes</i>, &beta;-haemolytic streptococci, <i>Ureaplasma</i> spp., <i>Mycoplasma hominis</i>, <i>Mycoplasma genitalium</i>.</p>
+      </div>
+
+      <div class="dp-block">
+        <p class="dp-label">Susceptibility test methods</p>
+        <p class="dp-text">Susceptibility of typical bacterial isolates is determined by a reference broth or agar dilution method as described by CLSI, and MIC values interpreted per the criteria approved by CDSCO. Susceptibility is also determined by disc diffusion using discs containing 15&nbsp;&micro;g of nafithromycin. Results for test strains are valid only when the quality control strain results fall within the CLSI-approved ranges.</p>
+        <div class="dp-tablewrap">
+          <table class="dp-table">
+            <caption>Table 3: Susceptibility test interpretive criteria (susceptible)</caption>
+            <thead><tr><th>Pathogen</th><th>MIC (mg/L)</th><th>Disc diffusion (zone, mm)</th></tr></thead>
+            <tbody>
+              <tr><td><i>Streptococcus pneumoniae</i></td><td>&le;1</td><td>&ge;16</td></tr>
+              <tr><td><i>Haemophilus influenzae</i>, <i>H. parainfluenzae</i></td><td>&le;16</td><td>&mdash;</td></tr>
+              <tr><td><i>Moraxella catarrhalis</i></td><td>&le;1</td><td>&ge;22</td></tr>
+              <tr><td><i>Staphylococcus aureus</i></td><td>&le;0.12</td><td>&ge;18</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="dp-tnote">For <i>Haemophilus influenzae</i> and <i>Haemophilus parainfluenzae</i>, only the broth or agar dilution MIC method is available.</p>
+        <div class="dp-tablewrap">
+          <table class="dp-table">
+            <caption>Table 4: Acceptable quality control ranges</caption>
+            <thead><tr><th>Quality control strain</th><th>MIC (mg/L)</th><th>Disc diffusion (zone, mm)</th></tr></thead>
+            <tbody>
+              <tr><td><i>Staphylococcus aureus</i> ATCC 29213</td><td>0.06&ndash;0.25</td><td>NA</td></tr>
+              <tr><td><i>Staphylococcus aureus</i> ATCC 25923</td><td>NA</td><td>25&ndash;31</td></tr>
+              <tr><td><i>Enterococcus faecalis</i> ATCC 29212</td><td>0.016&ndash;0.12</td><td>NA</td></tr>
+              <tr><td><i>S. pneumoniae</i> ATCC 49619</td><td>0.008&ndash;0.03</td><td>25&ndash;31</td></tr>
+              <tr><td><i>H. influenzae</i> ATCC 49247</td><td>2&ndash;8</td><td>16&ndash;20</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ PHARMACOKINETICS ============ -->
+    <div class="dp-panel" role="tabpanel" id="dpp-pk" aria-labelledby="dpt-pk" hidden>
+      <h3 class="dp-h">Pharmacokinetic Properties</h3>
+
+      <div class="dp-tablewrap">
+        <table class="dp-table">
+          <caption>Table 5: Mean plasma pharmacokinetic parameters in healthy adults</caption>
+          <thead><tr><th>Dose</th><th>C<sub>max</sub> (&micro;g/mL)</th><th>T<sub>max</sub> (h)</th><th>AUC (&micro;g&middot;h/mL)</th><th>t<sub>1/2</sub> (h)</th><th>C<sub>24h</sub> (&micro;g/mL)</th></tr></thead>
+          <tbody>
+            <tr><td>Single dose 800&nbsp;mg (N=36)</td><td>1.02</td><td>4</td><td>12.89</td><td>7.69</td><td>0.16</td></tr>
+            <tr><td>800&nbsp;mg once daily for 3 days (N=36)</td><td>1.39</td><td>4</td><td>16.64</td><td>9.05</td><td>0.27</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="dp-tnote">T<sub>max</sub> is the median. AUC is AUC<sub>(0&ndash;&infin;)</sub> for the single dose and AUC<sub>(0&ndash;24h)</sub> for the multiple dose.</p>
+
+      <div class="dp-block">
+        <p class="dp-label">Absorption</p>
+        <p class="dp-text">Median time to maximum concentration was 4 hours (range 2&ndash;6). Absolute oral bioavailability in adults was approximately 50%. With a high-calorie, high-fat diet, C<sub>max</sub> and AUC at 800&nbsp;mg increased 1.3- and 1.2-fold compared with the fasted state. Steady-state plasma concentrations were reached after day 3. In CABP patients (N=193), the day-3 mean plasma C<sub>max</sub> and AUC<sub>(0&ndash;24h)</sub> were 0.81&nbsp;&micro;g/mL and 14.42&nbsp;&micro;g&middot;h/mL.</p>
+      </div>
+
+      <div class="dp-block">
+        <p class="dp-label">Distribution</p>
+        <p class="dp-text">Approximately 80% of the drug is bound to plasma proteins, and the apparent volume of distribution following intravenous infusion was 403&nbsp;L, suggesting extensive tissue distribution. At 800&nbsp;mg once daily for 3 days, nafithromycin attained significantly higher levels in human lung epithelial lining fluid (ELF) and alveolar macrophages (AM): 24-hour AUC values of 224.1 and 8538&nbsp;&micro;g&middot;h/mL, which are <b>13.8- and 527-fold higher than the corresponding plasma exposure</b>. Concentrations in ELF and AM exceeded the MIC<sub>90</sub> for most community-acquired respiratory pathogens even 2 days after the last dose.</p>
+        <p class="dp-text">Extensive intracellular penetration was also observed in polymorphonuclear leukocytes (PMN). The mean PMN to plasma concentration ratio over 24 hours ranged from 95.8 to 138.6 on day 1 and 130.7 to 148.2 on day 7 of repeat dosing.</p>
+        <div class="dp-tablewrap">
+          <table class="dp-table">
+            <caption>Table 6: Mean concentrations (&micro;g/mL) after multiple once-daily oral doses of 800&nbsp;mg</caption>
+            <thead><tr><th>Time post dose</th><th>ELF, day 3</th><th>AM, day 3</th><th>PMN, day 1</th><th>PMN, day 7</th></tr></thead>
+            <tbody>
+              <tr><td>2&ndash;3 h</td><td>18.48</td><td>290.2</td><td>133.3</td><td>219.3</td></tr>
+              <tr><td>4&ndash;6 h</td><td>15.29</td><td>375.4</td><td>136.8</td><td>225.4</td></tr>
+              <tr><td>9 h</td><td>8.37</td><td>401.1</td><td>114.1</td><td>194.1</td></tr>
+              <tr><td>12 h</td><td>9.67</td><td>729.4</td><td>50.1</td><td>117.3</td></tr>
+              <tr><td>24 h</td><td>4.13</td><td>120.9</td><td>19.1</td><td>58.6</td></tr>
+              <tr><td>48 h</td><td>1.62</td><td>22.4</td><td>&mdash;</td><td>&mdash;</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="dp-tnote">ELF and AM sampling times were 3, 6, 9, 12, 24 and 48 hours; PMN sampling times were 2, 4, 6, 12 and 24 hours.</p>
+      </div>
+
+      <div class="dp-block">
+        <p class="dp-label">Metabolism</p>
+        <p class="dp-text">Nafithromycin is primarily metabolized by CYP3A4, undergoing moderate metabolism with hydrolysis and oxidative N-demethylation as the primary biotransformation pathways. After a single oral dose of radiolabeled nafithromycin, the unchanged drug and its hydrolyzed metabolite were the predominant circulating components in plasma (33.9% and 14.7% of total radioactive exposure) and urine (13.7% and 8.80%). The N-demethyl metabolite was a minor urinary metabolite (~1.5% of dose) and possessed weak antimicrobial activity. In faeces, nafithromycin was the most abundant radiolabeled component at 14% of total dose.</p>
+      </div>
+
+      <div class="dp-block">
+        <p class="dp-label">Elimination</p>
+        <p class="dp-text">The terminal elimination half-life at steady state after oral administration was 9 hours. After a single oral dose of [<sup>14</sup>C]-nafithromycin 800&nbsp;mg, around 61.2% of the dose was excreted in faeces and 28.6% in urine as unchanged drug and metabolites, indicating hepatic clearance through faeces and, to a lesser extent, renal clearance as the primary routes of elimination.</p>
+      </div>
+    </div>
+
+    <!-- ============ CLINICAL STUDIES ============ -->
+    <div class="dp-panel" role="tabpanel" id="dpp-clinical" aria-labelledby="dpt-clinical" hidden>
+      <h3 class="dp-h">Clinical Studies</h3>
+      <p class="dp-text">Efficacy of MIQNAF<sup>&reg;</sup> 3-day therapy was assessed in Phase 2 and Phase 3 CABP trials. In both, efficacy was determined by clinical response at day 4 in the ITT or modified ITT analysis set; a favourable response was survival with improvement of at least two symptoms (cough, sputum production, chest pain, dyspnoea) without deterioration in any of the four.</p>
+
+      <div class="dp-block">
+        <p class="dp-label">Study design</p>
+        <p class="dp-text"><b>Phase 2</b> was a global study in which 74 patients were randomized to MIQNAF<sup>&reg;</sup> (800&nbsp;mg orally once daily for 3 days) and 77 to moxifloxacin (400&nbsp;mg orally once daily for 7 days). Median age was 59.5 years and 33% were 65 or older; approximately 49% were PORT Risk Class II and 51% Class III/IV.</p>
+        <p class="dp-text"><b>Phase 3</b> was a randomised, multicentre, double-blind, non-inferiority trial comparing MIQNAF<sup>&reg;</sup> with moxifloxacin. Of 488 adults enrolled, 244 were randomized to MIQNAF<sup>&reg;</sup> (241 in the MITT set) and 244 to moxifloxacin (236 in MITT). Patients were all Indian and predominantly male (80.9%); median age 38 years, approximately 60% PORT Risk Class II and 40% Class III/IV.</p>
+      </div>
+
+      <div class="dp-tablewrap">
+        <table class="dp-table">
+          <caption>Table 7: Clinical response rates on day 4 (ITT/MITT analysis set)</caption>
+          <thead><tr><th>Study</th><th>MIQNAF<sup>&reg;</sup> n/N (%)</th><th>Moxifloxacin n/N (%)</th><th>Treatment difference (95% CI)</th></tr></thead>
+          <tbody>
+            <tr><td>Phase 2 (ITT)</td><td>68/74 (91.9)</td><td>67/77 (87.0)</td><td>4.9 (&minus;5.4, 15.4)</td></tr>
+            <tr><td>Phase 3 (MITT)</td><td>220/241 (91.3)</td><td>210/236 (89.0)</td><td>2.3 (&minus;3.1, 7.8)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="dp-tablewrap">
+        <table class="dp-table">
+          <caption>Table 8: Investigator-assessed clinical cure rates at test of cure (ITT/MITT analysis set)</caption>
+          <thead><tr><th>Study</th><th>MIQNAF<sup>&reg;</sup> n/N (%)</th><th>Moxifloxacin n/N (%)</th><th>Treatment difference (95% CI)</th></tr></thead>
+          <tbody>
+            <tr><td>Phase 2 (ITT)</td><td>70/74 (94.6)</td><td>71/77 (92.2)</td><td>2.4 (&minus;6.4, 11.4)</td></tr>
+            <tr><td>Phase 3 (MITT)</td><td>233/241 (96.7)</td><td>223/236 (94.5)</td><td>2.2 (&minus;1.6, 6.3)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="dp-tablewrap">
+        <table class="dp-table">
+          <caption>Table 10: Clinical cure at test of cure by baseline pathogen, Phase 3 (microMITT)</caption>
+          <thead><tr><th>Pathogen</th><th>MIQNAF<sup>&reg;</sup> n/N (%)</th><th>Moxifloxacin n/N (%)</th></tr></thead>
+          <tbody>
+            <tr><td><i>Streptococcus pneumoniae</i></td><td>7/7 (100)</td><td>12/12 (100)</td></tr>
+            <tr><td>Methicillin-susceptible <i>S. aureus</i> (MSSA)</td><td>1/1 (100)</td><td>0/0</td></tr>
+            <tr><td>Methicillin-resistant <i>S. aureus</i> (MRSA)</td><td>1/1 (100)</td><td>1/1 (100)</td></tr>
+            <tr><td><i>Haemophilus influenzae</i></td><td>14/15 (93.3)</td><td>9/11 (81.8)</td></tr>
+            <tr><td><i>Haemophilus parainfluenzae</i></td><td>13/13 (100)</td><td>9/11 (81.8)</td></tr>
+            <tr><td><i>Moraxella catarrhalis</i></td><td>20/21 (95.2)</td><td>13/13 (100)</td></tr>
+            <tr><td><i>Mycoplasma pneumoniae</i></td><td>48/50 (96.0)</td><td>37/39 (94.9)</td></tr>
+            <tr><td><i>Legionella pneumophilia</i></td><td>46/46 (100)</td><td>50/50 (100)</td></tr>
+            <tr><td><i>Chlamydophila pneumoniae</i></td><td>92/95 (96.8)</td><td>97/101 (96.0)</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="dp-tnote">MIQNAF<sup>&reg;</sup> demonstrated clinical cure in respiratory infection caused by MDR <i>Streptococcus pneumoniae</i>, <i>Haemophilus influenzae</i> and <i>Haemophilus parainfluenzae</i> including macrolide-, penicillin-, clindamycin-, trimethoprim/sulfamethoxazole- and moxifloxacin-resistant isolates.</p>
+
+      <p class="dp-text" style="margin-top:.8rem">In the Phase 3 study, the majority of patients in the microMITT set had monomicrobial atypical (n=61), polymicrobial atypical (n=37) and polymicrobial mixed infections (n=28). Clinical cure at test of cure in the MIQNAF<sup>&reg;</sup> group was 98.4%, 100% and 92.9% respectively, largely comparable to moxifloxacin. MIQNAF<sup>&reg;</sup> therefore has the potential to serve as a monotherapy option in the treatment of CABP, where coverage of both typical and atypical respiratory pathogens is desired.</p>
+    </div>
+
+    <!-- ============ PRODUCT DETAILS ============ -->
+    <div class="dp-panel" role="tabpanel" id="dpp-product" aria-labelledby="dpt-product" hidden>
+      <h3 class="dp-h">Description and Pharmaceutical Particulars</h3>
+
+      <div class="dp-block">
+        <p class="dp-label">Composition</p>
+        <p class="dp-text">Each film-coated tablet contains nafithromycin 400&nbsp;mg with excipients q.s. Excipients: croscarmellose sodium IP, microcrystalline cellulose IP, povidone IP, talc IP, magnesium stearate IP, hypromellose, titanium dioxide and polyethylene glycol.</p>
+      </div>
+
+      <div class="dp-block">
+        <p class="dp-label">Description</p>
+        <p class="dp-text">MIQNAF<sup>&reg;</sup> oral tablets contain nafithromycin, a novel semisynthetic antibacterial agent belonging to the macrolide class, and a semisynthetic derivative of clarithromycin. Nafithromycin is a white to off-white crystalline powder with a molecular formula of C<sub>42</sub>H<sub>62</sub>N<sub>6</sub>O<sub>11</sub>S and a molecular weight of 859.1&nbsp;g/mol. CAS registry number 1691240-78-4.</p>
+      </div>
+
+      <div class="dp-block">
+        <p class="dp-label">Packaging, shelf life and storage</p>
+        <p class="dp-text">Blister pack of 6 (3&nbsp;&times;&nbsp;2 tablets): one blister strip contains three cavities, each holding two tablets. Expiry date is indicated on the packaging. Do not store above 30&deg;C. Keep out of reach of children. There are no known pharmaceutical incompatibilities.</p>
+      </div>
+
+      <div class="dp-block">
+        <p class="dp-label">Patient counseling</p>
+        <p class="dp-text">Patients should be told that antibacterial drugs treat bacterial, not viral, infections, and that although it is common to feel better early in the course of therapy the medication should be taken exactly as directed &mdash; two 400&nbsp;mg tablets once a day for 3 days, preferably after a meal, at 24-hour intervals. Skipping doses or not completing the course may decrease effectiveness and increase the likelihood of resistance.</p>
+        <p class="dp-text">Patients should contact their physician if they experience hypersensitivity reactions, worsening muscle weakness or breathing problems, symptoms of hepatic dysfunction, a change in heartbeat or faintness, or watery and bloody stools; and should tell their physician if they are pregnant or breastfeeding, have a history of cholestatic jaundice, myasthenia gravis or QT prolongation, or had liver problems on any macrolide.</p>
+      </div>
+
+      <div class="dp-block">
+        <p class="dp-label">Manufacturer</p>
+        <p class="dp-text">Manufactured in India by Wockhardt Limited, Plot No. 87-A, Silver Industrial Estate, Bhimpore, Nani Daman 396&nbsp;210. DCGI permission No. IND/02/2024 dated 01 January 2025. M.L. No. DD/62. Date of revision 03/2025.</p>
+        <p class="dp-text"><b>Pharmacovigilance.</b> To report an adverse event about a Wockhardt product in India, call 1800&nbsp;258&nbsp;8127 or email PVSafety@wockhardt.com.</p>
+      </div>
+    </div>
+
+    <p class="dp-foot">Abridged from the MIQNAF<sup>&reg;</sup> (nafithromycin tablets) prescribing information, Wockhardt Limited, revision 03/2025. This summary is intended for registered medical practitioners; refer to the full prescribing information before prescribing.</p>
   </div>
+
+  <script>
+  (function () {
+    var root = document.getElementById('drug-profile');
+    if (!root) return;
+    var tabs = Array.prototype.slice.call(root.querySelectorAll('.dp-tab'));
+
+    function select(tab) {
+      tabs.forEach(function (t) {
+        var panel = document.getElementById(t.getAttribute('aria-controls'));
+        var on = t === tab;
+        t.setAttribute('aria-selected', on ? 'true' : 'false');
+        if (panel) panel.hidden = !on;
+      });
+      // a tab far along the strip should be brought into view when chosen
+      if (tab.scrollIntoView) tab.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+    }
+
+    tabs.forEach(function (tab, i) {
+      tab.addEventListener('click', function () { select(tab); });
+      tab.addEventListener('keydown', function (e) {
+        var step = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+        if (!step) return;
+        e.preventDefault();
+        var next = tabs[(i + step + tabs.length) % tabs.length];
+        next.focus();
+        select(next);
+      });
+    });
+  })();
+  </script>
 </section>
