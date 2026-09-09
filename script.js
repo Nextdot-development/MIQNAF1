@@ -388,6 +388,10 @@ function initializeDoctorSystem() {
 
     const playBtn      = document.getElementById('display-play-btn');
 
+    // pages other than the home page do not carry the doctor section, and the
+    // rest of this function writes into these without checking
+    if (!docText || !displayName || !displaySpec) return;
+
     let currentCity = 'mumbai';
     let currentDoctorIndex = 0;
 

@@ -173,6 +173,8 @@ button, a {
 /* ---- column 1: logo (left) ---- */
 .nav-logo {
     justify-self: start;
+    /* the tagline is inside this anchor and was picking up its underline */
+    text-decoration: none;
     /* the wordmark now carries the tagline beneath it, as the brand lockup does */
     display: inline-flex;
     flex-direction: column;

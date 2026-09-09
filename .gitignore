@@ -4,6 +4,7 @@
 node_modules/
 .env
 index.html
+molecular-lineage.html
 
 # working files that are not part of the site
 *.mp4

@@ -12,9 +12,9 @@
       color:var(--text-muted);margin:0 0 1.1rem;max-width:80ch}
 
     /* ---- tab bar: one strip across the top, as the reference lays it out ---- */
-    .dp-tabs{display:flex;gap:2px;overflow-x:auto;background:var(--brand-navy);border-radius:10px;
-      padding:4px;scrollbar-width:none;-ms-overflow-style:none}
-    .dp-tabs::-webkit-scrollbar{display:none}
+    /* eleven tabs do not fit one row at most widths, so they wrap rather than
+       running off the end of the strip */
+    .dp-tabs{display:flex;flex-wrap:wrap;gap:2px;background:var(--brand-navy);border-radius:10px;padding:4px}
     .dp-tab{flex:0 0 auto;cursor:pointer;white-space:nowrap;border:none;border-radius:7px;
       font-family:'Acumin Variable',sans-serif;font-size:.76rem;font-weight:700;letter-spacing:.03em;
       padding:9px 14px;color:rgba(255,255,255,.78);background:transparent;
