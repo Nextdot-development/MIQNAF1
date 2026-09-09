@@ -91,8 +91,7 @@ Miqnaf supports early clinical improvement and timely recovery.<sup>3</sup></p>
           <h2 class="patient-heading">Comorbid</h2>
           <hr class="patient-line">
           <h3 class="patient-subheading"></h3>
-          <p class="patient-body">CABP can exacerbate respiratory (asthma/COPD) and cardio metabolic comorbidities, leading to hospitalization.
-Miqnaf provides comprehensive coverage, early clinical response and reassured safety<sup>1</sup>,<sup>3</sup></p>
+          <p class="patient-body">CABP may aggravate respiratory (asthma/COPD) and cardiometabolic comorbidities, potentially leading to hospitalization. MIQNAF delivers broad coverage, rapid clinical response, and a well-established safety profile<sup>1,3</sup>.</p>
         </div>
       </div>
 
@@ -102,21 +101,17 @@ Miqnaf provides comprehensive coverage, early clinical response and reassured sa
           <h2 class="patient-heading">Hospitalized</h2>
           <hr class="patient-line">
           <h3 class="patient-subheading"></h3>
-          <p class="patient-body">In moderate to severe hospitalized CABP, early clinical stabilization, shorter hospital stay, atypical coverage and safety remain key treatment goals.
-Miqnaf provides potent activity against atypical pathogens, enabling early clinical improvement with better safety over traditional macrolides.<sup>1</sup>,<sup>3</sup></p>
+          <p class="patient-body">For hospitalized moderate to severe CABP, early stabilization, shorter hospital stay, atypical pathogen coverage, and safety are critical treatment priorities. MIQNAF along with other IV antibiotics delivers potent atypical coverage with early clinical improvement and a reassuring safety profile<sup>1,3</sup>.</p>
         </div>
       </div>
 
       <div class="pp-panel" role="tabpanel" id="pp-panel-failure" data-tone="maroon" aria-labelledby="pp-tab-failure" hidden>
-        <div class="pp-figure"><img src="assests/clinical-elderly.png" alt="Patient after prior treatment failure" loading="lazy"></div>
+        <div class="pp-figure"><img src="assests/clinical-failure.png" alt="Patient in consultation after a course of antibiotics failed" loading="lazy"></div>
         <div class="pp-body">
           <h2 class="patient-heading">Prior Treatment Failure</h2>
           <hr class="patient-line">
           <h3 class="patient-subheading"></h3>
-          <p class="patient-body">Inadequate response to initial antibiotics can prolong infection and increase disease burden.
-Miqnaf delivers potent, targeted action, ensuring rapid bacterial clearance and clinical resolution.<sup>1</sup>,<sup>3</sup>
-
-Because second chances should not fail.</p>
+          <p class="patient-body">When initial antibiotic therapy falls short, prolonged infection can increase disease burden. MIQNAF offers potent, targeted antibacterial activity to drive rapid bacterial clearance and clinical resolution<sup>1,3</sup>. Because every first chance should count.</p>
         </div>
       </div>
     </div>
@@ -137,6 +132,41 @@ Because second chances should not fail.</p>
         panel.hidden = !on;
         panel.classList.toggle('is-active', on);
       });
+    }
+
+    /* The panels advance on their own so the section reads without being
+       driven, and stop for good the moment a visitor takes the wheel - a
+       carousel that keeps moving under someone reading is worse than none. */
+    var AUTO_MS = 7000;
+    var timer = null;
+    var stopped = false;
+
+    function stopAuto() {
+      stopped = true;
+      if (timer) { clearInterval(timer); timer = null; }
+    }
+
+    function startAuto() {
+      if (stopped || timer) return;
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      timer = setInterval(function () {
+        if (document.hidden) return;
+        var i = tabs.indexOf(root.querySelector('.pp-tab[aria-selected="true"]'));
+        select(tabs[(i + 1) % tabs.length]);
+      }, AUTO_MS);
+    }
+
+    ['click', 'keydown', 'touchstart'].forEach(function (ev) {
+      root.addEventListener(ev, stopAuto, { passive: true });
+    });
+
+    // only run while the section is actually on screen
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) { en.isIntersecting ? startAuto() : (timer && (clearInterval(timer), timer = null)); });
+      }, { threshold: 0.25 }).observe(root);
+    } else {
+      startAuto();
     }
 
     tabs.forEach(function (tab, i) {

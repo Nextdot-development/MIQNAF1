@@ -30,6 +30,12 @@
     #moa .scene-subunit-label{font-family:'Acumin Variable',sans-serif;font-weight:800;font-size:1.15rem;letter-spacing:.06em;white-space:nowrap;user-select:none}
     #moa .scene-site-label{font-family:'Acumin Variable',sans-serif;font-weight:800;font-size:1.1rem;color:#2e2a33;user-select:none}
     #moa .scene-site-label.is-inverted{color:#fbf9fd}
+    #moa .scene-ribosome-label{font-family:'Acumin Variable',sans-serif;font-weight:800;font-size:1rem;
+      letter-spacing:.01em;color:#29397f;white-space:nowrap;user-select:none}
+    #moa .scene-ribosome-label span{display:block;font-weight:500;font-size:.7rem;color:#6b6b6b;letter-spacing:.01em}
+    .rib-caption{font-family:'Acumin Variable',sans-serif;font-size:.86rem;line-height:1.5;
+      color:var(--text-grey);margin:10px 14px 0}
+    .rib-caption strong{color:var(--brand-navy);font-weight:700}
     /* names the parts of the ribosome, drawn as DOM by CSS2DRenderer */
     #moa .structure-label{font-family:'Acumin Variable',sans-serif;font-weight:600;font-size:.72rem;line-height:1.2;
       padding:3px 6px;border-radius:6px;border:1px solid rgba(41,57,127,.16);background:rgba(255,255,255,.88);
@@ -102,6 +108,7 @@
           <div class="rib-hint">Drag to rotate &middot; scroll to zoom</div>
         </div>
         <div class="rib-status stalled" id="rib-status">Translation stalled &mdash; the tRNA is held at the A site and the peptide chain stops growing.</div>
+        <p class="rib-caption">The two lobes shown together make up one bacterial <strong>70S ribosome</strong> &mdash; the 50S subunit on top and the 30S subunit below.</p>
       </div>
 
       <ol class="rib-steps is-on" id="rib-steps-on">
@@ -344,6 +351,34 @@
     const subunit50 = makeSubunit([0, 0.45, 0], [2.05, 1.5, 1.5], "50S", "#4f9d84");
     const subunit30 = makeSubunit([0, -1.25, 0], [1.85, 0.8, 1.3], "30S", "#4f8fc0");
     scene.add(subunit50.group, subunit30.group);
+
+    /* ---- Whole-ribosome label: corner brackets that stay clear of the
+       50S/30S labels, so the pair reads as one 70S ribosome ---- */
+    const ribosomeTopY = 0.45 + 1.5;      // top of the 50S sphere
+    const ribosomeBottomY = -1.25 - 0.8;  // bottom of the 30S sphere
+    const ribosomeMidY = (ribosomeTopY + ribosomeBottomY) / 2;
+    const bracketX = -2.9;                // past the 50S (-2.6) and 30S (-2.4) labels
+
+    const bracketMat = new THREE.LineBasicMaterial({ color: 0x29397f, transparent: true, opacity: 0.45 });
+
+    scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([
+      new THREE.Vector3(-1.9, ribosomeTopY, 0.15),
+      new THREE.Vector3(bracketX, ribosomeTopY, 0.15),
+      new THREE.Vector3(bracketX, ribosomeTopY - 0.35, 0.15),
+    ]), bracketMat));
+
+    scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([
+      new THREE.Vector3(-1.75, ribosomeBottomY, 0.15),
+      new THREE.Vector3(bracketX, ribosomeBottomY, 0.15),
+      new THREE.Vector3(bracketX, ribosomeBottomY + 0.35, 0.15),
+    ]), bracketMat));
+
+    const ribosomeLabelDiv = document.createElement("div");
+    ribosomeLabelDiv.className = "scene-ribosome-label";
+    ribosomeLabelDiv.innerHTML = "70S Ribosome<span>50S + 30S together</span>";
+    const ribosomeLabel = new CSS2DObject(ribosomeLabelDiv);
+    ribosomeLabel.position.set(bracketX - 0.6, ribosomeMidY, 0.15);
+    scene.add(ribosomeLabel);
 
     /* ---- Sites ---- */
     const SITE_X = { E: -1.05, P: 0, A: 1.05 };
