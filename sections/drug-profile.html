@@ -2,22 +2,24 @@
 <section id="drug-profile" class="dp-section fade-in-on-scroll">
   <style>
     .dp-section{width:100%;padding:2.2rem 1rem 3.2rem;overflow:hidden;background:transparent}
-    .dp-container{width:100%;max-width:1240px;margin:0 auto}
+    .dp-container{width:100%;max-width:1440px;margin:0 auto}
 
     .dp-eyebrow{font-family:'Acumin Variable',sans-serif;font-size:.72rem;font-weight:800;letter-spacing:.18em;
       text-transform:uppercase;color:var(--orange-section);margin-bottom:.35rem}
     .dp-title{font-family:'Acumin Variable',sans-serif;font-size:clamp(1.5rem,2.2vw,2rem);font-weight:800;
       line-height:1.2;color:var(--brand-navy);margin:0 0 .35rem}
     .dp-standfirst{font-family:'Acumin Variable',sans-serif;font-size:.9rem;line-height:1.55;
-      color:var(--text-muted);margin:0 0 1.1rem;max-width:80ch}
+      color:var(--text-muted);margin:0 0 1.1rem;max-width:100ch}
 
     /* ---- tab bar: one strip across the top, as the reference lays it out ---- */
-    /* eleven tabs do not fit one row at most widths, so they wrap rather than
-       running off the end of the strip */
-    .dp-tabs{display:flex;flex-wrap:wrap;gap:2px;background:var(--brand-navy);border-radius:10px;padding:4px}
+    /* all eleven sit on one row; below the width where that fits, the strip
+       scrolls rather than wrapping or clipping */
+    .dp-tabs{display:flex;gap:1px;overflow-x:auto;background:var(--brand-navy);border-radius:10px;
+      padding:4px;scrollbar-width:none;-ms-overflow-style:none}
+    .dp-tabs::-webkit-scrollbar{display:none}
     .dp-tab{flex:0 0 auto;cursor:pointer;white-space:nowrap;border:none;border-radius:7px;
-      font-family:'Acumin Variable',sans-serif;font-size:.76rem;font-weight:700;letter-spacing:.03em;
-      padding:9px 14px;color:rgba(255,255,255,.78);background:transparent;
+      font-family:'Acumin Variable',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.01em;
+      padding:9px 10px;color:rgba(255,255,255,.78);background:transparent;
       transition:background .2s ease,color .2s ease}
     .dp-tab:hover{color:#fff;background:rgba(255,255,255,.1)}
     .dp-tab[aria-selected="true"]{color:#fff;background:var(--brand-red)}
@@ -33,14 +35,15 @@
     .dp-label{font-family:'Acumin Variable',sans-serif;font-size:.82rem;font-weight:800;letter-spacing:.01em;
       color:#1f2430;margin:0 0 .22rem}
     .dp-label.is-caps{text-transform:uppercase;letter-spacing:.04em;font-size:.78rem}
-    .dp-text{font-family:'Acumin Variable',sans-serif;font-size:.875rem;line-height:1.55;color:#41414c;margin:0}
+    .dp-text{font-family:'Acumin Variable',sans-serif;font-size:.875rem;line-height:1.55;color:#41414c;margin:0;
+      max-width:118ch}   /* the frame is 1440 wide; a line of prose is not */
     .dp-text + .dp-text{margin-top:.5rem}
     .dp-text i{font-style:italic}
     .dp-text b,.dp-text strong{color:#1f2430;font-weight:700}
 
     .dp-list{list-style:none;margin:.4rem 0 0;padding:0}
     .dp-list li{position:relative;padding-left:1.1rem;font-family:'Acumin Variable',sans-serif;
-      font-size:.875rem;line-height:1.55;color:#41414c}
+      font-size:.875rem;line-height:1.55;color:#41414c;max-width:118ch}
     .dp-list li + li{margin-top:.35rem}
     .dp-list li::before{content:"";position:absolute;left:.28rem;top:.66em;width:.3rem;height:.3rem;
       border-radius:999px;background:#41414c}
@@ -57,7 +60,7 @@
     .dp-table thead th{background:#f4f5f9;color:#1f2430;font-weight:700;border-top:none;white-space:nowrap}
     .dp-table td i{font-style:italic}
     .dp-tnote{font-family:'Acumin Variable',sans-serif;font-size:.76rem;line-height:1.45;
-      color:var(--text-grey);margin:.35rem 0 0}
+      color:var(--text-grey);margin:.35rem 0 0;max-width:118ch}
 
     .dp-foot{font-family:'Acumin Variable',sans-serif;font-size:.78rem;line-height:1.5;color:var(--text-grey);
       margin:1.6rem 0 0;padding-top:.8rem;border-top:1px solid rgba(41,57,127,.12)}

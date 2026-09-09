@@ -651,7 +651,7 @@ button, a {
     z-index: 2;
     /* The composition is 57.7% of its own width tall, so the width is also
        capped by the height left under the navbar: it stays above the fold. */
-    width: min(1120px, 90vw, (100vh - 198px) * 1.733);
+    width: min(1440px, 92vw, (100vh - 198px) * 1.733);
     container-type: inline-size;
 }
 

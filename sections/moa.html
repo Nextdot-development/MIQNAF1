@@ -6,7 +6,7 @@
     .moa-section.in-view .moa-board{animation:moaFade .7s ease forwards}
     @keyframes moaFade{from{opacity:0}to{opacity:1}}
     @media(prefers-reduced-motion:reduce){.moa-board{opacity:1;animation:none}}
-    .moa-container{width:100%;max-width:1300px;margin:0 auto}
+    .moa-container{width:100%;max-width:1440px;margin:0 auto}
     .moa-head{margin-bottom:2.2rem}
     .moa-eyebrow{font-family:'Acumin Variable',sans-serif;font-size:.8rem;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--orange-section);margin-bottom:.6rem}
     .moa-title{font-family:'Acumin Variable',sans-serif;font-size:clamp(2rem,3.4vw,3.3rem);font-weight:800;line-height:1.12;color:var(--brand-navy);margin:0}
@@ -85,16 +85,6 @@
     
     
     
-    /* the 3D lineage is a page of its own, so 3Dmol never loads with this one */
-    .rib-more{display:flex;align-items:center;gap:16px;margin:0 0 18px;padding:16px 20px;
-      border:1px solid rgba(41,57,127,.16);border-radius:14px;background:#fff;text-decoration:none;
-      color:var(--brand-navy);box-shadow:0 14px 32px -26px rgba(41,57,127,.6);
-      transition:border-color .25s ease,transform .25s ease,box-shadow .25s ease}
-    .rib-more:hover{border-color:rgba(41,57,127,.42);transform:translateY(-2px);
-      box-shadow:0 18px 38px -24px rgba(41,57,127,.65)}
-    .rib-more svg{flex:none;color:var(--brand-red)}
-    .rib-more-text{font-family:'Acumin Variable',sans-serif;font-size:.84rem;line-height:1.5;color:var(--text-grey)}
-    .rib-more-text b{display:block;font-size:.98rem;font-weight:800;color:var(--brand-navy);margin-bottom:2px}
     .rib-foot{font-family:'Acumin Variable',sans-serif;font-size:.74rem;font-weight:500;color:var(--text-grey);margin:0 0 34px}
 
 
@@ -145,15 +135,6 @@
       </ol>
 
     </div>
-
-    <a class="rib-more" href="/molecular-lineage.html">
-      <span class="rib-more-text">
-        <b>Explore the macrolide lineage in 3D</b>
-        Azithromycin, clarithromycin and nafithromycin as interactive structures, with the motifs
-        carried forward &mdash; or dropped &mdash; as the scaffold becomes a ketolide.
-      </span>
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg>
-    </a>
 
     <p class="rib-foot">Schematic representation for educational use; geometry is stylized, not a crystallographic structure.</p>
 
