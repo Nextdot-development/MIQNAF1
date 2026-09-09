@@ -1,42 +1,41 @@
 <!-- DRUG PROFILE — indication and uses, set out as the reference leaflet page does -->
 <section id="drug-profile" class="dp-section fade-in-on-scroll">
   <style>
-    .dp-section{width:100%;padding:2.5rem 1rem 4rem;overflow:hidden;background:transparent}
-    .dp-container{width:100%;max-width:1120px;margin:0 auto}
+    .dp-section{width:100%;padding:2.2rem 1rem 3.2rem;overflow:hidden;background:transparent}
+    /* The reference leaflet page is dense: small type, tight leading, and lines
+       that run the full width of the column rather than a narrow measure. */
+    .dp-container{width:100%;max-width:1240px;margin:0 auto}
 
-    .dp-eyebrow{font-family:'Acumin Variable',sans-serif;font-size:.8rem;font-weight:800;letter-spacing:.18em;
-      text-transform:uppercase;color:var(--orange-section);margin-bottom:.6rem}
-    .dp-title{font-family:'Acumin Variable',sans-serif;font-size:clamp(1.7rem,2.6vw,2.3rem);font-weight:800;
-      line-height:1.2;color:var(--brand-navy);margin:0 0 1.6rem}
+    .dp-eyebrow{font-family:'Acumin Variable',sans-serif;font-size:.72rem;font-weight:800;letter-spacing:.18em;
+      text-transform:uppercase;color:var(--orange-section);margin-bottom:.35rem}
+    .dp-title{font-family:'Acumin Variable',sans-serif;font-size:clamp(1.35rem,1.9vw,1.65rem);font-weight:800;
+      line-height:1.2;color:var(--brand-navy);margin:0 0 .95rem}
 
-    /* Headings in the leaflet are set in bold above their paragraph, with no
-       rules or cards between them - the reference page reads as a document. */
-    .dp-block + .dp-block{margin-top:1.5rem}
-    .dp-label{font-family:'Acumin Variable',sans-serif;font-size:.95rem;font-weight:800;letter-spacing:.02em;
-      color:#1f2430;margin:0 0 .45rem}
-    .dp-label.is-caps{text-transform:uppercase;letter-spacing:.05em;font-size:.88rem}
-    .dp-text{font-family:'Acumin Variable',sans-serif;font-size:1rem;line-height:1.62;color:#41414c;margin:0;max-width:96ch}
-    .dp-text + .dp-text{margin-top:.7rem}
+    .dp-block + .dp-block{margin-top:.95rem}
+    .dp-label{font-family:'Acumin Variable',sans-serif;font-size:.82rem;font-weight:800;letter-spacing:.01em;
+      color:#1f2430;margin:0 0 .22rem}
+    .dp-label.is-caps{text-transform:uppercase;letter-spacing:.04em;font-size:.78rem}
+    .dp-text{font-family:'Acumin Variable',sans-serif;font-size:.875rem;line-height:1.55;color:#41414c;margin:0}
+    .dp-text + .dp-text{margin-top:.5rem}
     .dp-text i{font-style:italic}
     .dp-text strong{color:#1f2430;font-weight:700}
 
-    .dp-dose{list-style:none;margin:.7rem 0 0;padding:0}
-    .dp-dose li{position:relative;padding-left:1.35rem;font-family:'Acumin Variable',sans-serif;
-      font-size:1rem;line-height:1.62;color:#41414c;max-width:96ch}
-    .dp-dose li + li{margin-top:.5rem}
-    .dp-dose li::before{content:"";position:absolute;left:.35rem;top:.72em;width:.34rem;height:.34rem;
+    .dp-dose{list-style:none;margin:.4rem 0 0;padding:0}
+    .dp-dose li{position:relative;padding-left:1.1rem;font-family:'Acumin Variable',sans-serif;
+      font-size:.875rem;line-height:1.55;color:#41414c}
+    .dp-dose li + li{margin-top:.3rem}
+    .dp-dose li::before{content:"";position:absolute;left:.28rem;top:.66em;width:.3rem;height:.3rem;
       border-radius:999px;background:#41414c}
 
-    .dp-note{font-family:'Acumin Variable',sans-serif;font-size:1rem;line-height:1.62;color:#41414c;
-      margin:.7rem 0 0;max-width:96ch}
+    .dp-note{font-family:'Acumin Variable',sans-serif;font-size:.875rem;line-height:1.55;color:#41414c;margin:.5rem 0 0}
     .dp-note b{color:#1f2430;font-weight:700}
 
-    .dp-foot{font-family:'Acumin Variable',sans-serif;font-size:.84rem;line-height:1.55;color:var(--text-grey);
-      margin:2rem 0 0;padding-top:1rem;border-top:1px solid rgba(41,57,127,.12);max-width:96ch}
+    .dp-foot{font-family:'Acumin Variable',sans-serif;font-size:.78rem;line-height:1.5;color:var(--text-grey);
+      margin:1.4rem 0 0;padding-top:.8rem;border-top:1px solid rgba(41,57,127,.12)}
 
     @media (max-width:860px){
-      .dp-section{padding:2rem 1rem 3rem}
-      .dp-text,.dp-dose li,.dp-note{font-size:.96rem}
+      .dp-section{padding:1.8rem 1rem 2.6rem}
+      .dp-text,.dp-dose li,.dp-note{font-size:.86rem}
     }
   </style>
 
