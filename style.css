@@ -173,9 +173,26 @@ button, a {
 /* ---- column 1: logo (left) ---- */
 .nav-logo {
     justify-self: start;
+    /* the wordmark now carries the tagline beneath it, as the brand lockup does */
     display: inline-flex;
+    flex-direction: column;
     align-items: center;
+    gap: 4px;
     transition: transform var(--mi-duration) var(--mi-ease);
+}
+
+.nav-tagline {
+    font-family: 'Acumin Variable', sans-serif;
+    font-size: .72rem;
+    font-weight: 700;
+    font-style: italic;
+    line-height: 1.25;
+    letter-spacing: .01em;
+    color: #fff;
+    white-space: nowrap;
+    padding: 3px 13px;
+    border-radius: 5px;
+    background: linear-gradient(90deg, #ee5323 0%, #d33a23 55%, #b92022 100%);
 }
 
 .nav-logo:hover {
@@ -329,6 +346,11 @@ button, a {
         width: 176px;
     }
 
+    .nav-tagline {
+        font-size: .66rem;
+        padding: 2px 10px;
+    }
+
     .nav-links {
         gap: clamp(14px, 1.9vw, 28px);
     }
@@ -355,6 +377,11 @@ button, a {
 
     .logo-img {
         width: 150px;
+    }
+
+    .nav-tagline {
+        font-size: .6rem;
+        padding: 2px 9px;
     }
 
     .menu-toggle {
@@ -413,6 +440,11 @@ button, a {
 
     .logo-img {
         width: 128px;
+    }
+
+    .nav-tagline {
+        font-size: .54rem;
+        padding: 2px 8px;
     }
 
     .nav-cta {
