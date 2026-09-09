@@ -1,122 +1,89 @@
-<!-- DRUG PROFILE — indication and uses, taken from the prescribing information -->
+<!-- DRUG PROFILE — indication and uses, set out as the reference leaflet page does -->
 <section id="drug-profile" class="dp-section fade-in-on-scroll">
   <style>
     .dp-section{width:100%;padding:2.5rem 1rem 4rem;overflow:hidden;background:transparent}
-    .dp-container{width:100%;max-width:1180px;margin:0 auto}
-    .dp-head{margin-bottom:2.2rem}
-    .dp-eyebrow{font-family:'Acumin Variable',sans-serif;font-size:.8rem;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--orange-section);margin-bottom:.6rem}
-    .dp-title{font-family:'Acumin Variable',sans-serif;font-size:clamp(2rem,3.4vw,3.3rem);font-weight:800;line-height:1.12;color:var(--brand-navy);margin:0}
-    .dp-title em{font-style:italic;color:var(--brand-red)}
-    .dp-reg{font-size:.42em;vertical-align:super;font-style:normal;letter-spacing:0}
-    .dp-sub{font-family:'Acumin Variable',sans-serif;font-size:clamp(1rem,1.4vw,1.2rem);font-weight:600;color:var(--text-muted);margin-top:.7rem;max-width:66ch}
+    .dp-container{width:100%;max-width:1120px;margin:0 auto}
 
-    /* ---- the leaflet itself, set as a document ---- */
-    .dp-sheet{background:#fff;border:1px solid rgba(41,57,127,.12);border-radius:22px;
-      box-shadow:0 26px 60px -38px rgba(41,57,127,.45);padding:clamp(1.6rem,3.4vw,3rem)}
-    .dp-block + .dp-block{margin-top:2.1rem;padding-top:2.1rem;border-top:1px solid rgba(41,57,127,.1)}
-    .dp-label{font-family:'Acumin Variable',sans-serif;font-size:.78rem;font-weight:800;letter-spacing:.14em;
-      text-transform:uppercase;color:var(--brand-red);margin:0 0 .7rem}
-    .dp-text{font-family:'Acumin Variable',sans-serif;font-size:1.02rem;line-height:1.65;color:#3c3c46;margin:0;max-width:78ch}
-    .dp-text + .dp-text{margin-top:.85rem}
-    .dp-text strong{color:var(--brand-navy);font-weight:700}
-    .dp-text em{font-style:italic}
+    .dp-eyebrow{font-family:'Acumin Variable',sans-serif;font-size:.8rem;font-weight:800;letter-spacing:.18em;
+      text-transform:uppercase;color:var(--orange-section);margin-bottom:.6rem}
+    .dp-title{font-family:'Acumin Variable',sans-serif;font-size:clamp(1.7rem,2.6vw,2.3rem);font-weight:800;
+      line-height:1.2;color:var(--brand-navy);margin:0 0 1.6rem}
 
-    .dp-dose{list-style:none;margin:.9rem 0 0;padding:0}
-    .dp-dose li{position:relative;padding-left:1.5rem;font-family:'Acumin Variable',sans-serif;
-      font-size:1.02rem;line-height:1.6;color:#3c3c46;max-width:78ch}
-    .dp-dose li + li{margin-top:.6rem}
-    .dp-dose li::before{content:"";position:absolute;left:0;top:.62em;width:.5rem;height:.5rem;
-      border-radius:999px;background:var(--orange-section)}
+    /* Headings in the leaflet are set in bold above their paragraph, with no
+       rules or cards between them - the reference page reads as a document. */
+    .dp-block + .dp-block{margin-top:1.5rem}
+    .dp-label{font-family:'Acumin Variable',sans-serif;font-size:.95rem;font-weight:800;letter-spacing:.02em;
+      color:#1f2430;margin:0 0 .45rem}
+    .dp-label.is-caps{text-transform:uppercase;letter-spacing:.05em;font-size:.88rem}
+    .dp-text{font-family:'Acumin Variable',sans-serif;font-size:1rem;line-height:1.62;color:#41414c;margin:0;max-width:96ch}
+    .dp-text + .dp-text{margin-top:.7rem}
+    .dp-text i{font-style:italic}
+    .dp-text strong{color:#1f2430;font-weight:700}
 
-    /* ---- organism groups ---- */
-    .dp-bugs{display:grid;gap:1rem;margin-top:1.1rem;grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
-    .dp-bug{border:1px solid rgba(41,57,127,.12);border-radius:14px;padding:1rem 1.1rem;background:#fcfbfe}
-    .dp-bug h4{font-family:'Acumin Variable',sans-serif;font-size:.82rem;font-weight:800;letter-spacing:.06em;
-      text-transform:uppercase;color:var(--brand-navy);margin:0 0 .55rem}
-    .dp-bug ul{list-style:none;margin:0;padding:0}
-    .dp-bug li{font-family:'Acumin Variable',sans-serif;font-size:.95rem;line-height:1.5;color:#3c3c46}
-    .dp-bug li + li{margin-top:.4rem}
-    .dp-bug i{font-style:italic}
-    .dp-bug small{display:block;font-size:.82rem;color:var(--text-grey);line-height:1.45;margin-top:.15rem}
+    .dp-dose{list-style:none;margin:.7rem 0 0;padding:0}
+    .dp-dose li{position:relative;padding-left:1.35rem;font-family:'Acumin Variable',sans-serif;
+      font-size:1rem;line-height:1.62;color:#41414c;max-width:96ch}
+    .dp-dose li + li{margin-top:.5rem}
+    .dp-dose li::before{content:"";position:absolute;left:.35rem;top:.72em;width:.34rem;height:.34rem;
+      border-radius:999px;background:#41414c}
 
-    .dp-note{font-family:'Acumin Variable',sans-serif;font-size:.86rem;line-height:1.55;color:var(--text-grey);
-      margin:1.1rem 0 0;padding:.9rem 1.1rem;border-left:3px solid var(--orange-section);background:#fff8f3;
-      border-radius:0 10px 10px 0;max-width:82ch}
-    .dp-foot{font-family:'Acumin Variable',sans-serif;font-size:.82rem;line-height:1.55;color:var(--text-grey);margin:1.3rem 0 0}
+    .dp-note{font-family:'Acumin Variable',sans-serif;font-size:1rem;line-height:1.62;color:#41414c;
+      margin:.7rem 0 0;max-width:96ch}
+    .dp-note b{color:#1f2430;font-weight:700}
+
+    .dp-foot{font-family:'Acumin Variable',sans-serif;font-size:.84rem;line-height:1.55;color:var(--text-grey);
+      margin:2rem 0 0;padding-top:1rem;border-top:1px solid rgba(41,57,127,.12);max-width:96ch}
 
     @media (max-width:860px){
       .dp-section{padding:2rem 1rem 3rem}
-      .dp-sheet{border-radius:16px}
-      .dp-text,.dp-dose li{font-size:.98rem}
+      .dp-text,.dp-dose li,.dp-note{font-size:.96rem}
     }
   </style>
 
   <div class="dp-container">
-    <div class="dp-head">
-      <div class="dp-eyebrow">Drug Profile</div>
-      <h2 class="dp-title">Indication and <em>Uses</em></h2>
-      <p class="dp-sub">From the prescribing information for MIQNAF<span class="dp-reg">&reg;</span> (nafithromycin tablets).</p>
+    <div class="dp-eyebrow">Drug Profile</div>
+    <h2 class="dp-title">Indication and Uses</h2>
+
+    <div class="dp-block">
+      <p class="dp-label is-caps">Dosage form and strength</p>
+      <p class="dp-text">MIQNAF<sup>&reg;</sup> (nafithromycin) tablet is a white, oval shaped, biconvex, film-coated, immediate release 400&nbsp;mg tablet for oral use. The tablet is debossed with &lsquo;W755&rsquo; on one side and plain on other side.</p>
     </div>
 
-    <div class="dp-sheet">
-      <div class="dp-block">
-        <p class="dp-label">Dosage form and strength</p>
-        <p class="dp-text">MIQNAF<span class="dp-reg">&reg;</span> (nafithromycin) tablet is a white, oval shaped, biconvex, film-coated, immediate release <strong>400&nbsp;mg</strong> tablet for oral use. The tablet is debossed with &lsquo;W755&rsquo; on one side and plain on the other side.</p>
-      </div>
-
-      <div class="dp-block">
-        <p class="dp-label">Therapeutic indication</p>
-        <p class="dp-text">MIQNAF<span class="dp-reg">&reg;</span> is a macrolide class of antibacterial drug indicated for the treatment of <strong>adults (&ge;&nbsp;18 years of age) with community-acquired bacterial pneumonia (CABP)</strong>.</p>
-      </div>
-
-      <div class="dp-block">
-        <p class="dp-label">Organisms</p>
-        <p class="dp-text">Nafithromycin has been shown to be active against most strains of the following microorganisms, both <em>in vitro</em> and in clinical infections.</p>
-        <div class="dp-bugs">
-          <div class="dp-bug">
-            <h4>Aerobic typical Gram-positive</h4>
-            <ul>
-              <li><i>Streptococcus pneumoniae</i><small>including macrolide-resistant, penicillin-resistant, clindamycin-resistant and multi-drug resistant isolates (MDRSP)</small></li>
-              <li><i>Streptococcus anginosus</i></li>
-              <li><i>Streptococcus mitis/oralis</i></li>
-              <li><i>Staphylococcus aureus</i></li>
-            </ul>
-          </div>
-          <div class="dp-bug">
-            <h4>Aerobic typical Gram-negative fastidious</h4>
-            <ul>
-              <li><i>Haemophilus influenzae</i><small>including macrolide-, penicillin-, clindamycin-, trimethoprim/sulfamethoxazole- and moxifloxacin-resistant isolates</small></li>
-              <li><i>Haemophilus parainfluenzae</i></li>
-              <li><i>Haemophilus parahaemolyticus</i></li>
-              <li><i>Moraxella catarrhalis</i></li>
-            </ul>
-          </div>
-          <div class="dp-bug">
-            <h4>Atypical</h4>
-            <ul>
-              <li><i>Mycoplasma pneumoniae</i></li>
-              <li><i>Chlamydophila pneumoniae</i></li>
-              <li><i>Legionella pneumophila</i></li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
-      <div class="dp-block">
-        <p class="dp-label">Usage</p>
-        <p class="dp-text">To reduce the development of drug-resistant bacteria and maintain the effectiveness of MIQNAF<span class="dp-reg">&reg;</span> and other antibacterial drugs, MIQNAF<span class="dp-reg">&reg;</span> should be used only to treat infections that are proven or strongly suspected to be caused by susceptible bacteria. When culture and susceptibility information are available, they should be used to choose or alter antibacterial therapy. In the absence of such data, local epidemiology and susceptibility patterns may guide the empiric selection of therapy.</p>
-      </div>
-
-      <div class="dp-block">
-        <p class="dp-label">Posology</p>
-        <p class="dp-text">For the treatment of adults (&ge;&nbsp;18 years of age) with CABP, the recommended dosage regimen of MIQNAF<span class="dp-reg">&reg;</span> tablets is as follows:</p>
-        <ul class="dp-dose">
-          <li>Administer <strong>800&nbsp;mg (2 tablets of 400&nbsp;mg each) orally, once daily at every 24&nbsp;hour interval for 3 days</strong>. The tablets should preferably be taken after a meal.</li>
-        </ul>
-        <p class="dp-note"><strong>Method of administration.</strong> Each 800&nbsp;mg dose consists of two 400&nbsp;mg tablets, taken orally once every 24&nbsp;hours, preferably after a meal. Swallow the tablets sequentially, with enough water. Do not crush or chew the tablets.</p>
-      </div>
+    <div class="dp-block">
+      <p class="dp-label is-caps">Therapeutic indication</p>
+      <p class="dp-text">MIQNAF<sup>&reg;</sup> is a macrolide class of antibacterial drug indicated for the treatment of adults (&ge;&nbsp;18 years of age) with community-acquired bacterial pneumonia (CABP).</p>
+      <p class="dp-text">Nafithromycin has been shown to be active against most strains of the following microorganisms, both <i>in vitro</i> and in clinical infections:</p>
     </div>
 
-    <p class="dp-foot">Abridged from the MIQNAF<span class="dp-reg">&reg;</span> prescribing information (Wockhardt Limited, revision 03/2025). To be sold against the prescription of a medical specialist only. Refer to the full prescribing information for contraindications, warnings, precautions, interactions and undesirable effects.</p>
+    <div class="dp-block">
+      <p class="dp-label">Aerobic typical Gram-positive bacteria</p>
+      <p class="dp-text"><i>Streptococcus pneumoniae</i> (including macrolide-resistant, penicillin-resistant, clindamycin-resistant and multi-drug resistant isolates [MDRSP]), <i>Streptococcus anginosus</i>, <i>Streptococcus mitis/oralis</i>, <i>Staphylococcus aureus</i>.</p>
+    </div>
+
+    <div class="dp-block">
+      <p class="dp-label">Aerobic typical Gram-negative fastidious bacteria</p>
+      <p class="dp-text"><i>Haemophilus influenzae</i> and <i>Haemophilus parainfluenzae</i> (both including macrolide-resistant, penicillin-resistant, clindamycin-resistant, trimethoprim/sulfamethoxazole-resistant and moxifloxacin-resistant isolates), <i>Haemophilus parahaemolyticus</i>, <i>Moraxella catarrhalis</i>.</p>
+    </div>
+
+    <div class="dp-block">
+      <p class="dp-label">Atypical bacteria</p>
+      <p class="dp-text"><i>Mycoplasma pneumoniae</i>, <i>Chlamydophila pneumoniae</i>, <i>Legionella pneumophila</i>.</p>
+    </div>
+
+    <div class="dp-block">
+      <p class="dp-label">Usage</p>
+      <p class="dp-text">To reduce the development of drug-resistant bacteria and maintain the effectiveness of MIQNAF<sup>&reg;</sup> and other antibacterial drugs, MIQNAF<sup>&reg;</sup> should be used only to treat infections that are proven or strongly suspected to be caused by susceptible bacteria. When culture and susceptibility information are available, they should be used to choose or alter antibacterial therapy. In the absence of such data, local epidemiology and susceptibility patterns may guide the empiric selection of therapy.</p>
+    </div>
+
+    <div class="dp-block">
+      <p class="dp-label is-caps">Posology</p>
+      <p class="dp-text">For the treatment of adults (&ge;&nbsp;18 years of age) with CABP, the recommended dosage regimen of MIQNAF<sup>&reg;</sup> tablets is as follows:</p>
+      <ul class="dp-dose">
+        <li>Administer 800&nbsp;mg (2 tablets of 400&nbsp;mg each) orally, once-daily at every 24&nbsp;hour interval for 3 days. The tablets should preferably be taken after a meal.</li>
+      </ul>
+      <p class="dp-note"><b>Method of administration.</b> Each 800&nbsp;mg dose of MIQNAF<sup>&reg;</sup> consists of two 400&nbsp;mg tablets. Two tablets of MIQNAF<sup>&reg;</sup> should be taken orally, once every 24&nbsp;hours, preferably after a meal. Swallow the MIQNAF<sup>&reg;</sup> tablets sequentially, with enough water. Do not crush or chew the tablets.</p>
+    </div>
+
+    <p class="dp-foot">To be sold against the prescription of a medical specialist only. Abridged from the MIQNAF<sup>&reg;</sup> prescribing information (Wockhardt Limited, revision 03/2025); refer to the full prescribing information for contraindications, warnings and precautions, drug interactions, use in special populations and undesirable effects.</p>
   </div>
 </section>
