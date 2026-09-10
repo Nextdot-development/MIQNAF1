@@ -566,44 +566,24 @@ button, a {
 .hero-dot[aria-current="true"] { background: var(--brand-red); width: 28px; }
 
 /* ---- the film: a poster until someone asks for it ---- */
-.hero-inner-film {
+/* The film slide ignores the key visual's 1440 frame: it takes the whole band
+   under the navbar. 16:9 across the full width would stand taller than the
+   screen, so the height left over is what sets the size - as large as one
+   screen holds, with nothing cropped off the picture. The 198px reserve is the
+   key visual's own, so neither slide sits lower on the fold than the other.
+   Matched by both classes because the plain .hero-inner rule sits further down
+   the file and would otherwise win the width on equal specificity. */
+.hero-inner.hero-inner-film {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 18px;
-}
-
-.hero-film-head {
-    text-align: center;
-    max-width: 58ch;
-}
-
-.hero-film-eyebrow {
-    margin: 0 0 6px;
-    font-family: 'Acumin Variable', sans-serif;
-    font-size: .78rem;
-    font-weight: 800;
-    letter-spacing: .18em;
-    text-transform: uppercase;
-    color: var(--orange-section);
-}
-
-.hero-film-title {
-    margin: 0;
-    font-family: 'Acumin Variable', sans-serif;
-    font-size: clamp(1.4rem, 2vw, 2.1rem);
-    font-weight: 800;
-    line-height: 1.15;
-    color: var(--brand-navy);
+    justify-content: center;
+    width: min(98vw, (100vh - 198px) * 1.778);
 }
 
 .hero-film {
     position: relative;
-    /* the frame is 1440 wide; 16:9 at that width is 810px tall and leaves no
-       room for the heading, so the film itself stops a little short of it */
-    width: min(100%, 1180px, (100vh - 330px) * 1.778);
+    width: 100%;
     aspect-ratio: 16 / 9;
-    border-radius: 18px;
+    border-radius: 14px;
     overflow: hidden;
     background: #0e1424;
     box-shadow: 0 26px 60px -34px rgba(41, 57, 127, .55);
@@ -617,6 +597,17 @@ button, a {
     height: 100%;
     object-fit: cover;
 }
+
+/* fullscreen hands the element the whole display, whose shape is not the
+   film's - contain keeps the picture whole and lets the surround be black */
+.hero-film:fullscreen {
+    width: 100%;
+    aspect-ratio: auto;
+    border-radius: 0;
+    background: #000;
+}
+
+.hero-film:fullscreen .hero-film-video { object-fit: contain; }
 
 .hero-film-play {
     position: absolute;
