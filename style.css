@@ -854,9 +854,9 @@ button, a {
        the left column, where only that margin lands */
     /* Sized off the podium's gold ring, which is unmistakable in both images:
        the reference runs it from 50.2 to 104.2 in pill-width units. */
-    width: 48.2cqw;
+    width: 68cqw;
     justify-self: end;
-    margin: 7.9cqw -3.6cqw 0 0;
+    margin: 4.6cqw -5cqw 0 0;
 }
 
 /* The pack lifts as one piece. Splitting the carton from its podium so only
@@ -913,7 +913,7 @@ button, a {
     .hero-first-country { font-size: 4.1cqw; padding: 0.6cqw 0; border-top-width: 0.6cqw; border-bottom-width: 0.6cqw; }
     .hero-first-rank { font-size: 13cqw; }
     .hero-first-what { font-size: 3.2cqw; padding: 0.7cqw 1.8cqw; border-radius: 1.4cqw; }
-    .hero-pack { width: 82cqw; justify-self: center; margin: 5cqw 0 0; }
+    .hero-pack { width: 104cqw; justify-self: center; margin: 3cqw 0 0; }
 
     @container (min-width: 1px) {
         .hero-claim { font-size: 5.2cqw; padding: 2.4cqw 4cqw; border-radius: 4cqw; }

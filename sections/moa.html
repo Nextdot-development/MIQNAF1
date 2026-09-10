@@ -8,10 +8,10 @@
     @media(prefers-reduced-motion:reduce){.moa-board{opacity:1;animation:none}}
     .moa-container{width:100%;max-width:1440px;margin:0 auto}
     .moa-head{margin-bottom:2.2rem}
-    .moa-eyebrow{font-family:'Acumin Variable',sans-serif;font-size:.8rem;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--orange-section);margin-bottom:.6rem}
-    .moa-title{font-family:'Acumin Variable',sans-serif;font-size:clamp(2rem,3.4vw,3.3rem);font-weight:800;line-height:1.12;color:var(--brand-navy);margin:0}
+    .moa-eyebrow{font-family:'Acumin Variable',sans-serif;font-size:.8rem;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--orange-section);margin-bottom:0}
+    .moa-title{font-family:'Acumin Variable',sans-serif;font-size:clamp(2rem,3.4vw,3.3rem);font-weight:800;line-height:1.12;color:var(--brand-navy);margin:0 0 .6rem}
     .moa-title em{font-style:italic;color:var(--brand-red)}
-    .moa-sub{font-family:'Acumin Variable',sans-serif;font-size:clamp(1rem,1.4vw,1.2rem);font-weight:600;color:var(--text-muted);margin-top:.7rem;max-width:64ch}
+    .moa-sub{font-family:'Acumin Variable',sans-serif;font-size:clamp(1rem,1.4vw,1.2rem);font-weight:600;color:var(--text-muted);margin-top:.7rem;max-width:none}
 
     /* ===== interactive ribosome scene ===== */
     .rib-board{display:grid;grid-template-columns:minmax(0,1fr) minmax(300px,392px);gap:16px;align-items:stretch;margin-bottom:18px}
@@ -96,9 +96,9 @@
 
   <div class="moa-container">
     <div class="moa-head">
-      <div class="moa-eyebrow">Dual Ribosomal Binding</div>
       <h2 class="moa-title">Mechanism of <em>Action</em></h2>
-      <p class="moa-sub">Nafithromycin anchors at two ribosomal sites at once &mdash; so neither erm(B) methylation nor mef(A) efflux can switch it off.</p>
+      <div class="moa-eyebrow">Dual Ribosomal Binding</div>
+      <p class="moa-sub">Nafithromycin anchors at two ribosomal sites at once, so neither erm(B) methylation nor mef(A) efflux can switch it off.</p>
     </div>
 
     <div class="rib-board">
@@ -108,7 +108,6 @@
           <div class="rib-hint">Drag to rotate &middot; scroll to zoom</div>
         </div>
         <div class="rib-status stalled" id="rib-status">Translation stalled &mdash; the tRNA is held at the A site and the peptide chain stops growing.</div>
-        <p class="rib-caption">The two lobes shown together make up one bacterial <strong>70S ribosome</strong> &mdash; the 50S subunit on top and the 30S subunit below.</p>
       </div>
 
       <ol class="rib-steps is-on" id="rib-steps-on">

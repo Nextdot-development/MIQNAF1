@@ -737,11 +737,9 @@ function initializeExtraReveals() {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
     const groups = [
-        { selector: '.about-bridge-row', stagger: 0 },
         { selector: '.about-timeline-gif', stagger: 0 },
         { selector: '.about-timeline-entry', stagger: 0.1 },
         { selector: '.about-2025-block, .about-india-block', stagger: 0.12 },
-        { selector: '.about-footnote', stagger: 0 },
         { selector: '#video-container', stagger: 0, cls: 'mi-zoom' },
         { selector: '.stats-qr-overlay', stagger: 0 },
         { selector: '.stats-ref-heading, .ref-text', stagger: 0.08 },
