@@ -134,6 +134,12 @@ button, a {
    [ LOGO 260 ]      [ NAVIGATION 1fr ]      [ MAP 180 ]
    No absolute positioning, no negative margins, no manual offsets.
    ============================================================ */
+/* the navbar's height, so the hero can hand a slide exactly what is
+   left of the screen below it */
+:root { --nav-h: 100px; }
+@media (max-width: 992px) { :root { --nav-h: 72px; } }
+@media (max-width: 480px) { :root { --nav-h: 64px; } }
+
 .navbar,
 .navbar.scrolled {
     position: fixed;
@@ -479,8 +485,9 @@ button, a {
     min-height: 100vh;
     display: flex;
     justify-content: center;
-    align-items: center;
-    padding: calc(118px + 2vh) 0 8vh;
+    align-items: stretch;
+    /* only the navbar: the space under it belongs to whichever slide is up */
+    padding: var(--nav-h) 0 0;
 }
 
 /* Matched by id as well as class: the page-wide `#page-root > section` reset
@@ -520,6 +527,15 @@ button, a {
     display: flex;
     justify-content: center;
     align-items: center;
+    /* a definite height, not a minimum: the film sizes itself from it, and a
+       minimum would leave the percentage circular and fall back to the
+       picture's own 16:9 */
+    height: calc(100vh - var(--nav-h));
+}
+
+/* the film slide has no margin to give: its child fills the band */
+.hero-slide-film {
+    align-items: stretch;
 }
 
 .hero-nav {
@@ -546,10 +562,20 @@ button, a {
 .hero-nav-next { right: 12px; }
 
 .hero-dots {
+    position: absolute;
+    left: 50%;
+    bottom: 16px;
+    transform: translateX(-50%);
+    z-index: 4;
     display: flex;
     justify-content: center;
     gap: 9px;
-    margin-top: 14px;
+    margin: 0;
+    padding: 7px 12px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, .74);
+    box-shadow: 0 6px 20px -12px rgba(41, 57, 127, .7);
+    backdrop-filter: blur(6px);
 }
 
 .hero-dot {
@@ -566,27 +592,23 @@ button, a {
 .hero-dot[aria-current="true"] { background: var(--brand-red); width: 28px; }
 
 /* ---- the film: a poster until someone asks for it ---- */
-/* The film slide ignores the key visual's 1440 frame: it takes the whole band
-   under the navbar. 16:9 across the full width would stand taller than the
-   screen, so the height left over is what sets the size - as large as one
-   screen holds, with nothing cropped off the picture. The 198px reserve is the
-   key visual's own, so neither slide sits lower on the fold than the other.
+/* The film ignores the key visual's 1440 frame and covers the band: full
+   width, and every pixel between the navbar and the bottom of the screen.
    Matched by both classes because the plain .hero-inner rule sits further down
    the file and would otherwise win the width on equal specificity. */
 .hero-inner.hero-inner-film {
     display: flex;
-    justify-content: center;
-    width: min(98vw, (100vh - 198px) * 1.778);
+    width: 100%;
 }
 
 .hero-film {
     position: relative;
     width: 100%;
-    aspect-ratio: 16 / 9;
-    border-radius: 14px;
+    /* the band is wider than 16:9, so covering it trims a little off the top
+       and bottom of the picture - the price of going edge to edge */
+    height: 100%;
     overflow: hidden;
-    background: #0e1424;
-    box-shadow: 0 26px 60px -34px rgba(41, 57, 127, .55);
+    background: #fbfbfb;   /* the poster's own ground */
 }
 
 .hero-film picture,
@@ -598,16 +620,11 @@ button, a {
     object-fit: cover;
 }
 
-/* fullscreen hands the element the whole display, whose shape is not the
-   film's - contain keeps the picture whole and lets the surround be black */
-.hero-film:fullscreen {
-    width: 100%;
-    aspect-ratio: auto;
-    border-radius: 0;
-    background: #000;
-}
-
-.hero-film:fullscreen .hero-film-video { object-fit: contain; }
+/* The band is wider than 16:9, so the film is cropped a little top and bottom
+   to cover it. The poster is a still with a headline across the top, which
+   that crop would slice, so it sits whole instead - its own ground is #fbfbfb,
+   which is the box's, so the margin either side does not read as a margin. */
+.hero-film-poster { object-fit: contain; }
 
 .hero-film-play {
     position: absolute;
@@ -635,23 +652,45 @@ button, a {
     right: 0;
     bottom: 0;
     margin: 0;
-    padding: 26px 18px 12px;
+    padding: 26px 18px 46px;
     font-family: 'Acumin Variable', sans-serif;
     font-size: .74rem;
     line-height: 1.4;
     text-align: center;
     color: rgba(255, 255, 255, .88);
-    background: linear-gradient(to top, rgba(14, 20, 36, .72), rgba(14, 20, 36, 0));
+    background: linear-gradient(to top, rgba(14, 20, 36, .58), rgba(14, 20, 36, 0));
     pointer-events: none;
 }
 
 .hero-film.is-playing .hero-film-note { display: none; }
 
+@media (max-width: 992px) {
+    .hero-slide { height: auto; }
+    .hero-slide-film { align-items: center; }
+    .hero-slide-film .hero-inner.hero-inner-film { width: min(620px, 92vw); }
+
+    .hero-film {
+        height: auto;
+        aspect-ratio: 16 / 9;
+        border-radius: 14px;
+        box-shadow: 0 26px 60px -34px rgba(41, 57, 127, .55);
+    }
+
+    .hero-dots {
+        position: static;
+        transform: none;
+        margin-top: 14px;
+        padding: 0;
+        background: none;
+        box-shadow: none;
+        backdrop-filter: none;
+    }
+}
+
 @media (max-width: 860px) {
     .hero-nav { width: 38px; height: 38px; }
     .hero-nav-prev { left: 4px; }
     .hero-nav-next { right: 4px; }
-    .hero-film { border-radius: 14px; }
     .hero-film-play { width: 58px; height: 58px; }
     .hero-film-note { font-size: .68rem; padding: 20px 12px 9px; }
 }
@@ -4716,7 +4755,8 @@ body.page-loaded .hero-logo-img {
 /* HERO: animated scroll-down cue at the bottom of the hero. */
 .hero-scroll-cue {
     position: absolute;
-    bottom: 26px;
+    /* clear of the dots, which now sit over the bottom of the band */
+    bottom: 58px;
     left: 50%;
     transform: translateX(-50%);
     display: flex;
@@ -4758,6 +4798,11 @@ body.page-loaded .hero-scroll-cue {
 @keyframes cue-bounce {
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(7px); }
+}
+
+.hero.is-film .hero-scroll-cue {
+    opacity: 0;
+    pointer-events: none;
 }
 
 @media (max-width: 992px) {

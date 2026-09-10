@@ -39,7 +39,7 @@
                 </div>
             </div>
 
-            <div class="hero-slide" role="group" aria-roledescription="slide" aria-label="2 of 2: film">
+            <div class="hero-slide hero-slide-film" role="group" aria-roledescription="slide" aria-label="2 of 2: film">
                 <div class="hero-inner hero-inner-film">
                     <!-- The poster is all that loads; the film is only fetched once
                          someone asks for it, which is the point of the play button. -->
@@ -101,8 +101,11 @@
             sync();
         }
 
+        var hero = document.getElementById('hero');
+
         function sync() {
             dotEls.forEach(function (d, i) { d.setAttribute('aria-current', i === index ? 'true' : 'false'); });
+            if (hero) hero.classList.toggle('is-film', index === 1);
             prev.disabled = index === 0;
             next.disabled = index === slides.length - 1;
         }
@@ -160,18 +163,6 @@
             film.appendChild(video);
             film.classList.add('is-playing');
             video.focus();
-
-            // "full screen" literally: the click is the gesture the browser
-            // wants, and if it refuses the film simply keeps playing in place
-            var request = film.requestFullscreen || film.webkitRequestFullscreen
-                || video.webkitEnterFullscreen;
-            if (request) {
-                try {
-                    var target = request === video.webkitEnterFullscreen ? video : film;
-                    var out = request.call(target);
-                    if (out && out.catch) out.catch(function () { /* refused */ });
-                } catch (err) { /* refused */ }
-            }
         });
     })();
     </script>
