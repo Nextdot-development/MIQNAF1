@@ -307,51 +307,7 @@ function initializeDoctorSystem() {
     // Entries whose video/thumb are not in yet simply omit them; the UI then
     // falls back to a branded "video coming soon" card instead of a broken image.
     const data = {
-        mumbai: [
-            {
-                doctor: 'Dr. Sonam Solanki',
-                spec: 'Pulmonologist',
-                hospitals: ['INICIO Chest Clinic, Lalbagh'],
-                type: 'gdrive',
-                video: 'https://drive.google.com/file/d/136k8m5DCus7-WLW-_p7tW2H7bIOGct2I/preview',
-                thumb: 'thumbnails/dr-sonam-solanki.jpg'
-            },
-            {
-                doctor: 'Dr. Sameer Garde',
-                spec: 'Interventional Pulmonologist',
-                hospitals: ['Gleneagles Hospital, Parel', 'S. L. Raheja Hospital, Mahim'],
-                type: 'gdrive',
-                video: 'https://drive.google.com/file/d/198uucZxoxBuoo5_iNCcReJmi6hub1yAw/preview',
-                thumb: 'thumbnails/dr-sameer-garde.jpg'
-            },
-            {
-                doctor: 'Dr. Swami Pawar',
-                spec: 'Consultant Pulmonologist & ICU In-Charge',
-                hospitals: ['Thunga Hospital, Malad', 'Thunga Hospital, Mira Road'],
-                type: 'gdrive',
-                video: 'https://drive.google.com/file/d/17dEXA8utX1hWI_WF3ytw94NWPOwZZqWo/preview',
-                thumb: 'thumbnails/dr-swami-pawar.jpg'
-            }
-        ],
-        chennai: [
-            {
-                doctor: 'Dr. Suresh Kanna S',
-                spec: 'Consultant Physician & Diabetologist',
-                hospitals: ['Sree Balaji Medical College & Hospital, Chromepet'],
-                type: 'gdrive',
-                video: 'https://drive.google.com/file/d/1SQ-FZVNxu8OxvvxQ599UyW6ekK79DxmZ/preview',
-                thumb: 'thumbnails/dr-suresh-kanna.jpg'
-            }
-        ],
         kolkata: [
-            {
-                doctor: 'Dr. Indranil Haldar',
-                spec: 'Professor & Head of the Department, Pulmonary Medicine',
-                hospitals: ['College of Medicine and JNM Hospital, Kalyani, Nadia'],
-                type: 'gdrive',
-                video: 'https://drive.google.com/file/d/1AHWJVx6kVciOn16FezpDPFX64hIhioqi/preview',
-                thumb: 'thumbnails/dr-indranil-haldar.jpg'
-            },
             {
                 doctor: 'Dr. Raja Dhar',
                 spec: 'Head of the Department, Pulmonology',
@@ -392,7 +348,7 @@ function initializeDoctorSystem() {
     // rest of this function writes into these without checking
     if (!docText || !displayName || !displaySpec) return;
 
-    let currentCity = 'mumbai';
+    let currentCity = 'kolkata';
     let currentDoctorIndex = 0;
 
     // ---- Display helpers ----
