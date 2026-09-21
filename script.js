@@ -112,7 +112,15 @@ function initializeNavbar() {
             if (scrollToHash(hash)) {
                 e.preventDefault();
                 history.replaceState(null, '', hash);
+                return;
             }
+            // Sub-pages (the 3D lineage) carry the same navbar but none of the
+            // home page's sections, so every one of these anchors pointed at
+            // nothing and the reader was stranded there — a reload kept them
+            // stranded, since it is the same page again. Send them home to the
+            // section they asked for instead.
+            e.preventDefault();
+            window.location.href = '/' + hash;
         });
     });
 

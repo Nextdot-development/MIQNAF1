@@ -281,6 +281,12 @@
     var showLayer = activeIsA ? document.getElementById('lin-layerB') : document.getElementById('lin-layerA');
     var hideLayer = activeIsA ? document.getElementById('lin-layerA') : document.getElementById('lin-layerB');
     var showViewer = activeIsA ? viewerB : viewerA;
+    var hideViewer = activeIsA ? viewerA : viewerB;
+
+    // Both viewers used to keep spinning once they had been shown, so the page
+    // ended up driving two WebGL render loops for ever — enough to lock up a
+    // modest laptop or phone. Only the one on screen animates now.
+    if (hideViewer) { try { hideViewer.spin(false); } catch (e) {} }
 
     loadInto(showViewer, mol);
 
@@ -371,6 +377,19 @@
   } else {
     loadLib(0);
   }
+
+  // A backgrounded tab kept spinning and advancing; coming back to it after a
+  // while meant catching up on all of that at once.
+  document.addEventListener('visibilitychange', function () {
+    if (document.hidden) {
+      clearTimeout(mainTimer);
+      clearReveals();
+      [viewerA, viewerB].forEach(function (v) { if (v) { try { v.spin(false); } catch (e) {} } });
+    } else if (ready && onScreen) {
+      if (activeViewer) { try { activeViewer.spin('y', 0.4); } catch (e) {} }
+      resetProgress();
+    }
+  });
 
   window.addEventListener('resize', function () {
     [viewerA, viewerB].forEach(function (v) { if (v) { try { v.resize(); } catch (e) {} } });
